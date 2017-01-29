@@ -1,4 +1,4 @@
-package sg.edu.nus.comp.cs4218.impl.app.test;
+package sg.edu.nus.comp.cs4218.test.app;
 
 import static org.junit.Assert.*;
 
