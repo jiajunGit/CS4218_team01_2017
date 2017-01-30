@@ -89,6 +89,66 @@ public class GrepApplicationTest {
 		assertEquals( output, "some day\n    somsome some\t\nseom  some\n" );
 	}
 	
+	@Test
+	public void testGrepFromStdinDelimiterAtStartOfContent() throws GrepException {
+		
+		GrepApplication grepApp = new GrepApplication();
+		
+		String pattern = "some";
+		
+		String content = "\n  some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		InputStream is = new ByteArrayInputStream( content.getBytes() );
+		
+		String output = grepApp.grepFromStdin( pattern, is );
+		
+		assertEquals( output, "  some day\n    somsome some\t\nseom  some\n" );
+	}
+	
+	@Test
+	public void testGrepFromStdinDelimiterBeforeContent() throws GrepException {
+		
+		GrepApplication grepApp = new GrepApplication();
+		
+		String pattern = "some";
+		
+		String content = " \n  some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		InputStream is = new ByteArrayInputStream( content.getBytes() );
+		
+		String output = grepApp.grepFromStdin( pattern, is );
+		
+		assertEquals( output, "  some day\n    somsome some\t\nseom  some\n" );
+	}
+	
+	@Test
+	public void testGrepFromStdinContentStartingWithSpaces() throws GrepException {
+		
+		GrepApplication grepApp = new GrepApplication();
+		
+		String pattern = "some";
+		
+		String content = "   some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		InputStream is = new ByteArrayInputStream( content.getBytes() );
+		
+		String output = grepApp.grepFromStdin( pattern, is );
+		
+		assertEquals( output, "   some day\n    somsome some\t\nseom  some\n" );
+	}
+	
+	@Test
+	public void testGrepFromStdinContentEndingWithSpaces() throws GrepException {
+		
+		GrepApplication grepApp = new GrepApplication();
+		
+		String pattern = "some";
+		
+		String content = "   some day\n    somsome some\t\n      somme\n\nseom  some  \t";
+		InputStream is = new ByteArrayInputStream( content.getBytes() );
+		
+		String output = grepApp.grepFromStdin( pattern, is );
+		
+		assertEquals( output, "   some day\n    somsome some\t\nseom  some  \t\n" );
+	}
+	
 	@Test(expected=GrepException.class)
 	public void testGrepFromStdinInValidPattern() throws GrepException {
 		
