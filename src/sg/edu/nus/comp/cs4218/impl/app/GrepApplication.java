@@ -153,15 +153,17 @@ public class GrepApplication implements Application {
 	 * 		The index to begin the search for the first occurrence of a newline character within str.
 	 * @param end
 	 * 		The index to end the search for the first occurrence of a newline character within str. Search
-	 * 		does not include character at this index within str.
+	 * 		include character at this index within str.
 	 * 
 	 * @return 
 	 * 		The index where the first occurrence of a newline character within str is found.
 	 */
 	private int findFirstNewLine( StringBuilder str, int start, int end ) {
-		for( int i = start; i < end; ++i ){
-			if( isNewLine(str.charAt(i)) ){
-				return i;
+		if( start >= 0 && end < str.length() ){
+			for( int i = start; i <= end; ++i ){
+				if( isNewLine(str.charAt(i)) ){
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -175,7 +177,7 @@ public class GrepApplication implements Application {
 	 *      The StringBuilder object used to find the last occurrence of a newline character.
 	 * @param start
 	 * 		The index to end the search for the last occurrence of a newline character within str. Search
-	 * 		does not include character at this index within str.
+	 * 		include character at this index within str.
 	 * @param end
 	 * 		The index to begin the search for the last occurrence of a newline character within str.
 	 * 
@@ -183,9 +185,11 @@ public class GrepApplication implements Application {
 	 * 		The index where the last occurrence of a newline character within str is found.
 	 */
 	private int findLastNewLine( StringBuilder str, int start, int end ) {
-		for( int i = end; i > start; --i ){
-			if( isNewLine(str.charAt(i)) ){
-				return i;
+		if( start >= 0 && end < str.length() ){
+			for( int i = end; i >= start; --i ){
+				if( isNewLine(str.charAt(i)) ){
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -206,8 +210,8 @@ public class GrepApplication implements Application {
 	 */
 	private void findAllRegex( StringBuilder str, Matcher regxMatcher, String prefixStr, StringBuilder output ) {
 		
-		int prevStart = 0;
-		int prevEnd = 0;
+		int prevStart = -1;
+		int prevEnd = -1;
 		int newLineIdx;
 		
 		while( regxMatcher.find() ){
@@ -215,20 +219,26 @@ public class GrepApplication implements Application {
 			int start = regxMatcher.start();
 			int end = regxMatcher.end();
 			
-			if( end <= start || (start >= prevStart && end <= prevEnd) ){
+			if( start < 0 || end <= start || (start >= prevStart && end <= prevEnd) ){
 				continue;
 			}
 
 			int startOfLine = start;
-			newLineIdx = findLastNewLine( str, -1, start-1 );
+			newLineIdx = findLastNewLine( str, prevEnd+1, start-1 );
 			if( newLineIdx > -1 ){
 				startOfLine = newLineIdx + 1;
 			}
+			else{
+				startOfLine = prevEnd + 1;
+			}
 			
 			int endOfLine = end;
-			newLineIdx = findFirstNewLine( str, end, str.length() );
+			newLineIdx = findFirstNewLine( str, end, str.length()-1 );
 			if( newLineIdx > -1 ){
 				endOfLine = newLineIdx;
+			}
+			else{
+				endOfLine = str.length();
 			}
 			
 			output.append(prefixStr);
