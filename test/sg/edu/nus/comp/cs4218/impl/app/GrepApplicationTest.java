@@ -24,7 +24,7 @@ public class GrepApplicationTest {
 		grepApp.run( null, System.in, System.out );
 	}
 
-	@Test
+	@Test(expected=GrepException.class)
 	public void testGrepFromStdinEmptyPattern() throws GrepException {
 		
 		GrepApplication grepApp = new GrepApplication();
@@ -33,9 +33,7 @@ public class GrepApplicationTest {
 		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
-		String output = grepApp.grepFromStdin( pattern, is );
-		
-		assertEquals( output, "" );
+		grepApp.grepFromStdin( pattern, is );
 	}
 	
 	@Test(expected=GrepException.class)
@@ -203,6 +201,24 @@ public class GrepApplicationTest {
 	}
 	
 	@Test(expected=GrepException.class)
+    public void testGrepFromOneFileEmptyPattern() throws GrepException, IOException {
+        
+        GrepApplication grepApp = new GrepApplication();
+        
+        String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+        
+        File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+
+        FileOutputStream outStream = new FileOutputStream(tempFile);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        tempFile.deleteOnExit();
+        
+        grepApp.grepFromOneFile( "", tempFile.getAbsolutePath() );
+    }
+	
+	@Test(expected=GrepException.class)
 	public void testGrepFromOneFileNullFileName() throws GrepException, IOException {
 		
 		GrepApplication grepApp = new GrepApplication();
@@ -261,8 +277,28 @@ public class GrepApplicationTest {
 		
 		tempFile.deleteOnExit();
 		
-		String[] fileNames = { tempFile.getAbsolutePath() };
+		String[] arguments = { null, tempFile.getAbsolutePath() };
 	
-		grepApp.grepFromMultipleFiles( null, fileNames );
+		grepApp.grepFromMultipleFiles( arguments );
+	}
+	
+	@Test(expected=GrepException.class)
+	public void testGrepFromMultipleFilesEmptyPattern() throws GrepException, IOException {
+	    
+	    GrepApplication grepApp = new GrepApplication();
+        
+        String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+        
+        File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+
+        FileOutputStream outStream = new FileOutputStream(tempFile);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        tempFile.deleteOnExit();
+        
+        String[] arguments = { "", tempFile.getAbsolutePath() };
+    
+        grepApp.grepFromMultipleFiles( arguments );
 	}
 }
