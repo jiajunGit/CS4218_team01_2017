@@ -267,7 +267,7 @@ public class GrepApplication implements Application {
 	 */
 	public String grepFromStdin(String pattern, InputStream stdin) throws GrepException {
 		
-		if( pattern == null ){
+		if( pattern == null || pattern.length() <= 0 ){
 			throw new GrepException(ERROR_EXP_INVALID_PATTERN);
 		}
 		if( stdin == null ){
@@ -308,7 +308,7 @@ public class GrepApplication implements Application {
 	 */
 	public String grepFromOneFile(String pattern, String fileName) throws GrepException {
 		
-		if( pattern == null ){
+		if( pattern == null || pattern.length() <= 0 ){
 			throw new GrepException(ERROR_EXP_INVALID_PATTERN);
 		}
 		if( fileName == null || fileName.length() <= 0 ){
@@ -340,9 +340,9 @@ public class GrepApplication implements Application {
 	 * Returns string containing lines which match the specified pattern in the given files
 	 * 
 	 * @param args
-	 *        Array of arguments for the application. First array element is a 
-	 *        regular expression in JAVA format. Subsequent array element(s) is/are
-	 *        the path(s) to a file(s).
+	 *      Array of arguments for the application. First array element is a 
+	 *      regular expression in JAVA format. Subsequent array element(s) is/are
+	 *      the path(s) to a file(s).
 	 *        
 	 * @throws GrepException
 	 *      If null arguments are specified, or the regular expression pattern specified is 
@@ -353,7 +353,7 @@ public class GrepApplication implements Application {
 	 * 		A String containing all lines within the file(s) that contain the specified regex pattern
 	 * 		delimited by a newline character
 	 */
-	private String grepFromMultipleFiles(String[] args) throws GrepException {
+	public String grepFromMultipleFiles(String[] args) throws GrepException {
 		
 		if( args == null ){
 			throw new GrepException(ERROR_EXP_NULL_ARGS);
@@ -363,6 +363,10 @@ public class GrepApplication implements Application {
 		}
 		
 		String pattern = args[0];
+		
+		if( pattern == null || pattern.length() <= 0 ){
+		    throw new GrepException(ERROR_EXP_INVALID_PATTERN);
+		}
 		
 		BufferedInputStream bis = null;
 		
@@ -375,72 +379,6 @@ public class GrepApplication implements Application {
 			for( int i = 1; i < args.length; ++i ){
 				
 				String fileName = args[i];
-				
-				if( fileName == null || fileName.length() <= 0 ){
-					throw new GrepException(ERROR_EXP_INVALID_FILE);
-				}
-				
-				FileInputStream fs = new FileInputStream(fileName);
-				bis = new BufferedInputStream(fs);
-				
-				StringBuilder content = readContentFromStdin(bis);
-				
-				bis.close();
-				fs.close();
-				
-				Matcher regxMatcher = regxPattern.matcher(content);
-				findAllRegex( content, regxMatcher, fileName + ": ", output );
-			}
-			
-			return output.toString();
-		}
-		catch (IOException e) {
-			throw new GrepException(ERROR_EXP_INVALID_FILE);
-		}
-		catch ( SecurityException e ) {
-			throw new GrepException(ERROR_EXP_INVALID_FILE);
-		}
-		catch( PatternSyntaxException e ){
-			throw new GrepException(ERROR_EXP_INVALID_PATTERN);
-		}
-	}
-	
-	/**
-	 * Returns string containing lines which match the specified pattern in the given files
-	 * 
-	 * @param pattern
-	 *        The specified regex pattern string.
-	 * @param fileNames
-	 * 		  An array of names of the files whose contents are used to find the specified regex pattern. 
-	 *        
-	 * @throws GrepException
-	 *      If the specified file name(s) is/are invalid or an invalid pattern is specified
-	 *        
-	 * @return
-	 * 		A String containing all lines within the file(s) that contain the specified regex pattern
-	 * 		delimited by a newline character
-	 */
-	public String grepFromMultipleFiles(String pattern, String[] fileNames) throws GrepException {
-		
-		if( pattern == null || fileNames == null ){
-			throw new GrepException(ERROR_EXP_NULL_ARGS);
-		}
-		if( pattern.length() <= 0 ){
-			throw new GrepException(ERROR_EXP_INVALID_PATTERN);
-		}
-		if( fileNames.length <= 0 ){
-			throw new GrepException(ERROR_EXP_INVALID_FILE);
-		}
-		
-		BufferedInputStream bis = null;
-		
-		try {
-			
-			Pattern regxPattern = Pattern.compile(pattern);
-			
-			StringBuilder output = new StringBuilder();
-			
-			for( String fileName : fileNames ){
 				
 				if( fileName == null || fileName.length() <= 0 ){
 					throw new GrepException(ERROR_EXP_INVALID_FILE);
