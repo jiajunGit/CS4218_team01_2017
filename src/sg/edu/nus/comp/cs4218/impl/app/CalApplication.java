@@ -2,6 +2,8 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
+import java.util.Calendar;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.app.Cal;
@@ -25,18 +27,23 @@ import sg.edu.nus.comp.cs4218.exception.CalException;
  * </p>
  */
 public class CalApplication implements Cal{
-
-	/**
-	 * 
-	 */
+	
+	private static final String CAL_COMMAND = "cal";
+	private static final int ROW_LENGTH = 20;
+	private static final int MAXIMUM_SUPPORTED_YEAR = 999999999;
+	private static final int MINIMUM_SUPPORTED_YEAR = -999999999;
+	private static final String[] MONTH_NAME = {"January","February","March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	private static final String EMPTY_SPACE = " ";
+	private static final String EMPTY_CELL = "   ";
+	private static final int MONTH_OFFSET = 1;
+	
 	public CalApplication() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CalException {
 		if (args.length ==  0){
-			printCal(args);
+			printCal(CAL_COMMAND);
 		}
 		
 	}
@@ -45,10 +52,78 @@ public class CalApplication implements Cal{
 	 * Print the calendar of the current month
 	 * @param args String array containing command and arguments to print the calendar of the current month
 	 */
-	public String printCal(String[] args) {
+	public String printCal(String args) {
+		int numDays;
+		StringBuilder calOutput = new StringBuilder();
+		LocalDate now = LocalDate.now();
+		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
+		
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
+		calOutput.append(printDaysHeader(false));
+		calOutput.append(printDaysOfMonth(currMonth, false));
+		
+		return calOutput.toString();
+	}
+
+	
+	/**
+	 * Returns a String for the month
+	 * @param currMonth specifies a LocalDate for the first day of the month 
+	 * @param isMon specifies whether the month calendar starts with Mon
+	 */
+	private String printDaysOfMonth(LocalDate currMonth, boolean isMon) {
+		int offset;
+		int day = 1;
+		int counter = 0;
+		int daysInMonth = numberOfDaysInMonth(currMonth.getMonthValue(), currMonth.getYear());
+		int index = currMonth.getDayOfWeek().getValue();
+		StringBuilder calendar = new StringBuilder();
+		
+		if (!isMon){
+			if (index == 7){
+				index = 1;
+			}
+			else{
+				index++;
+			}
+		}
+		offset = index--;
+		
+		// First week
+		for (int i = 0; i < offset; i++){
+			calendar.append(EMPTY_CELL);
+		}
+		for (int i = index ; i <= 7; i++){
+			calendar.append(day);
+			calendar.append(EMPTY_SPACE);
+			calendar.append(EMPTY_SPACE);
+			day++;
+		}
+		calendar.append(System.lineSeparator());
+		
+		while (day < daysInMonth){
+			calendar.append(day);
+			if (day < 10){
+				calendar.append(EMPTY_SPACE);
+			}
+			calendar.append(EMPTY_SPACE);
+			day++;
+			counter++;
+			if (counter == 6){
+				counter = 0;
+				calendar.append(System.lineSeparator());
+			}
+		}
+		
+		if (counter != 0){
+			offset = 7 - counter;
+			for ( int i = 0; i < counter; i++){
+				calendar.append(EMPTY_CELL);
+			}
+		}
 		
 		
-		return null;
+		return calendar.toString();
 	}
 
 	/**
@@ -56,7 +131,7 @@ public class CalApplication implements Cal{
 	 * as the first day of the week
 	 * @param args String array containing command and arguments
 	 */
-	public String printCalWithMondayFirst(String[] args) {
+	public String printCalWithMondayFirst(String args) {
 		return null;
 	}
 
@@ -64,7 +139,7 @@ public class CalApplication implements Cal{
 	 * Returns the string to print the calendar for specified month and year
 	 * @param args String array containing command and arguments
 	 */
-	public String printCalForMonthYear(String[] args) {
+	public String printCalForMonthYear(String args) {
 		return null;
 	}
 
@@ -72,7 +147,7 @@ public class CalApplication implements Cal{
 	 * Returns the string to print the calendar for specified year
 	 * @param args String array containing command and arguments
 	 */
-	public String printCalForYear(String[] args) {
+	public String printCalForYear(String args) {
 		return null;
 	}
 
@@ -81,7 +156,7 @@ public class CalApplication implements Cal{
 	 * with Monday as the first day of the week
 	 * @param args String array containing command and arguments
 	 */
-	public String printCalForMonthYearMondayFirst(String[] args) {
+	public String printCalForMonthYearMondayFirst(String args) {
 		return null;
 	}
 
@@ -90,8 +165,19 @@ public class CalApplication implements Cal{
 	 * as the first day of the week
 	 * @param args String array containing command and arguments
 	 */
-	public String printCalForYearMondayFirst(String[] args) {
+	public String printCalForYearMondayFirst(String args) {
 		return null;
+	}
+	
+	/**
+	 * Returns a String array containing cal as first string and 
+	 * @param args
+	 * @return
+	 */
+	private String[] parseArgs(String args){
+		String[] argsToStringArray = args.split(" ");
+		
+		return argsToStringArray;
 	}
 	
 	/**
@@ -161,6 +247,53 @@ public class CalApplication implements Cal{
 				}
 			default:
 				return 30;
+		}
+	}
+	
+	/**
+	 * Returns the header showing month and year centralized
+	 * @param month specifies the month
+	 * @param year specifies the year
+	 */
+	private String printMonthYear(int month, int year){
+//		if (year > MAXIMUM_SUPPORTED_YEAR || year < MINIMUM_SUPPORTED_YEAR){
+//			throws new CalException("Year given is out of range");
+//		}
+		StringBuilder monthYear = new StringBuilder();
+		monthYear.append(MONTH_NAME[(month - MONTH_OFFSET)]);
+		monthYear.append(EMPTY_SPACE);
+		monthYear.append(year);
+		
+		int excessLength = (ROW_LENGTH - monthYear.length()) / 2;
+		
+		for (int i = 0 ; i < excessLength; i++){
+			monthYear.insert(0, EMPTY_SPACE);
+		}
+		
+		int remainLength = ROW_LENGTH - monthYear.length(); 
+		
+		for (int i = 0; i < remainLength; i++){
+			monthYear.append(EMPTY_SPACE);
+		}
+		
+		return monthYear.toString();
+	}
+	
+	/** 
+	 * Returns an int representing the index of the day 0 being first and 6 being last 
+	 * @param month A LocalDate object for the first day of the month 
+	 * @param isMon specifies whether Monday starts first
+	 */
+	private int getFirstDayOfWeek(LocalDate month, boolean isMon){
+		int index = month.getDayOfWeek().getValue();
+		
+		if (isMon){
+			return index;
+		}
+		else{
+			// Week starts from Sun
+			return (index + 1) % 8;
+			
 		}
 	}
 }
