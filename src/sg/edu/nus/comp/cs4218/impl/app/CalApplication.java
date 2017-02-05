@@ -59,7 +59,9 @@ public class CalApplication implements Cal{
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
 		
 		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
+		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysHeader(false));
+		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysOfMonth(currMonth, false));
 		
 		return calOutput.toString();
@@ -72,28 +74,26 @@ public class CalApplication implements Cal{
 	 * @param isMon specifies whether the month calendar starts with Mon
 	 */
 	private String printDaysOfMonth(LocalDate currMonth, boolean isMon) {
-		int offset;
 		int day = 1;
 		int counter = 0;
 		int daysInMonth = numberOfDaysInMonth(currMonth.getMonthValue(), currMonth.getYear());
-		int index = currMonth.getDayOfWeek().getValue();
+		int offset = currMonth.getDayOfWeek().getValue();
 		StringBuilder calendar = new StringBuilder();
 		
 		if (!isMon){
-			if (index == 7){
-				index = 1;
+			if (offset == 7){
+				offset = 1;
 			}
 			else{
-				index++;
+				offset++;
 			}
 		}
-		offset = index--;
 		
 		// First week
-		for (int i = 0; i < offset; i++){
+		for (int i = 1; i < offset; i++){
 			calendar.append(EMPTY_CELL);
 		}
-		for (int i = index ; i <= 7; i++){
+		for (int i = offset ; i <= 7; i++){
 			calendar.append(day);
 			calendar.append(EMPTY_SPACE);
 			calendar.append(EMPTY_SPACE);
@@ -101,7 +101,7 @@ public class CalApplication implements Cal{
 		}
 		calendar.append(System.lineSeparator());
 		
-		while (day < daysInMonth){
+		while (day <= daysInMonth){
 			calendar.append(day);
 			if (day < 10){
 				calendar.append(EMPTY_SPACE);
@@ -109,7 +109,7 @@ public class CalApplication implements Cal{
 			calendar.append(EMPTY_SPACE);
 			day++;
 			counter++;
-			if (counter == 6){
+			if (counter == 7){
 				counter = 0;
 				calendar.append(System.lineSeparator());
 			}
@@ -117,7 +117,7 @@ public class CalApplication implements Cal{
 		
 		if (counter != 0){
 			offset = 7 - counter;
-			for ( int i = 0; i < counter; i++){
+			for ( int i = 0; i < offset; i++){
 				calendar.append(EMPTY_CELL);
 			}
 		}
@@ -132,7 +132,19 @@ public class CalApplication implements Cal{
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalWithMondayFirst(String args) {
-		return null;
+		int numDays;
+		StringBuilder calOutput = new StringBuilder();
+		LocalDate now = LocalDate.now();
+		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
+		
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysHeader(true));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysOfMonth(currMonth, true));
+		
+		return calOutput.toString();
+		
 	}
 
 	/**
