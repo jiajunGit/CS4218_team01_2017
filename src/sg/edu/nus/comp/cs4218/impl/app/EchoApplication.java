@@ -43,10 +43,10 @@ public class EchoApplication implements Application {
 			if (args.length == 0) {
 				stdout.write("\n\n".getBytes());
 			} else {
-				for (int i = 0; i < args.length - 1; i++) {
+				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
+				    stdout.write(" ".getBytes()); //elements gets separated by a spacing
 				}
-				stdout.write(args[args.length-1].getBytes());
 				stdout.write("\n".getBytes());
 			}
 		} catch (IOException e) {
