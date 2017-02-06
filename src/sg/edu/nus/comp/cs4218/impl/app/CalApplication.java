@@ -45,15 +45,13 @@ public class CalApplication implements Cal{
 		if (args.length ==  0){
 			printCal(CAL_COMMAND);
 		}
-		
 	}
 
 	/**
-	 * Print the calendar of the current month
+	 * Returns a  the calendar of the current month
 	 * @param args String array containing command and arguments to print the calendar of the current month
 	 */
 	public String printCal(String args) {
-		int numDays;
 		StringBuilder calOutput = new StringBuilder();
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
@@ -132,7 +130,6 @@ public class CalApplication implements Cal{
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalWithMondayFirst(String args) {
-		int numDays;
 		StringBuilder calOutput = new StringBuilder();
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
@@ -152,7 +149,19 @@ public class CalApplication implements Cal{
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalForMonthYear(String args) {
-		return null;
+		LocalDate currMonth;
+		StringBuilder calOutput = new StringBuilder();
+		String[] argsArr = parseArgs(args);
+		
+		currMonth = LocalDate.of(Integer.parseInt(argsArr[2]), Integer.parseInt(argsArr[1]), 1);
+		
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysHeader(false));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysOfMonth(currMonth, false));
+		
+		return calOutput.toString();
 	}
 
 	/**
@@ -169,7 +178,19 @@ public class CalApplication implements Cal{
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalForMonthYearMondayFirst(String args) {
-		return null;
+		LocalDate currMonth;
+		StringBuilder calOutput = new StringBuilder();
+		String[] argsArr = parseArgs(args);
+		
+		currMonth = LocalDate.of(Integer.parseInt(argsArr[3]), Integer.parseInt(argsArr[2]), 1);
+		
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysHeader(true));
+		calOutput.append(System.lineSeparator());
+		calOutput.append(printDaysOfMonth(currMonth, true));
+		
+		return calOutput.toString();
 	}
 
 	/**
@@ -187,7 +208,9 @@ public class CalApplication implements Cal{
 	 * @return
 	 */
 	private String[] parseArgs(String args){
-		String[] argsToStringArray = args.split(" ");
+		String[] argsToStringArray = args.split(EMPTY_SPACE);
+		
+		System.out.println(argsToStringArray);
 		
 		return argsToStringArray;
 	}
@@ -208,11 +231,6 @@ public class CalApplication implements Cal{
 		}
 		
 		return header;
-	}
-	
-	
-	private String printMonthHeader(int mon){
-		return null;
 	}
 	
 	/**
