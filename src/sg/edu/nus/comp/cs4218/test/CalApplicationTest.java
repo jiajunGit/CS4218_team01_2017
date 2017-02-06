@@ -35,4 +35,18 @@ public class CalApplicationTest {
 		
 		assertEquals("", cal.printCalForMonthYearMondayFirst("cal -m 1 2017"));
 	}
+	
+	@Test
+	public void testPrintCalForYear(){
+		CalApplication cal = new CalApplication();
+		
+		assertEquals("", cal.printCalForYear("cal 2020"));
+	}
+	
+	@Test
+	public void testPrintCalForYearMondayFirst(){
+		CalApplication cal = new CalApplication();
+		
+		assertEquals("", cal.printCalForYearMondayFirst("cal -m 2017"));
+	}
 }

@@ -34,8 +34,10 @@ public class CalApplication implements Cal{
 	private static final int MINIMUM_SUPPORTED_YEAR = -999999999;
 	private static final String[] MONTH_NAME = {"January","February","March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	private static final String EMPTY_SPACE = " ";
+	private static final String EMPTY_BORDER = "  ";
 	private static final String EMPTY_CELL = "   ";
 	private static final int MONTH_OFFSET = 1;
+	private static final int YEAR_WIDTH = 64;
 	
 	public CalApplication() {
 	}
@@ -45,6 +47,7 @@ public class CalApplication implements Cal{
 		if (args.length ==  0){
 			printCal(CAL_COMMAND);
 		}
+		
 	}
 
 	/**
@@ -120,7 +123,6 @@ public class CalApplication implements Cal{
 			}
 		}
 		
-		
 		return calendar.toString();
 	}
 
@@ -169,7 +171,34 @@ public class CalApplication implements Cal{
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalForYear(String args) {
-		return null;
+		StringBuilder calOutput = new StringBuilder();
+		String[] argArr = parseArgs(args);
+		int[] months = new int[3];
+		LocalDate[] monthDates = new LocalDate[3];
+		int year = Integer.parseInt(argArr[1]);
+		
+		calOutput.append(printYear(year));
+		calOutput.append(System.lineSeparator());
+		for (int i = 0 ; i < 4; i++){
+			months = new int[3];
+			for (int j = 0 ; j < months.length; j++){
+				months[j] = i * 3 + j + 1;
+				monthDates[j] = LocalDate.of(year, months[j], 1);
+			}
+			calOutput.append(printMonth(months));
+			calOutput.append(System.lineSeparator());
+			for (int j = 0; j < months.length; j++){
+				calOutput.append(printDaysHeader(false));
+				if ( (j+1) != months.length){
+					calOutput.append(EMPTY_BORDER);
+				}
+			}
+			calOutput.append(System.lineSeparator());
+			calOutput.append(printThreeMonths(monthDates, year, false));
+		}
+		
+		return calOutput.toString();
+	
 	}
 
 	/**
@@ -192,20 +221,141 @@ public class CalApplication implements Cal{
 		
 		return calOutput.toString();
 	}
+	
+	/**
+	 * Returns a String containing 3 months of dates
+	 * @param  
+	 * @param isMon specifies if the header starts with Monday
+	 */
+	private String printThreeMonths(LocalDate[] months, int year, boolean isMon){
+		int[] days = {1, 1, 1};
+		int[] counters = new int[3];
+		int[] daysInMonths = new int[3];
+		int[] offset = {0, 0, 0};
+		StringBuilder cal = new StringBuilder();
+		
+		for (int i = 0 ; i < daysInMonths.length; i++){
+			daysInMonths[i] = numberOfDaysInMonth(months[i].getMonthValue() ,year);
+			offset[i] = months[i].getDayOfWeek().getValue();
+			if (!isMon){
+				if (offset[i] == 7){
+					offset[i] = 1;
+				}
+				else{
+					offset[i]++;
+				}
+			}
+		}
+		
+		//First Week
+		for (int month = 0; month < months.length; month++){
+			for (int i = 1; i < offset[month]; i++){
+				cal.append(EMPTY_CELL);
+			}
+			for (int i = offset[month]; i <= 7; i++){
+				cal.append(days[month]);
+				cal.append(EMPTY_SPACE);
+				if ( i != 7){
+					cal.append(EMPTY_SPACE);
+				}
+				days[month]++;
+			}
+			//Not the last month
+			if (month + 1 != months.length){
+				cal.append(EMPTY_BORDER);
+			}
+			else{
+				cal.append(System.lineSeparator());
+			}
+		}
+		
+		while (days[0] <= daysInMonths[0] || days[1] <= daysInMonths[1] || days[2] <= daysInMonths[2]){
+			for (int month = 0; month < months.length; month++){
+				while (counters[month] < 7 && days[month] <= daysInMonths[month]){
+					cal.append(days[month]);
+					if (days[month] < 10){
+						cal.append(EMPTY_SPACE);	
+					}
+					days[month]++;
+					counters[month]++;
+					if (counters[month] != 7){ //Not the last cell
+						cal.append(EMPTY_SPACE);
+					}
+				}
+				
+				if (counters[month] == 7){
+					if ((month + 1) != months.length){
+						cal.append(EMPTY_BORDER);
+					}
+					else{
+						cal.append(System.lineSeparator());
+					}
+					counters[month] = 0;
+				}
+				else{
+					for (int i = 0; i < (7-counters[month]); i++){
+						if ((i+1) == (7 - counters[month])){
+							cal.append(EMPTY_BORDER);
+							if ((month+1) != months.length ){
+								cal.append(EMPTY_BORDER);
+							}
+							else{
+								cal.append(System.lineSeparator());
+							}
 
+						}
+						else{
+							cal.append(EMPTY_CELL);
+						}
+					}
+					counters[month] = 0;
+				}
+			}
+		}
+		
+//		cal.append(System.lineSeparator());
+		
+		return cal.toString();
+	}
+	
 	/**
 	 * Returns the string to print the calendar for specified year with Monday
 	 * as the first day of the week
 	 * @param args String array containing command and arguments
 	 */
 	public String printCalForYearMondayFirst(String args) {
-		return null;
+		StringBuilder calOutput = new StringBuilder();
+		String[] argArr = parseArgs(args);
+		int[] months = new int[3];
+		LocalDate[] monthDates = new LocalDate[3];
+		int year = Integer.parseInt(argArr[2]);
+		
+		calOutput.append(printYear(year));
+		calOutput.append(System.lineSeparator());
+		for (int i = 0 ; i < 4; i++){
+			months = new int[3];
+			for (int j = 0 ; j < months.length; j++){
+				months[j] = i * 3 + j + 1;
+				monthDates[j] = LocalDate.of(year, months[j], 1);
+			}
+			calOutput.append(printMonth(months));
+			calOutput.append(System.lineSeparator());
+			for (int j = 0; j < months.length; j++){
+				calOutput.append(printDaysHeader(true));
+				if ( (j+1) != months.length){
+					calOutput.append(EMPTY_BORDER);
+				}
+			}
+			calOutput.append(System.lineSeparator());
+			calOutput.append(printThreeMonths(monthDates, year, true));
+		}
+		
+		return calOutput.toString();
 	}
 	
 	/**
 	 * Returns a String array containing cal as first string and 
 	 * @param args
-	 * @return
 	 */
 	private String[] parseArgs(String args){
 		String[] argsToStringArray = args.split(EMPTY_SPACE);
@@ -231,6 +381,57 @@ public class CalApplication implements Cal{
 		}
 		
 		return header;
+	}
+	
+	/**
+	 * Returns the year header being centralized
+	 * @param year specifies the year to print for the header
+	 */
+	private String printYear(int year){
+		int offset;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(year);
+		offset = YEAR_WIDTH - sb.length();
+		offset = offset / 2;
+		for (int i = 0; i < offset; i++){
+			sb.insert(0, EMPTY_SPACE);
+		}
+		offset = YEAR_WIDTH - sb.length();
+		for (int i = 0; i < offset; i++){
+			sb.append(EMPTY_SPACE);
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Returns the month header for one row
+	 * @param months specifies the months to return in a row
+	 */
+	public String printMonth(int[] months){
+		StringBuilder sb = new StringBuilder();
+		StringBuilder singleMon;
+		int offset;
+		
+		for (int i = 0; i < months.length; i++){
+			singleMon = new StringBuilder();
+			singleMon.append(MONTH_NAME[months[i] - 1]);
+			offset = (ROW_LENGTH - singleMon.length()) / 2;
+			for (int j = 0; j < offset; j++){
+				singleMon.insert(0, EMPTY_SPACE);
+			}
+			offset = ROW_LENGTH - singleMon.length();
+			for (int j = 0; j < offset; j++){
+				singleMon.append(EMPTY_SPACE);
+			}
+			sb.append(singleMon.toString());
+			if ((i+1) != months.length){
+				sb.append(EMPTY_BORDER);
+			}
+		}
+		
+		return sb.toString();
 	}
 	
 	/**
@@ -307,23 +508,5 @@ public class CalApplication implements Cal{
 		}
 		
 		return monthYear.toString();
-	}
-	
-	/** 
-	 * Returns an int representing the index of the day 0 being first and 6 being last 
-	 * @param month A LocalDate object for the first day of the month 
-	 * @param isMon specifies whether Monday starts first
-	 */
-	private int getFirstDayOfWeek(LocalDate month, boolean isMon){
-		int index = month.getDayOfWeek().getValue();
-		
-		if (isMon){
-			return index;
-		}
-		else{
-			// Week starts from Sun
-			return (index + 1) % 8;
-			
-		}
 	}
 }
