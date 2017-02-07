@@ -360,8 +360,6 @@ public class CalApplication implements Cal{
 	private String[] parseArgs(String args){
 		String[] argsToStringArray = args.split(EMPTY_SPACE);
 		
-		System.out.println(argsToStringArray);
-		
 		return argsToStringArray;
 	}
 	
@@ -509,4 +507,5 @@ public class CalApplication implements Cal{
 		
 		return monthYear.toString();
 	}
+
 }
