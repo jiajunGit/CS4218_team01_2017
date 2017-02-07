@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
@@ -77,11 +78,13 @@ public class CatApplication implements Application {
 
 				// file could be read. perform cat command
 				if (filePathArray.length != 0) {
-					for (int j = 0; j < filePathArray.length - 1; j++) {
+					for (int j = 0; j < filePathArray.length; j++) {
 						try {
-							byte[] byteFileArray = Files
-									.readAllBytes(filePathArray[j]);
-							stdout.write(byteFileArray);
+							List<String> stringListArray = Files
+									.readAllLines(filePathArray[j]);
+							for(int i=0; i<stringListArray.size();i++){
+								stdout.write(stringListArray.get(0).getBytes());
+							}
 						} catch (IOException e) {
 							throw new CatException(
 									"Could not write to output stream");
@@ -103,7 +106,7 @@ public class CatApplication implements Application {
 	 *             If the file is not readable
 	 */
 	boolean checkIfFileIsReadable(Path filePath) throws CatException {
-		
+
 		if (Files.isDirectory(filePath)) {
 			throw new CatException("This is a directory");
 		}

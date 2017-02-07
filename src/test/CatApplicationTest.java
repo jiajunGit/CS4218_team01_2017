@@ -44,7 +44,7 @@ public class CatApplicationTest {
 	}
 
 	@Test
-	public void testNullPointerStdinException() throws EchoException {
+	public void testNullPointerStdinException() throws CatException {
 		try{
 			cat.run(null, null, System.out);
 		}catch(CatException e){
@@ -53,7 +53,7 @@ public class CatApplicationTest {
 	}
 
 	@Test
-	public void testNullPointerStdoutException() throws EchoException {
+	public void testNullPointerStdoutException() throws CatException {
 		try{
 			cat.run(null, System.in, null);
 		}catch(CatException e){
@@ -62,11 +62,38 @@ public class CatApplicationTest {
 	}
 
 	@Test
-	public void simulateStdin() throws CatException {
+	public void testEmptyArgWithSimulatedStdin() throws CatException {
 		ByteArrayInputStream in = new ByteArrayInputStream("2".getBytes());
 		System.setIn(in);
 		cat.run(null, System.in, System.out);
 		assertEquals("2",outContent.toString());
+	}
+	
+	@Test
+	public void testInvalidFilePathException() throws CatException {
+		String[] input ={"this is a non directory"};
+		try{
+			cat.run(input, System.in, System.out);
+		}catch(CatException e){
+			assertEquals("cat: Could not read file", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testIsFileDirectoryException () throws CatException {
+		String[] input ={"/"};
+		try{
+			cat.run(input, System.in, System.out);
+		}catch(CatException e){
+			assertEquals("cat: This is a directory", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testValidFilePath () throws CatException {
+		String[] input ={"/Users/Leon/Documents/workspace/CS4218_team01_2017/txt/test"};
+		cat.run(input, System.in, System.out);
+		assertEquals("a simple test", outContent.toString());
 	}
 
 }
