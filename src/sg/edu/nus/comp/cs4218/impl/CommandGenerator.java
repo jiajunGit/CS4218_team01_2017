@@ -19,7 +19,6 @@ public class CommandGenerator {
     private Command prevCmd;
     
     public CommandGenerator( Globber cmdGlobber, List<Segment> cmdSegments ) {
-        reset();
         segments = cmdSegments;
         globber = cmdGlobber;
     }
@@ -29,6 +28,8 @@ public class CommandGenerator {
         if(globber == null || segments == null){
             return new LinkedList<Command>();
         }
+        
+        reset();
         
         Stage currentStage = Stage.NORMAL;
         
@@ -56,9 +57,7 @@ public class CommandGenerator {
             processPostCommand(currentStage);
         }
         
-        List<Command> cmdCommands = commands;
-        reset();
-        return cmdCommands;
+        return commands;
     }
     
     private void reset() {
