@@ -7,6 +7,7 @@ import java.io.OutputStream;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.exception.PwdException;
 
 /**
@@ -41,12 +42,12 @@ public class PwdApplication implements Application {
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
 		}
 		if( Environment.currentDirectory == null || !isCurrentDirectoryValid() ) {
-			throw new PwdException(ERROR_EXP_UNKNOWN_DIR);
+			Environment.setDefaultDirectory();
 		}
 		
 		try {
 			stdout.write(Environment.currentDirectory.getBytes());
-			stdout.write("\n".getBytes());
+			stdout.write(Symbol.NEW_LINE_S.getBytes());
 			stdout.flush();
 		} 
 		catch (IOException e) {

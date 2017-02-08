@@ -13,6 +13,10 @@ public final class Environment {
 
     private Environment() {};
 
+    public static void setDefaultDirectory() {
+        currentDirectory = System.getProperty("user.dir");
+    }
+    
     public static boolean isExists(String absPath) {
 
         if (absPath == null) {
