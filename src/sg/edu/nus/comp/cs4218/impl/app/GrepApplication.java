@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import sg.edu.nus.comp.cs4218.Application;
+import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.app.Grep;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 
@@ -40,6 +40,8 @@ public class GrepApplication implements Grep {
     public static final String ERROR_EXP_INVALID_ARGS_COUNT = "Invalid number of arguments specified";
     public static final String ERROR_EXP_INTERNAL = "Internal error occurred";
 
+    private static final int NEW_LINE_LENGTH = Symbol.NEW_LINE_S.length();
+    
     private static final int TEMP_BUF_SZ = 10000;
     private byte[] tempBuf = new byte[TEMP_BUF_SZ];
 
@@ -89,7 +91,7 @@ public class GrepApplication implements Grep {
         try {
             stdout.write(outputStr.getBytes());
             if (outputStr.isEmpty()) {
-                stdout.write("\n".getBytes());
+                stdout.write(Symbol.NEW_LINE_S.getBytes());
             }
             stdout.flush();
         } catch (IOException e) {
@@ -130,83 +132,7 @@ public class GrepApplication implements Grep {
         }
         return content;
     }
-
-    /**
-     * Returns a boolean value indicating if the character is a newline
-     * character or not.
-     * 
-     * @param character
-     *      The character to be tested if it is a newline character or
-     *      not.
-     * 
-     * @return 
-     *      A boolean value indicating if the character is a newline
-     *      character or not.
-     */
-    private boolean isNewLine(char character) {
-        return (character == '\n' || character == '\r');
-    }
-
-    /**
-     * Returns the index of the first occurrence of a newline character within
-     * str from start to end not inclusive of end.
-     * 
-     * @param str
-     *      The StringBuilder object used to find the first occurrence of
-     *      a newline character.
-     * @param start
-     *      The index to begin the search for the first occurrence of a
-     *      newline character within str.
-     * @param end
-     *      The index to end the search for the first occurrence of a
-     *      newline character within str. Search include character at this
-     *      index within str.
-     * 
-     * @return 
-     *      The index where the first occurrence of a newline character
-     *      within str is found.
-     */
-    private int findFirstNewLine(StringBuilder str, int start, int end) {
-        if (start >= 0 && end < str.length()) {
-            for (int i = start; i <= end; ++i) {
-                if (isNewLine(str.charAt(i))) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * Returns the index of the last occurrence of a newline character within
-     * str from start to end not inclusive of start.
-     * 
-     * @param str
-     *      The StringBuilder object used to find the last occurrence of a
-     *      newline character.
-     * @param start
-     *      The index to end the search for the last occurrence of a
-     *      newline character within str. Search include character at this
-     *      index within str.
-     * @param end
-     *      The index to begin the search for the last occurrence of a
-     *      newline character within str.
-     * 
-     * @return 
-     *      The index where the last occurrence of a newline character within
-     *      str is found.
-     */
-    private int findLastNewLine(StringBuilder str, int start, int end) {
-        if (start >= 0 && end < str.length()) {
-            for (int i = end; i >= start; --i) {
-                if (isNewLine(str.charAt(i))) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
+    
     /**
      * Returns all lines within str that contains the regex string pattern
      * matched by regxMatcher.
@@ -226,29 +152,29 @@ public class GrepApplication implements Grep {
      */
     private void findAllRegex(StringBuilder str, Matcher regxMatcher, String prefixStr, StringBuilder output) {
 
-        int prevStart = -1;
-        int prevEnd = -1;
+        int prevStart = -NEW_LINE_LENGTH;
+        int prevEnd = -NEW_LINE_LENGTH;
         int newLineIdx;
 
         while (regxMatcher.find()) {
 
             int start = regxMatcher.start();
             int end = regxMatcher.end();
-
+            
             if (start < 0 || end <= start || (start >= prevStart && end <= prevEnd)) {
                 continue;
             }
 
             int startOfLine = start;
-            newLineIdx = findLastNewLine(str, prevEnd + 1, start - 1);
+            newLineIdx = str.lastIndexOf(Symbol.NEW_LINE_S, start - 1);
             if (newLineIdx > -1) {
-                startOfLine = newLineIdx + 1;
+                startOfLine = newLineIdx + NEW_LINE_LENGTH;
             } else {
-                startOfLine = prevEnd + 1;
+                startOfLine = prevEnd + NEW_LINE_LENGTH;
             }
 
             int endOfLine = end;
-            newLineIdx = findFirstNewLine(str, end, str.length() - 1);
+            newLineIdx = str.indexOf(Symbol.NEW_LINE_S, end);
             if (newLineIdx > -1) {
                 endOfLine = newLineIdx;
             } else {
@@ -257,7 +183,7 @@ public class GrepApplication implements Grep {
 
             output.append(prefixStr);
             output.append(str.substring(startOfLine, endOfLine));
-            output.append('\n');
+            output.append(Symbol.NEW_LINE_S);
 
             prevStart = startOfLine;
             prevEnd = endOfLine;
@@ -301,7 +227,7 @@ public class GrepApplication implements Grep {
 
         Matcher regxMatcher = regxPattern.matcher(content);
         StringBuilder output = new StringBuilder();
-        findAllRegex(content, regxMatcher, "", output);
+        findAllRegex(content, regxMatcher, Symbol.EMPTY_S, output);
 
         return output.toString();
     }

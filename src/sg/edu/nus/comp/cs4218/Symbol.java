@@ -33,6 +33,7 @@ public final class Symbol {
     public static final String PATH_SEPARATOR_S = File.separator;
     public static final String CURRENT_DIR_S = ".";
     public static final String PREV_DIR_S = "..";
+    public static final String EMPTY_S = "";
     
     public static final String REGEX_WINDOWS_PATH_SEPARATOR = "/|\\\\";
     public static final String REGEX_NON_WINDOWS_PATH_SEPARATOR = "/";
