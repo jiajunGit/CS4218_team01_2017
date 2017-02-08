@@ -91,7 +91,7 @@ public class CatApplicationTest {
 	
 	@Test
 	public void testValidFilePath () throws CatException {
-		String[] input ={"/Users/Leon/Documents/workspace/CS4218_team01_2017/txt/test"};
+		String[] input ={"txt/test"};
 		cat.run(input, System.in, System.out);
 		assertEquals("a simple test", outContent.toString());
 	}

@@ -97,7 +97,9 @@ public class CalApplication implements Cal{
 		for (int i = offset ; i <= 7; i++){
 			calendar.append(day);
 			calendar.append(EMPTY_SPACE);
-			calendar.append(EMPTY_SPACE);
+			if (i != 7){
+				calendar.append(EMPTY_SPACE);	
+			}
 			day++;
 		}
 		calendar.append(System.lineSeparator());
@@ -107,19 +109,26 @@ public class CalApplication implements Cal{
 			if (day < 10){
 				calendar.append(EMPTY_SPACE);
 			}
-			calendar.append(EMPTY_SPACE);
 			day++;
 			counter++;
 			if (counter == 7){
 				counter = 0;
 				calendar.append(System.lineSeparator());
 			}
+			else{
+				calendar.append(EMPTY_SPACE);
+			}
 		}
 		
 		if (counter != 0){
 			offset = 7 - counter;
 			for ( int i = 0; i < offset; i++){
-				calendar.append(EMPTY_CELL);
+				if ((i+1) == offset){
+					calendar.append(EMPTY_BORDER);
+				}
+				else{
+					calendar.append(EMPTY_CELL);	
+				}
 			}
 		}
 		
