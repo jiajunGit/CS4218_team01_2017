@@ -6,7 +6,17 @@ import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 public interface Shell {
-	
+    
+    public static final String EXP_INVALID_APP = "Invalid app.";
+    public static final String EXP_SYNTAX = "Invalid syntax encountered.";
+    public static final String EXP_REDIR_PIPE = "File output redirection and pipe operator cannot be used side by side.";
+    public static final String EXP_MULTI_STDIN = "Multiple input streams.";
+    public static final String EXP_SAME_REDIR = "Input redirection file same as output redirection file.";
+    public static final String EXP_STDOUT = "Error writing to stdout.";
+    public static final String EXP_STDIN = "Error writing to stdin.";
+    public static final String EXP_NOT_SUPPORTED = " not supported yet";
+    public static final String EXP_INTERNAL = "Internal Error occurred";
+    
 	/**
 	 * Parses and evaluates user's command line.
 	 */	
