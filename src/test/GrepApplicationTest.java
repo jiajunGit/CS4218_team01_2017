@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 
@@ -30,7 +31,10 @@ public class GrepApplicationTest {
 		GrepApplication grepApp = new GrepApplication();
 		
 		String pattern = "";
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
+		                + Symbol.TAB + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S 
+		                + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		grepApp.grepFromStdin( pattern, is );
@@ -41,7 +45,10 @@ public class GrepApplicationTest {
 		
 		GrepApplication grepApp = new GrepApplication();
 		
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
+		                + Symbol.TAB + Symbol.NEW_LINE_S + "      somme" 
+		                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		grepApp.grepFromStdin( null, is );
@@ -79,12 +86,16 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" + Symbol.TAB 
+		                + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S 
+		                + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		String output = grepApp.grepFromStdin( pattern, is );
 		
-		assertEquals( output, "some day\n    somsome some\t\nseom  some\n" );
+		assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some" 
+		              + Symbol.TAB + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S );
 	}
 	
 	@Test
@@ -94,12 +105,16 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String content = "\n  some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = Symbol.NEW_LINE_S + "  some day" + Symbol.NEW_LINE_S + "    somsome some" 
+		                + Symbol.TAB + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S 
+		                + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		String output = grepApp.grepFromStdin( pattern, is );
 		
-		assertEquals( output, "  some day\n    somsome some\t\nseom  some\n" );
+		assertEquals( output, "  some day" + Symbol.NEW_LINE_S + "    somsome some" + Symbol.TAB 
+		              + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S );
 	}
 	
 	@Test
@@ -109,12 +124,16 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String content = " \n  some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = " " + Symbol.NEW_LINE_S + "  some day" + Symbol.NEW_LINE_S + "    somsome some\t" 
+		                     + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S 
+		                     + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		String output = grepApp.grepFromStdin( pattern, is );
 		
-		assertEquals( output, "  some day\n    somsome some\t\nseom  some\n" );
+		assertEquals( output, "  some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		              + "seom  some" + Symbol.NEW_LINE_S );
 	}
 	
 	@Test
@@ -124,12 +143,15 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String content = "   some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "   some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		String output = grepApp.grepFromStdin( pattern, is );
 		
-		assertEquals( output, "   some day\n    somsome some\t\nseom  some\n" );
+		assertEquals( output, "   some day" + Symbol.NEW_LINE_S + "    somsome some\t" 
+		              + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S );
 	}
 	
 	@Test
@@ -139,12 +161,15 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String content = "   some day\n    somsome some\t\n      somme\n\nseom  some  \t";
+		String content = "   some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some  \t";
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		String output = grepApp.grepFromStdin( pattern, is );
 		
-		assertEquals( output, "   some day\n    somsome some\t\nseom  some  \t\n" );
+		assertEquals( output, "   some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		              + "seom  some  \t" + Symbol.NEW_LINE_S );
 	}
 	
 	@Test(expected=GrepException.class)
@@ -154,7 +179,9 @@ public class GrepApplicationTest {
 		
 		String pattern = "*?some?";
 		
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                  + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+		
 		InputStream is = new ByteArrayInputStream( content.getBytes() );
 		
 		grepApp.grepFromStdin( pattern, is );
@@ -166,7 +193,8 @@ public class GrepApplicationTest {
 		GrepApplication grepApp = new GrepApplication();
 		
 		String pattern = "some";
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+		                 + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
 		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 		
@@ -187,7 +215,8 @@ public class GrepApplicationTest {
 		
 		GrepApplication grepApp = new GrepApplication();
 		
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
 		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -205,7 +234,8 @@ public class GrepApplicationTest {
         
         GrepApplication grepApp = new GrepApplication();
         
-        String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                          + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
         File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -247,7 +277,8 @@ public class GrepApplicationTest {
 		GrepApplication grepApp = new GrepApplication();
 		
 		String pattern = "some";
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
 		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -259,7 +290,8 @@ public class GrepApplicationTest {
 		
 		String output = grepApp.grepFromOneFile( pattern, tempFile.getAbsolutePath() );
 		
-		assertEquals( output, "some day\n    somsome some\t\nseom  some\n" );
+		assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+		              + Symbol.NEW_LINE_S );
 	}
 	
 	@Test(expected=GrepException.class)
@@ -267,7 +299,8 @@ public class GrepApplicationTest {
 		
 		GrepApplication grepApp = new GrepApplication();
 		
-		String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
 		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
@@ -287,7 +320,8 @@ public class GrepApplicationTest {
 	    
 	    GrepApplication grepApp = new GrepApplication();
         
-        String content = "some day\n    somsome some\t\n      somme\n\nseom  some\n";
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                         + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
         File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
 
