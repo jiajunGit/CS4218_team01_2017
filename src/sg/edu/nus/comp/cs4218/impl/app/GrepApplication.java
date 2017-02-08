@@ -154,6 +154,8 @@ public class GrepApplication implements Grep {
 
         int prevStart = -NEW_LINE_LENGTH;
         int prevEnd = -NEW_LINE_LENGTH;
+        int startOfLine;
+        int endOfLine;
         int newLineIdx;
 
         while (regxMatcher.find()) {
@@ -165,7 +167,6 @@ public class GrepApplication implements Grep {
                 continue;
             }
 
-            int startOfLine = start;
             newLineIdx = str.lastIndexOf(Symbol.NEW_LINE_S, start - 1);
             if (newLineIdx > -1) {
                 startOfLine = newLineIdx + NEW_LINE_LENGTH;
@@ -173,7 +174,6 @@ public class GrepApplication implements Grep {
                 startOfLine = prevEnd + NEW_LINE_LENGTH;
             }
 
-            int endOfLine = end;
             newLineIdx = str.indexOf(Symbol.NEW_LINE_S, end);
             if (newLineIdx > -1) {
                 endOfLine = newLineIdx;
