@@ -10,6 +10,7 @@ import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.app.Cal;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CalException;
+import sg.edu.nus.comp.cs4218.exception.EchoException;
 
 /**
  * The cal command prints the calendar of the month or year if it is specified, else
@@ -28,6 +29,18 @@ import sg.edu.nus.comp.cs4218.exception.CalException;
  * </p>
  */
 public class CalApplication implements Cal{
+	/**
+	 * Runs the cal application with the specified arguments.
+	 * 
+	 * @param args
+	 *            Array of arguments for the application.
+	 * @param stdin
+	 *            An InputStream, not used.
+	 * @param stdout
+	 *            An OutputStream. Calendar of the specified options will be output
+	 * @throws CalException
+	 *             If a Cal exception occurs.
+	 */
 	
 	private static final String CAL_COMMAND = "cal";
 	private static final int ROW_LENGTH = 20;
