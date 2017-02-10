@@ -77,6 +77,7 @@ public class SortApplication implements Sort {
 			writeToFile(arrayToString(), args[1]);
 		}
 		
+		
 		try {
 			stdout.write(arrayToString().getBytes());
 			stdout.flush();
@@ -247,8 +248,7 @@ public class SortApplication implements Sort {
 	
 	private void load(String fileName) throws SortException {
 		File workingFile = new File(fileName);
-		Vector<String> linesVector; 
-		System.out.println(fileName);
+		Vector<String> linesVector;
 		
 		if (workingFile.exists()) {
 			try {
@@ -311,8 +311,19 @@ public class SortApplication implements Sort {
 	}
 	
 	private int compareStrings(String a, String b) throws AbstractApplicationException{
-		if(isNullOrEmpty(a) || isNullOrEmpty(b)){
+		if(a == null || b == null){
 			throw new SortException(ERROR_EXP_NULL_STRING);
+		}
+		
+		if(a.isEmpty() || b.isEmpty()){
+			if(!b.isEmpty()){
+				return SECOND_STRING_GREATER;
+			}else if(!a.isEmpty()){
+				return FIRST_STRING_GREATER;
+			}else{
+				return BOTH_STRING_EQUAL;
+			}
+				
 		}
 		
 		int result = BOTH_STRING_EQUAL;
