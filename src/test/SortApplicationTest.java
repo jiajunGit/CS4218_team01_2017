@@ -2,8 +2,10 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +16,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 
 public class SortApplicationTest {
@@ -21,7 +24,7 @@ public class SortApplicationTest {
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "sort"
 			+ PATH_SEPARATOR;
-	
+	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 	
 	@BeforeClass
 	public static void setUpOnce(){
@@ -91,4 +94,41 @@ public class SortApplicationTest {
 		assertEquals("simple sort", "\"" + LINE_SEPARATOR + "\'" + LINE_SEPARATOR + "*" + LINE_SEPARATOR + ";" + LINE_SEPARATOR + "<" + LINE_SEPARATOR + ">" + LINE_SEPARATOR + "`" + LINE_SEPARATOR + "|", sort.sortSimpleNumbers("sort "+file));
 	}
 
+	@Test
+	public void testRunSortStartLineNumberNoOpt() throws AbstractApplicationException{
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunNoOption" ;
+		String[] args = {file};
+		System.setOut(new PrintStream(out));
+		
+		sort.run(args, System.in, System.out);
+		
+		try {
+			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunNoOption")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		assertEquals(expectedOutput, out.toString());
+	}
+	
+	@Test
+	public void testRunSortStartLineNumberWithOpt() throws AbstractApplicationException{
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunOption";
+		String[] args = {"-n", file};
+		System.setOut(new PrintStream(out));
+		
+		sort.run(args, System.in, System.out);
+		
+		try {
+			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunOption")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		assertEquals(expectedOutput, out.toString());
+	}
 }
