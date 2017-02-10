@@ -29,8 +29,6 @@ public class CdApplication implements Application {
 	private static final String ERROR_EXP_DIRECTORY_UNSPECIFIED = "No relative directory specified";
 	private static final String ERROR_EXP_ONE_ARG = "Only 1 argument is expected";
 	private static final String ERROR_EXP_DIRECTORY_DOES_NOT_EXIST = "Directory does not exist";
-	private static final String ONE_BACK_DIR = "..";
-	private static final String ONE_MORE_BACK_DIR = ".." + System.getProperty("path.separator");
 	
 	/**
 	 * Runs the cd application with the specified arguments.
@@ -64,15 +62,6 @@ public class CdApplication implements Application {
 		
 		changeDirectory(args[0]);
 		
-//		String changedDirectory = Environment.currentDirectory + System.getProperty("path.separator") + args[0];
-//		
-//		File f = new File(changedDirectory);
-//		if (f.exists() && f.isDirectory()){
-//			Environment.currentDirectory = Environment.currentDirectory + System.getProperty("path.separator") + args[0];
-//		}
-//		else{
-//			throw new CdException(ERROR_EXP_DIRECTORY_DOES_NOT_EXIST);
-//		}
 	}
 
 	
@@ -82,10 +71,8 @@ public class CdApplication implements Application {
 	private void changeDirectory(String arg) throws CdException{
 		boolean isDir = false;
 		File changeDirectory = new File(Environment.currentDirectory + File.separator +  arg);
-		System.out.println(Environment.currentDirectory + File.separator +  arg);
 		try {
 			changeDirectory = changeDirectory.getCanonicalFile();
-			System.out.println(changeDirectory);
 		} catch (IOException e) {
 			isDir = false;
 		}

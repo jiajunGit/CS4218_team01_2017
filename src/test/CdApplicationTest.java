@@ -12,6 +12,8 @@ import sg.edu.nus.comp.cs4218.exception.CdException;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,17 +22,21 @@ public class CdApplicationTest {
 
 	private InputStream input;
 	private OutputStream output;
-	private static CdApplication cdApp;
+	private CdApplication cdApp;
+	private static String revertDir = Environment.currentDirectory;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public void setUpBeforeTest() throws Exception {
 		cdApp = new CdApplication();
+	}
+	
+	@After
+	public void tearDownAfterTest(){
+		Environment.currentDirectory = revertDir;
 	}
 
 	@Test(expected = CdException.class)
 	public void testCdNullArgumentsException() throws CdException {
-		// CdApplication cdApp = new CdApplication();
-
 		cdApp.run(null, input, output);
 	}
 
@@ -50,7 +56,6 @@ public class CdApplicationTest {
 
 	@Test(expected = CdException.class)
 	public void testDirectoryDoesNotExistException() throws CdException {
-		cdApp = new CdApplication();
 		String[] args = { "./directoryDoesNotExist" };
 
 		cdApp.run(args, input, output);
@@ -58,7 +63,6 @@ public class CdApplicationTest {
 
 	@Test
 	public void testCdDirectoryExist() throws CdException {
-		cdApp = new CdApplication();
 		String previousPath = Environment.currentDirectory + File.separator + "randomDirectory";
 		File testFile = new File(previousPath);
 		testFile.mkdir();
@@ -73,7 +77,6 @@ public class CdApplicationTest {
 	
 	@Test
 	public void testCdDirectoryRelLocal() throws CdException {
-		cdApp = new CdApplication();
 		String previousPath = Environment.currentDirectory + File.separator + "randomDirectory";
 		File testFile = new File(previousPath);
 		testFile.mkdir();
@@ -86,13 +89,28 @@ public class CdApplicationTest {
 		testFile.delete();
 	}
 	
+	//Assume that previous directory exists
 	@Test
-	public void testCdDirectoryManyRelative() throws CdException {
-		cdApp = new CdApplication();
+	public void testCdDirectoryRelBack() throws CdException {
+		String previousPath = Environment.currentDirectory;
+		File testFile = new File(previousPath);
+		testFile = new File(testFile.getParent() + File.separator + "randomDirectory" );
+		testFile.mkdir();
+		String[] args = { ".." + File.separator + "randomDirectory" };
+
+		cdApp.run(args, input, output);
+
+		assertEquals(testFile.getAbsolutePath(), Environment.currentDirectory);
+
+		testFile.delete();
+	}
+	
+	@Test
+	public void testCdDirectoryAbsolute() throws CdException {
 		String previousPath = Environment.currentDirectory + File.separator + "randomDirectory";
 		File testFile = new File(previousPath);
 		testFile.mkdir();
-		String[] args = { "randomDirectory" };
+		String[] args = { previousPath };
 
 		cdApp.run(args, input, output);
 
