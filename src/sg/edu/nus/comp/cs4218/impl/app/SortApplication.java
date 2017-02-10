@@ -1,12 +1,17 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -49,14 +54,27 @@ public class SortApplication implements Sort {
 		
 		if( args.length == 1 && !args[0].equals("-n")){
 			load(args[0]);
+		}else if(args.length == 1 && args[0].equals("-n")){
+			loadFromStdIn(stdin);
 		}else if((args == null || args.length == 0) && stdin !=null){
 			loadFromStdIn(stdin);
+		}else if(args.length == 2){
+			load(args[1]);
 		}
 		
 		sort();
 		
+		if((args.length == 1 && args[0].equals("-n")) 
+				|| (args.length == 2 && args[0].equals("-n"))){
+			sortN();
+		}
+		
 		if(args.length == 1 && !args[0].equals("-n")){
 			writeToFile(arrayToString(), args[0]);
+		}
+		
+		if(args.length == 2){
+			writeToFile(arrayToString(), args[1]);
 		}
 		
 		try {
@@ -64,19 +82,25 @@ public class SortApplication implements Sort {
 			stdout.flush();
 		} catch (IOException e) {
 			throw new SortException(ERROR_IO_WRITING_OUTSTREAM);
-		}
-		
+		}		
 	}
 	
 	private static void writeToFile(String newString, String fileName) throws SortException{
 		FileWriter fw;
 		try {
+			clearFromFile(fileName);
 			fw = new FileWriter(fileName, true);
 			fw.write(newString);
 			fw.close();
 		} catch (IOException e) {
 			throw new SortException(ERROR_IO_WRITING);
 		}
+	}
+	
+	private static void clearFromFile(String fileName) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(new File(fileName));
+		writer.print("");
+		writer.close();
 	}
 	
 	private String arrayToString(){
@@ -93,6 +117,92 @@ public class SortApplication implements Sort {
 	private void sort() throws AbstractApplicationException {
 		tempArr = new String[lines.length];
 		mergeSort(0, lines.length -1);
+	}
+
+	private void sortN() throws AbstractApplicationException{
+		int start = getFirstNumberLine();
+		int end = getLastNumberLine();
+		mergeSortN(start, end);
+	}
+	
+	private int getLastNumberLine() {
+		int found = -1;
+		
+		for (int i = lines.length -1; i >= 0; i--){
+			if(Character.isDigit(lines[i].charAt(0))){
+				found = i;
+				break;
+			}
+		}
+		return found;
+	}
+
+	private int getFirstNumberLine() {
+		int found = -1;
+		
+		for (int i = 0; i < lines.length; i++){
+			if(Character.isDigit(lines[i].charAt(0))){
+				found = i;
+				break;
+			}
+		}
+		return found;
+	}
+
+	private void mergeSortN(int lo, int hi) throws AbstractApplicationException {
+		if (lo < hi) {
+			int mid = lo + (hi - lo)/2;
+			mergeSortN(lo, mid);
+			mergeSortN(mid+1, hi);
+			mergeN(lo, mid, hi);
+		}
+	}
+
+	private void mergeN(int lo, int mid, int hi) throws AbstractApplicationException {
+        for (int i = lo; i <= hi; i++) {
+            tempArr[i] = lines[i];
+        }
+        int i = lo;
+        int j = mid + 1;
+        int k = lo;
+        while (i <= mid && j <= hi) {
+            if (compareNumber(tempArr[i], tempArr[j]) == SECOND_STRING_GREATER ||
+            		compareNumber(tempArr[i], tempArr[j]) == BOTH_STRING_EQUAL) {
+                lines[k] = tempArr[i];
+                i++;
+            } else {
+                lines[k] = tempArr[j];
+                j++;
+            }
+            k++;
+        }
+        while (i <= mid) {
+            lines[k] = tempArr[i];
+            k++;
+            i++;
+        }
+	}	
+	
+	private int compareNumber(String a, String b) throws SortException {
+		if(isNullOrEmpty(a) || isNullOrEmpty(b)){
+			throw new SortException(ERROR_EXP_NULL_STRING);
+		}
+		
+		if (isNumber(a) && isNumber(b)){
+			if(Double.parseDouble(a.split(" ")[0]) > Double.parseDouble(b.split(" ")[0])){
+				return FIRST_STRING_GREATER;
+			}else if (Double.parseDouble(a.split(" ")[0]) < Double.parseDouble(b.split(" ")[0])){
+				return SECOND_STRING_GREATER;
+			}else{
+				return BOTH_STRING_EQUAL;
+			}
+		}else if (isNumber(a)){
+			return SECOND_STRING_GREATER;
+		}else if (isNumber(b)){
+			return FIRST_STRING_GREATER;
+		}
+		
+		return BOTH_STRING_EQUAL;
 	}
 
 	private void mergeSort(int lo, int hi) throws AbstractApplicationException {
@@ -138,6 +248,7 @@ public class SortApplication implements Sort {
 	private void load(String fileName) throws SortException {
 		File workingFile = new File(fileName);
 		Vector<String> linesVector; 
+		System.out.println(fileName);
 		
 		if (workingFile.exists()) {
 			try {
@@ -190,8 +301,13 @@ public class SortApplication implements Sort {
 		return false;
 	}
 	
-	private boolean isNumber(){
-		return false;
+	private boolean isNumber(String a){
+        try {
+            Double.parseDouble(a.split(" ")[0]);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
 	}
 	
 	private int compareStrings(String a, String b) throws AbstractApplicationException{
@@ -220,10 +336,11 @@ public class SortApplication implements Sort {
 	
 	private int compareChars(char a, char b){
 		int result = 0;
+		double res = 1;
 		if (isSpecialChar(a) || isSpecialChar(b)){
 			if(!isSpecialChar(b)){
 				return SECOND_STRING_GREATER;
-			}else if(!isSpecialChar(b)){
+			}else if(!isSpecialChar(a)){
 				return FIRST_STRING_GREATER;
 			}else if (a == b){
 				return BOTH_STRING_EQUAL;
@@ -253,9 +370,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortStringsSimple(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -264,9 +382,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortStringsCapital(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -275,9 +394,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortNumbers(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -286,9 +406,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -297,9 +418,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleCapital(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -308,9 +430,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleNumbers(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -319,9 +442,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -330,9 +454,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortCapitalNumbers(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -341,9 +466,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortCapitalSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -352,9 +478,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortNumbersSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -363,9 +490,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleCapitalNumber(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -374,9 +502,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleCapitalSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -385,9 +514,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortSimpleNumbersSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -396,9 +526,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortCapitalNumbersSpecialChars(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
@@ -407,9 +538,10 @@ public class SortApplication implements Sort {
 
 	@Override
 	public String sortAll(String toSort) {
-		lines = toSort.split("[" + System.getProperty("line.separator") + "]");
+		String[] split = toSort.split(" ");
+		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			sort();
+			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 		}
