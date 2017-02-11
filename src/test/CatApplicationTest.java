@@ -13,13 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.CatException;
-import sg.edu.nus.comp.cs4218.exception.EchoException;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 
-/**
- * @author Leon
- *
- */
 public class CatApplicationTest {
 
 	private static CatApplication cat;

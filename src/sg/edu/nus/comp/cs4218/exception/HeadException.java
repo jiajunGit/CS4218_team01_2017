@@ -8,6 +8,6 @@ public class HeadException extends AbstractApplicationException {
 	private static final long serialVersionUID = -3608957686975123140L;
 
 	public HeadException(String message) {
-		super("sort:" + message);
+		super("head:" + message);
 	}
 }
