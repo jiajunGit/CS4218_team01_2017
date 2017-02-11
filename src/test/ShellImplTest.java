@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -12,6 +13,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class ShellImplTest {
@@ -20,12 +23,12 @@ public class ShellImplTest {
 	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "IOredirect"
 			+ PATH_SEPARATOR;
 	final static String RELATIVE_TEST_SHELL_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR;
-	private ShellImp shell = new ShellImp();
+	private ShellImpl shell = new ShellImpl();
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	
 	@Before
 	public void setUpBeforeTest(){
-		shell = new ShellImp();
+		shell = new ShellImpl();
 		System.setOut(new PrintStream(outContent));
 	}
 	
@@ -107,12 +110,47 @@ public class ShellImplTest {
     }
     
     @Test
-    public void testCall() throws AbstractApplicationException, ShellException {
-    	shell.parseAndEvaluate("pwd", System.out);
-    	String expectedOut = System.getProperty("user.dir");
+    public void testCallArg1() throws AbstractApplicationException, ShellException {
+    	shell.parseAndEvaluate("echo 'black cat'", System.out);
+    	String expectedOut = "black cat" + LINE_SEPARATOR;
     	
     	assertEquals(expectedOut, outContent.toString());
     }
     
+    @Test
+    public void testCall() throws AbstractApplicationException, ShellException {
+    	shell.parseAndEvaluate("pwd", System.out);
+    	String expectedOut = System.getProperty("user.dir") + LINE_SEPARATOR;
+    	
+    	assertEquals(expectedOut, outContent.toString());
+    }
     
+    @Test
+    public void testCallOption() throws AbstractApplicationException, ShellException {
+    	String expectedOut = "";
+    	shell.parseAndEvaluate("cal -m", System.out);
+    	
+    	try {
+			expectedOut = new String(Files.readAllBytes(Paths.get("src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR + "currentMonthMonday")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+    	
+    	assertEquals(expectedOut, outContent.toString());
+    }
+    
+    @Test
+    public void testCallOptArg() throws AbstractApplicationException, ShellException {
+    	String expectedOut = "";
+    	
+    	shell.parseAndEvaluate("head -n 6 " + RELATIVE_TEST_SHELL_DIRECTORY + "input" + PATH_SEPARATOR + "testCallOptArg", System.out);
+    	
+    	try {
+			expectedOut = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_SHELL_DIRECTORY + PATH_SEPARATOR + "output" + PATH_SEPARATOR + "testCallOptArg")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+    	
+    	assertEquals(expectedOut, outContent.toString());
+    }
 }
