@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.app.Cal;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CalException;
+import sg.edu.nus.comp.cs4218.exception.EchoException;
 
 /**
  * The cal command prints the calendar of the month or year if it is specified, else
@@ -27,15 +29,29 @@ import sg.edu.nus.comp.cs4218.exception.CalException;
  * </p>
  */
 public class CalApplication implements Cal{
+	/**
+	 * Runs the cal application with the specified arguments.
+	 * 
+	 * @param args
+	 *            Array of arguments for the application.
+	 * @param stdin
+	 *            An InputStream, not used.
+	 * @param stdout
+	 *            An OutputStream. Calendar of the specified options will be output
+	 * @throws CalException
+	 *             If a Cal exception occurs.
+	 */
 	
 	private static final String CAL_COMMAND = "cal";
 	private static final int ROW_LENGTH = 20;
-	private static final int MAXIMUM_SUPPORTED_YEAR = 999999999;
-	private static final int MINIMUM_SUPPORTED_YEAR = -999999999;
+	private static final int MAXIMUM_SUPPORTED_YEAR = 9999;
+	private static final int MINIMUM_SUPPORTED_YEAR = 1;
 	private static final String[] MONTH_NAME = {"January","February","March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	private static final String EMPTY_SPACE = " ";
 	private static final String EMPTY_BORDER = "  ";
 	private static final String EMPTY_CELL = "   ";
+	private static final String INVALID_ARG = "Invalid argument detected";
+	private static final String MONDAY_OPT = "-m";
 	private static final int MONTH_OFFSET = 1;
 	private static final int YEAR_WIDTH = 64;
 	
@@ -44,14 +60,126 @@ public class CalApplication implements Cal{
 
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CalException {
+		String outputString = "";
+		String cmd = "";
+		boolean validArg;
+		
 		if (args.length ==  0){
-			printCal(CAL_COMMAND);
+			// cal
+			cmd = CAL_COMMAND;
+			outputString = printCal(cmd);
+		}
+		else if (args.length == 1){
+			if (args[0] == MONDAY_OPT){
+				//cal -m
+				cmd = CAL_COMMAND + " " + "-m";
+				outputString = printCalWithMondayFirst(cmd);
+			}
+			else {
+				// cal year
+				validArg = checkYearInput(args[0]);
+				if (!validArg){
+					throw new CalException(INVALID_ARG);
+				}
+				else{
+					cmd = CAL_COMMAND + " " + args[0];
+					outputString = printCalForYear(cmd);
+				}
+			}
+		}
+		else if (args.length == 2){
+			if (args[0] == MONDAY_OPT){
+				// cal -m year
+				validArg = checkYearInput(args[1]);
+				if (!validArg){
+					throw new CalException(INVALID_ARG);
+				}
+				else{
+					cmd = CAL_COMMAND + " " + MONDAY_OPT + " " + args[1];
+					outputString = printCalForYearMondayFirst(cmd);
+				}
+			}
+			else{
+				// cal month year
+				validArg = checkMonthInput(args[0]);
+				validArg &= checkYearInput(args[1]);
+				if (!validArg){
+					throw new CalException(INVALID_ARG);
+				}
+				else{
+					cmd = CAL_COMMAND + EMPTY_SPACE + args[0] + EMPTY_SPACE + args[1];
+					outputString = printCalForMonthYear(cmd);
+				}
+			}
+		}
+		else if (args.length == 3){
+			if (args[0] == MONDAY_OPT && checkMonthInput(args[1]) && checkYearInput(args[2])){
+				// cal -m month year
+				cmd = CAL_COMMAND + EMPTY_SPACE + args[0] + EMPTY_SPACE + args[1] + EMPTY_SPACE + args[2];
+				
+				outputString = printCalForMonthYearMondayFirst(cmd);
+			}
+			else{
+				throw new CalException(INVALID_ARG);
+			}
+		}
+		else{
+			throw new CalException(INVALID_ARG);
 		}
 		
+		
+		try {
+			stdout.write(outputString.getBytes());
+		} catch (IOException e) {
+			throw new CalException("Unable to write output to stdout");
+		}
+	}
+	
+	/**
+	 * Returns true if month is within [1, 12], false otherwise.
+	 * @param monthStr
+	 */
+	private boolean checkMonthInput(String monthStr) throws CalException{
+		Integer month;
+		
+		try{
+			month = Integer.parseInt(monthStr);
+		}catch (NumberFormatException ex){
+			throw new CalException(INVALID_ARG);
+		}
+		
+		if (month >= 1 ){
+			if (month <= 12){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns true if year is within [1,9999], false otherwise. 
+	 * @param yearStr Specifies the year as a string
+	 */
+	private boolean checkYearInput(String yearStr) throws CalException{
+		Integer year;
+		
+		try{
+			year = Integer.parseInt(yearStr);
+		}catch (NumberFormatException ex){
+			throw new CalException(INVALID_ARG);
+		}
+		if (year <= MAXIMUM_SUPPORTED_YEAR){
+			if (year >= MINIMUM_SUPPORTED_YEAR){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**
-	 * Returns a  the calendar of the current month
+	 * Returns the calendar of the current month
 	 * @param args String array containing command and arguments to print the calendar of the current month
 	 */
 	public String printCal(String args) {
@@ -66,73 +194,6 @@ public class CalApplication implements Cal{
 		calOutput.append(printDaysOfMonth(currMonth, false));
 		
 		return calOutput.toString();
-	}
-
-	
-	/**
-	 * Returns a String for the month
-	 * @param currMonth specifies a LocalDate for the first day of the month 
-	 * @param isMon specifies whether the month calendar starts with Mon
-	 */
-	private String printDaysOfMonth(LocalDate currMonth, boolean isMon) {
-		int day = 1;
-		int counter = 0;
-		int daysInMonth = numberOfDaysInMonth(currMonth.getMonthValue(), currMonth.getYear());
-		int offset = currMonth.getDayOfWeek().getValue();
-		StringBuilder calendar = new StringBuilder();
-		
-		if (!isMon){
-			if (offset == 7){
-				offset = 1;
-			}
-			else{
-				offset++;
-			}
-		}
-		
-		// First week
-		for (int i = 1; i < offset; i++){
-			calendar.append(EMPTY_CELL);
-		}
-		for (int i = offset ; i <= 7; i++){
-			calendar.append(day);
-			calendar.append(EMPTY_SPACE);
-			if (i != 7){
-				calendar.append(EMPTY_SPACE);	
-			}
-			day++;
-		}
-		calendar.append(System.lineSeparator());
-		
-		while (day <= daysInMonth){
-			calendar.append(day);
-			if (day < 10){
-				calendar.append(EMPTY_SPACE);
-			}
-			day++;
-			counter++;
-			if (counter == 7){
-				counter = 0;
-				calendar.append(System.lineSeparator());
-			}
-			else{
-				calendar.append(EMPTY_SPACE);
-			}
-		}
-		
-		if (counter != 0){
-			offset = 7 - counter;
-			for ( int i = 0; i < offset; i++){
-				if ((i+1) == offset){
-					calendar.append(EMPTY_BORDER);
-				}
-				else{
-					calendar.append(EMPTY_CELL);	
-				}
-			}
-		}
-		
-		return calendar.toString();
 	}
 
 	/**
@@ -363,6 +424,72 @@ public class CalApplication implements Cal{
 	}
 	
 	/**
+	 * Returns a String for the month
+	 * @param currMonth specifies a LocalDate for the first day of the month 
+	 * @param isMon specifies whether the month calendar starts with Mon
+	 */
+	private String printDaysOfMonth(LocalDate currMonth, boolean isMon) {
+		int day = 1;
+		int counter = 0;
+		int daysInMonth = numberOfDaysInMonth(currMonth.getMonthValue(), currMonth.getYear());
+		int offset = currMonth.getDayOfWeek().getValue();
+		StringBuilder calendar = new StringBuilder();
+		
+		if (!isMon){
+			if (offset == 7){
+				offset = 1;
+			}
+			else{
+				offset++;
+			}
+		}
+		
+		// First week
+		for (int i = 1; i < offset; i++){
+			calendar.append(EMPTY_CELL);
+		}
+		for (int i = offset ; i <= 7; i++){
+			calendar.append(day);
+			calendar.append(EMPTY_SPACE);
+			if (i != 7){
+				calendar.append(EMPTY_SPACE);	
+			}
+			day++;
+		}
+		calendar.append(System.lineSeparator());
+		
+		while (day <= daysInMonth){
+			calendar.append(day);
+			if (day < 10){
+				calendar.append(EMPTY_SPACE);
+			}
+			day++;
+			counter++;
+			if (counter == 7){
+				counter = 0;
+				calendar.append(System.lineSeparator());
+			}
+			else{
+				calendar.append(EMPTY_SPACE);
+			}
+		}
+		
+		if (counter != 0){
+			offset = 7 - counter;
+			for ( int i = 0; i < offset; i++){
+				if ((i+1) == offset){
+					calendar.append(EMPTY_BORDER);
+				}
+				else{
+					calendar.append(EMPTY_CELL);	
+				}
+			}
+		}
+		
+		return calendar.toString();
+	}
+	
+	/**
 	 * Returns a String array containing cal as first string and 
 	 * @param args
 	 */
@@ -494,9 +621,6 @@ public class CalApplication implements Cal{
 	 * @param year specifies the year
 	 */
 	private String printMonthYear(int month, int year){
-//		if (year > MAXIMUM_SUPPORTED_YEAR || year < MINIMUM_SUPPORTED_YEAR){
-//			throws new CalException("Year given is out of range");
-//		}
 		StringBuilder monthYear = new StringBuilder();
 		monthYear.append(MONTH_NAME[(month - MONTH_OFFSET)]);
 		monthYear.append(EMPTY_SPACE);

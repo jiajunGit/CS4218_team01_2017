@@ -1,8 +1,10 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
 import sg.edu.nus.comp.cs4218.Application;
@@ -58,22 +60,49 @@ public class CdApplication implements Application {
 			throw new CdException(ERROR_EXP_ONE_ARG);
 		}
 		
-		String changedDirectory = Environment.currentDirectory + System.getProperty("path.separator") + args[0];
+		changeDirectory(args[0]);
 		
-		File f = new File(changedDirectory);
-		if (f.exists() && f.isDirectory()){
-			Environment.currentDirectory = Environment.currentDirectory + System.getProperty("path.separator") + args[0];
+	}
+
+	
+	/**
+	 * @param arg specifies the directory to change to
+	 */
+	private void changeDirectory(String arg) throws CdException{
+		boolean isDir = false;
+		File changeDirectory = new File(Environment.currentDirectory + File.separator +  arg);
+		try {
+			changeDirectory = changeDirectory.getCanonicalFile();
+		} catch (IOException e) {
+			isDir = false;
+		}
+		
+		if (changeDirectory.isDirectory()){
+			Environment.currentDirectory = changeDirectory.getAbsolutePath();
+			isDir = true;
+			return;
 		}
 		else{
+			changeDirectory = new File(arg);
+			try {
+				changeDirectory = changeDirectory.getCanonicalFile();
+			} catch (IOException e) {
+				isDir = false;
+			}
+			if (changeDirectory.isDirectory()){
+				Environment.currentDirectory = changeDirectory.getAbsolutePath();
+				isDir = true;
+				return;
+			}
+		}
+		
+		if (!isDir){
 			throw new CdException(ERROR_EXP_DIRECTORY_DOES_NOT_EXIST);
 		}
 	}
-
+	
 	/**
-	 * Checks if the current directory referenced by this application is valid or not.
-	 * 
-	 * @return
-	 * 		A boolean value indicating if the current directory referenced by this application is valid or not.
+	 * Returns true if Environment.currentDirectory is valid, false, otherwise 
 	 */
 	private boolean isCurrentDirectoryValid() {
 		File dir = new File(Environment.currentDirectory);
