@@ -142,7 +142,7 @@ public class SortApplication implements Sort {
 		int found = -1;
 		
 		for (int i = 0; i < lines.length; i++){
-			if(Character.isDigit(lines[i].charAt(0))){
+			if(!lines[i].isEmpty() && Character.isDigit(lines[i].charAt(0))){
 				found = i;
 				break;
 			}
