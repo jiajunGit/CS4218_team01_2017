@@ -6,7 +6,7 @@ public class Shell {
         
         try {
             
-            ShellImp shell = new ShellImp();
+            ShellImpl shell = new ShellImpl();
             String readLine = " echo 'hi'";
             shell.parseAndEvaluate(readLine, System.out);
             

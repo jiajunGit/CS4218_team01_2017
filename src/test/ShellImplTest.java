@@ -4,16 +4,13 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.ShellException;
-import sg.edu.nus.comp.cs4218.impl.ShellImp;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class ShellImplTest {
 	final static String PATH_SEPARATOR = File.separator;
@@ -23,7 +20,7 @@ public class ShellImplTest {
 	
 	@Test
 	public void testRedirectInput(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectInput.txt")));
 			Assert.assertEquals(expectedOutput, shell.redirectInput("cat < " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectInput.txt"));
@@ -34,7 +31,7 @@ public class ShellImplTest {
 	
     @Test
     public void testRedirectOutput(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectOutput.txt")));
@@ -49,28 +46,28 @@ public class ShellImplTest {
 
     @Test
     public void redirectInputWithNoFile(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithNoFile("cat < "));
 		
     }
 
     @Test
     public void redirectOutputWithNoFile(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		
 		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithNoFile("cat > "));
     }
 
     @Test
     public void redirectInputWithException(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		
 		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat < input.txt < input.txt "));
     }
 
     @Test
     public void redirectOutputWithException(){
-		ShellImp shell = new ShellImp();
+		ShellImpl shell = new ShellImpl();
 		
 		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat > input.txt > input.txt "));
     }	
