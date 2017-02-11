@@ -989,10 +989,30 @@ public class ShellImp implements Shell {
        executeCommands(commands, stdout);
     }
     
-    // TODO Need to check with prof about the validity of a command that ends with a consecutive sequence of new lines
+    // TODO Need to check with prof about the validity of a command that ends with a consecutive sequence of new lines at the end
     private boolean hasNewLineViolation(String input) {
-        int index = input.indexOf(Symbol.NEW_LINE_S);
-        return (index >= 0 && index < input.length() - Symbol.NEW_LINE_S.length());
+        
+        int fromIndex = 0;
+        int newLineLength = Symbol.NEW_LINE_S.length();
+        int lastNewLineIndex = -Symbol.NEW_LINE_S.length();
+        
+        while(true) {
+            
+            int currentIndex = input.indexOf(Symbol.NEW_LINE_S, fromIndex);
+            
+            if(currentIndex < 0){
+                break;
+            }
+            
+            if( lastNewLineIndex < 0 || (currentIndex - newLineLength) == lastNewLineIndex ){
+                lastNewLineIndex = currentIndex;
+            } else {
+                return true;
+            }
+            
+            fromIndex = currentIndex + newLineLength;
+        }
+        return (lastNewLineIndex >= 0 && ((input.length() - newLineLength) != lastNewLineIndex));
     }
     
     // This method is for the static method processBQ(). It is NOT used internally.
@@ -1012,11 +1032,23 @@ public class ShellImp implements Shell {
     public void parseAndEvaluate(String cmdline, OutputStream stdout)
             throws AbstractApplicationException, ShellException {
         
-        if(cmdline == null || cmdline.length() <= 0 || hasNewLineViolation(cmdline)){
+        if(cmdline == null){
             throw new ShellException(EXP_SYNTAX);
         }
         if(stdout == null){
             throw new ShellException(EXP_STDOUT);
+        }
+        
+        cmdline = cmdline.trim();
+        
+        if( cmdline.length() <= 0 || hasNewLineViolation(cmdline) ) {
+            throw new ShellException(EXP_SYNTAX);
+        }
+        
+        cmdline = cmdline.replace(Symbol.NEW_LINE_S, Symbol.EMPTY_S);
+        
+        if( cmdline.length() <= 0) {
+            throw new ShellException(EXP_SYNTAX);
         }
         
         StringBuilder cmdSymbols = generateSymbols(cmdline);
