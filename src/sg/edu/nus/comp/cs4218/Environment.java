@@ -2,6 +2,9 @@ package sg.edu.nus.comp.cs4218;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class Environment {
 
@@ -68,20 +71,19 @@ public final class Environment {
             return new String();
         }
 
-        File file = new File(path);
-        if (!isAbsPath(path)) {
-            String oldPath = path;
-            path = currentDirectory;
-            path += Symbol.PATH_SEPARATOR;
-            path += oldPath;
-            file = new File(path);
-        }
-
         String absPath = new String();
-        try {
-            absPath = file.getCanonicalPath();
-        } catch (IOException | SecurityException e) {}
-
+        try{
+            if (!isAbsPath(path)) {
+                String oldPath = path;
+                path = currentDirectory;
+                path += Symbol.PATH_SEPARATOR;
+                path += oldPath;
+            }
+            Path filePath = Paths.get(path);
+            absPath = filePath.normalize().toString();
+        } catch( InvalidPathException e ) {
+            return new String();
+        }
         return absPath;
     }
 
