@@ -52,8 +52,38 @@ public class CalApplicationTest {
 	}
 	
 	@Test(expected=CalException.class)
+	public void testInvalidOptionPosition() throws CalException{
+		String[] arg = {"6", "-m", "2017"};
+		System.setOut(new PrintStream(out));
+		
+		CalApplication cal = new CalApplication();
+		
+		cal.run(arg, System.in, System.out);
+	}
+	
+	@Test(expected=CalException.class)
 	public void testInvalidArgumentsException() throws CalException{
 		String[] arg = {"-mlw"};
+		System.setOut(new PrintStream(out));
+		
+		CalApplication cal = new CalApplication();
+		
+		cal.run(arg, System.in, System.out);
+	}
+	
+	@Test(expected=CalException.class)
+	public void testMonthOutOfBound() throws CalException{
+		String[] arg = {"13", "2017"};
+		System.setOut(new PrintStream(out));
+		
+		CalApplication cal = new CalApplication();
+		
+		cal.run(arg, System.in, System.out);
+	}
+	
+	@Test(expected=CalException.class)
+	public void testYearOutOfBound() throws CalException{
+		String[] arg = {"12", "0"};
 		System.setOut(new PrintStream(out));
 		
 		CalApplication cal = new CalApplication();
@@ -134,6 +164,24 @@ public class CalApplicationTest {
 	}
 	
 	@Test
+	public void testRunPrintCalMonthYearMondayAlt() throws CalException {
+		String[] arg = {"2", "2000", "-m"};
+		String expectedCalendar = "";
+		System.setOut(new PrintStream(out));
+		CalApplication cal = new CalApplication();
+		
+		try {
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "MonthYearMondayLeapYear")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		cal.run(arg, System.in, System.out);
+		
+		assertEquals(expectedCalendar, out.toString());
+	}
+	
+	@Test
 	public void testRunPrintCalYear() throws CalException {
 		String[] arg = {"1900"};
 		String expectedCalendar = "";
@@ -154,6 +202,24 @@ public class CalApplicationTest {
 	@Test
 	public void testRunPrintCalYearMonday() throws CalException {
 		String[] arg = {"-m", "2017"};
+		String expectedCalendar = "";
+		System.setOut(new PrintStream(out));
+		CalApplication cal = new CalApplication();
+		
+		try {
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year2017Monday")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		cal.run(arg, System.in, System.out);
+		
+		assertEquals(expectedCalendar, out.toString());
+	}
+	
+	@Test
+	public void testRunPrintCalYearMondayAlt() throws CalException {
+		String[] arg = {"2017", "-m"};
 		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();

@@ -70,7 +70,7 @@ public class CalApplication implements Cal{
 			outputString = printCal(cmd);
 		}
 		else if (args.length == 1){
-			if (args[0] == MONDAY_OPT){
+			if (args[0].equals( MONDAY_OPT)){
 				//cal -m
 				cmd = CAL_COMMAND + " " + "-m";
 				outputString = printCalWithMondayFirst(cmd);
@@ -88,7 +88,7 @@ public class CalApplication implements Cal{
 			}
 		}
 		else if (args.length == 2){
-			if (args[0] == MONDAY_OPT){
+			if (args[0].equals(MONDAY_OPT)){
 				// cal -m year
 				validArg = checkYearInput(args[1]);
 				if (!validArg){
@@ -96,6 +96,17 @@ public class CalApplication implements Cal{
 				}
 				else{
 					cmd = CAL_COMMAND + " " + MONDAY_OPT + " " + args[1];
+					outputString = printCalForYearMondayFirst(cmd);
+				}
+			}
+			else if (args[1].equals(MONDAY_OPT)){
+				//cal year -m
+				validArg = checkYearInput(args[0]);
+				if (!validArg){
+					throw new CalException(INVALID_ARG);
+				}
+				else{
+					cmd = CAL_COMMAND + " " + MONDAY_OPT + " " + args[0];
 					outputString = printCalForYearMondayFirst(cmd);
 				}
 			}
@@ -113,9 +124,14 @@ public class CalApplication implements Cal{
 			}
 		}
 		else if (args.length == 3){
-			if (args[0] == MONDAY_OPT && checkMonthInput(args[1]) && checkYearInput(args[2])){
+			if (args[0].equals(MONDAY_OPT) && checkMonthInput(args[1]) && checkYearInput(args[2])){
 				// cal -m month year
 				cmd = CAL_COMMAND + EMPTY_SPACE + args[0] + EMPTY_SPACE + args[1] + EMPTY_SPACE + args[2];
+				
+				outputString = printCalForMonthYearMondayFirst(cmd);
+			}
+			else if (args[2].equals(MONDAY_OPT) && checkMonthInput(args[0]) && checkYearInput(args[1])){
+				cmd = CAL_COMMAND + EMPTY_SPACE + args[2] + EMPTY_SPACE + args[0] + EMPTY_SPACE + args[1];
 				
 				outputString = printCalForMonthYearMondayFirst(cmd);
 			}
@@ -280,7 +296,6 @@ public class CalApplication implements Cal{
 		LocalDate currMonth;
 		StringBuilder calOutput = new StringBuilder();
 		String[] argsArr = parseArgs(args);
-		
 		currMonth = LocalDate.of(Integer.parseInt(argsArr[3]), Integer.parseInt(argsArr[2]), 1);
 		
 		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
