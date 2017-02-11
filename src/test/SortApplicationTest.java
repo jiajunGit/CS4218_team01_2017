@@ -42,7 +42,7 @@ public class SortApplicationTest {
 	
 	private static void copyInputToTestFolder() throws IOException {
 		File folder = new File(RELATIVE_TEST_DIRECTORY + "input");
-		System.out.println(folder.getAbsolutePath());
+//		System.out.println(folder.getAbsolutePath());
 	    for (final File fileEntry : folder.listFiles()) {
 	    	Path source = Paths.get(fileEntry.getAbsolutePath());
 	    	Path dest = Paths.get(RELATIVE_TEST_DIRECTORY + "toTest" 
