@@ -9,7 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -44,7 +46,8 @@ import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
  */
 
 public class ShellImp implements Shell {
-    
+	private ByteArrayOutputStream out = new ByteArrayOutputStream();
+	
     @Override
     public String pipeTwoCommands(String args) {
         // TODO Auto-generated method stub
@@ -89,38 +92,76 @@ public class ShellImp implements Shell {
 
     @Override
     public String redirectInput(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
     public String redirectOutput(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
     public String redirectInputWithNoFile(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getClass().getName();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
     public String redirectOutputWithNoFile(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getClass().getName();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
     public String redirectInputWithException(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getClass().getName();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
     public String redirectOutputWithException(String args) {
-        // TODO Auto-generated method stub
-        return null;
+		System.setOut(new PrintStream(out));
+		try {
+			this.parseAndEvaluate(args, System.out);
+		} catch (AbstractApplicationException | ShellException e) {
+			return e.getClass().getName();
+		}
+		
+		return out.toString(); 
     }
 
     @Override
