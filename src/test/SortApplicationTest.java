@@ -131,4 +131,23 @@ public class SortApplicationTest {
 		
 		assertEquals(expectedOutput, out.toString());
 	}
+	
+	@Test
+	public void testRunMixed() throws AbstractApplicationException{
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunMixed" ;
+		String[] args = {file};
+		System.setOut(new PrintStream(out));
+		
+		sort.run(args, System.in, System.out);
+		
+		try {
+			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunMixed")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		assertEquals(expectedOutput, out.toString());
+	}
 }
