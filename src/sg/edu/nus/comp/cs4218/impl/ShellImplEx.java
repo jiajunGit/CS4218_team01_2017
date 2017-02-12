@@ -452,7 +452,7 @@ public class ShellImplEx implements Shell {
     
     private Globber globber = new Globber();
     
-    private StringBuilder generateSymbols( String cmdline ) throws ShellException {
+    private static StringBuilder generateSymbols( String cmdline ) throws ShellException {
         
         StringBuilder symbols = new StringBuilder(cmdline.length());
         
@@ -1161,6 +1161,15 @@ public class ShellImplEx implements Shell {
                 throw new ShellException(e.getMessage());
             }
         }
+    }
+    
+    // This method is in the testing of globbing. It is NOT used internally.
+    public static String generateSymbolString( String input ) throws ShellException {
+        if(input == null){
+            return new String();
+        }
+        StringBuilder out = generateSymbols(input);
+        return out.toString();
     }
     
     // This method is for the static method processBQ(). It is NOT used internally.
