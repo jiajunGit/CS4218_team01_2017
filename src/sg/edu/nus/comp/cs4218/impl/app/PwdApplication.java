@@ -43,7 +43,7 @@ public class PwdApplication implements Application {
 		}
 		
 		if( Environment.currentDirectory == null || !isCurrentDirectoryValid() ) {
-			Environment.setDefaultDirectory();  //Should throw an exception if current directory is invalid
+			throw new PwdException(ERROR_EXP_UNKNOWN_DIR);
 		}
 		
 		try {
