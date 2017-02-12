@@ -20,7 +20,7 @@ public class EchoApplicationTest {
 	//Variables for testing
 	private static EchoApplication echo;
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -70,7 +70,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testSingleArgument() throws EchoException {
 		String[] input = {"INPUT"};
-		String expected = "INPUT \n";
+		String expected = "INPUT"+LINE_SEPARATOR;
 		echo.run(input, System.in, System.out );
 		assertEquals(expected, outContent.toString());
 	}
@@ -78,7 +78,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testDoubleArgument() throws EchoException {
 		String[] input = {"INPUT 1"," INPUT2"};
-		String expected = "INPUT 1  INPUT2 \n";
+		String expected = "INPUT 1  INPUT2"+ LINE_SEPARATOR;
 		echo.run(input, System.in, System.out );
 		assertEquals(expected, outContent.toString());
 	}
@@ -86,17 +86,8 @@ public class EchoApplicationTest {
 	@Test
 	public void testEmptyArgument() throws EchoException {
 		String[] input = {""};
-		String expected = " \n";  //not sure if this is the requirement 
+		String expected = LINE_SEPARATOR;  //not sure if this is the requirement 
 		echo.run(input, System.in, System.out );
 		assertEquals(expected, outContent.toString());
 	}
-	/*@Test
-	 *Not sure if should be handled by quoting
-	public void testSingleQuotedArgument() throws EchoException {
-		String[] input = {"'INPUT: should ignore all special characters %^$#@!*&'"};
-		String expected = "INPUT: should ignore all special characters %^$#@!*&\n";
-		echo.run(input, System.in, System.out );
-		assertEquals(expected, outContent.toString());
-	}*/
-
 }

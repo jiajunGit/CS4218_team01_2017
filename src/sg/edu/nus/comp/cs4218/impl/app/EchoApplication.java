@@ -16,7 +16,7 @@ import sg.edu.nus.comp.cs4218.exception.EchoException;
  * </p>
  */
 public class EchoApplication implements Application {
-
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	/**
 	 * Runs the echo application with the specified arguments.
 	 * 
@@ -41,13 +41,15 @@ public class EchoApplication implements Application {
 		}
 		try {
 			if (args.length == 0) {
-				stdout.write("\n\n".getBytes());
+				stdout.write(LINE_SEPARATOR.getBytes());
 			} else {
 				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
-				    stdout.write(" ".getBytes()); //elements gets separated by a spacing
+				    if(i!=args.length-1){
+				    	stdout.write(" ".getBytes());//elements gets separated by a spacing
+				    }
 				}
-				stdout.write("\n".getBytes());
+				stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		} catch (IOException e) {
 			throw new EchoException("IOException");
