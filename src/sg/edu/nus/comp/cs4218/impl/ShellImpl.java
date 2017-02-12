@@ -1054,6 +1054,17 @@ public class ShellImpl implements Shell {
         return (lastNewLineIndex >= 0 && ((input.length() - newLineLength) != lastNewLineIndex));
     }
     
+    private void writeToOut(OutputStream stdout, String content ) throws ShellException {
+        if( stdout != null && content != null ){
+            try {
+                stdout.write(content.getBytes());
+                stdout.flush();
+            } catch (IOException e) {
+                throw new ShellException(e.getMessage());
+            }
+        }
+    }
+    
     // This method is for the static method processBQ(). It is NOT used internally.
     public String processBQ( String input ) throws ShellException, AbstractApplicationException{
         
@@ -1100,5 +1111,9 @@ public class ShellImpl implements Shell {
         List<Segment> segments = split(cmd, cmdSymbols);
         
         evaluate(segments, stdout);
+        
+        writeToOut(stdout, Symbol.NEW_LINE_S);
+        
+        closeOutputStream(stdout);
     }
 }
