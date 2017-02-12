@@ -36,7 +36,7 @@ public class HeadApplication implements Head {
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
 			if( stdout == null ){
-				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM); //need to fix empty stdin
+				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
 			if( stdin == null ){
 				throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
@@ -44,15 +44,17 @@ public class HeadApplication implements Head {
 			int noLines = 10;
 
 			if(args!=null && args.length!=0){
-				if(args.length==1 && !args[0].substring(0, 3).equals("-n "))
+				if(args.length==1 && !args[0].substring(0, 3).equals("-n "))  //load file with no options
 					load(args[0]);
-				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){
+				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){ //load stdin with N lines
+					noLines = Integer.parseInt(args[0].substring(3));
+					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new HeadException(NUMBER_NOT_SPECIFIED);
 					loadFromStdIn(stdin);
-					noLines = Integer.parseInt(args[0].substring(3));
 				}
-				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){
-					load(args[1]);
+				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){ //load file with N lines
 					noLines = Integer.parseInt(args[0].substring(3));
+					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new HeadException(NUMBER_NOT_SPECIFIED);
+					load(args[1]);
 				}
 				else{
 					throw new HeadException(INVALID_FORMAT);
