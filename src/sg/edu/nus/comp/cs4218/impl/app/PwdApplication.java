@@ -41,8 +41,9 @@ public class PwdApplication implements Application {
 		if( stdout == null ){
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
 		}
+		
 		if( Environment.currentDirectory == null || !isCurrentDirectoryValid() ) {
-			Environment.setDefaultDirectory();
+			Environment.setDefaultDirectory();  //Should throw an exception if current directory is invalid
 		}
 		
 		try {
