@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 
@@ -97,17 +96,6 @@ public class TailApplicationTest {
 	}
 	
 	@Test
-	public void testEmptyStdinWithValidArgException() throws TailException {
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n 10", file};
-		try{
-			tail.run(arg, null, System.out);
-		}catch(TailException e){
-			assertEquals("tail:InputStream not provided",e.getMessage());
-		}
-	}
-	
-	@Test
 	public void testPrintFromInvalidFileException() throws TailException{
 		String[] arg = {"-n 99", "INVALID_FILE"};
 		try{
@@ -121,6 +109,29 @@ public class TailApplicationTest {
 	public void testPrintFromFileWithInvalidNumOfLinesException() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 		String[] arg = {"-n xx", file};
+		try{
+			tail.run(arg, System.in, System.out);
+		}catch(TailException e){
+			assertEquals("tail:Specify proper number with \"-n\" option",e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testPrintFromFileWithNegativeNumOfLinesException() throws TailException{
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
+		String[] arg = {"-n -10", file};
+		try{
+			tail.run(arg, System.in, System.out);
+		}catch(TailException e){
+			assertEquals("tail:Specify proper number with \"-n\" option",e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testPrintFromFileWithMaxIntNumOfLinesException() throws TailException{
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
+		
+		String[] arg = {"-n 2947483647", file}; //maxint=2147483647
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){

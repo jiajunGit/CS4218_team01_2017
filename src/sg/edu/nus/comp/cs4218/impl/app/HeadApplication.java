@@ -38,9 +38,6 @@ public class HeadApplication implements Head {
 			if( stdout == null ){
 				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			/*if( stdin == null ){
-				throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
-			}*/
 			int noLines = 10;
 
 			if(args!=null && args.length!=0){

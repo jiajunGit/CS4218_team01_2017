@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import sg.edu.nus.comp.cs4218.app.Tail;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 
@@ -32,29 +33,29 @@ public class TailApplication implements Tail {
 			if( stdout == null ){
 				throw new TailException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			if( stdin == null ){
-				throw new TailException(ERROR_EXP_INVALID_INSTREAM);
-			}
-			
 			int noLines = 10;
 			
 			if(args!=null && args.length!=0){
-				if(args.length==1 && !args[0].substring(0, 3).equals("-n "))
+				if(args.length==1 && !args[0].substring(0, 3).equals("-n ")) //load file with no options
 					load(args[0]);
-				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){
+				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){ //load stin with N lines
+					noLines = Integer.parseInt(args[0].substring(3));
+					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
+					if(stdin==null) throw new TailException(ERROR_EXP_INVALID_INSTREAM);
 					loadFromStdIn(stdin);
-					noLines = Integer.parseInt(args[0].substring(3));
 				}
-				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){
-					load(args[1]);
+				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){ //load file with N lines
 					noLines = Integer.parseInt(args[0].substring(3));
+					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
+					load(args[1]);
 				}
 				else{
-					throw new TailException(INVALID_FORMAT);
+					throw new TailException(INVALID_FORMAT); //Invalid input
 				}
 			}else{
 				if (stdin!=null)
 					loadFromStdIn(stdin);
+				else throw new TailException(ERROR_EXP_INVALID_INSTREAM);
 			}
 			
 			printLines(noLines);
