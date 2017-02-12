@@ -25,6 +25,7 @@ import sg.edu.nus.comp.cs4218.exception.CatException;
  * </p>
  */
 public class CatApplication implements Application {
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	/**
 	 * Runs the cat application with the specified arguments.
@@ -83,7 +84,8 @@ public class CatApplication implements Application {
 							List<String> stringListArray = Files
 									.readAllLines(filePathArray[j]);
 							for(int i=0; i<stringListArray.size();i++){
-								stdout.write(stringListArray.get(0).getBytes());
+								stdout.write(stringListArray.get(i).getBytes());
+								stdout.write(LINE_SEPARATOR.getBytes());
 							}
 						} catch (IOException e) {
 							throw new CatException(

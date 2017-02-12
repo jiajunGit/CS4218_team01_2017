@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 
 import org.junit.After;
@@ -19,7 +20,35 @@ public class CatApplicationTest {
 
 	private static CatApplication cat;
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
+	private final static String PATH_SEPARATOR = File.separator;
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "cat"
+			+ PATH_SEPARATOR;
+	private final static String testInput01 = "1" +  LINE_SEPARATOR +
+			"2" + LINE_SEPARATOR +
+			"3" + LINE_SEPARATOR +
+			"" + LINE_SEPARATOR +
+			"a" + LINE_SEPARATOR +
+			"B" + LINE_SEPARATOR +
+			"7" + LINE_SEPARATOR +
+			"*" + LINE_SEPARATOR +
+			"9" + LINE_SEPARATOR +
+			"10" + LINE_SEPARATOR +
+			"1%" + LINE_SEPARATOR;
+	private final static String testInput02 = "alice" + LINE_SEPARATOR +
+			"bob" + LINE_SEPARATOR +
+			"eve" + LINE_SEPARATOR +
+			"mallory" + LINE_SEPARATOR +
+			"" + LINE_SEPARATOR +
+			"" + LINE_SEPARATOR +
+			"end of file" + LINE_SEPARATOR;
+	private final static String testInput03 = "this" + LINE_SEPARATOR +
+			"is" + LINE_SEPARATOR +
+			"the" + LINE_SEPARATOR +
+			"3rd" + LINE_SEPARATOR +
+			"test" + LINE_SEPARATOR +
+			"input" + LINE_SEPARATOR;
+			
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -57,18 +86,27 @@ public class CatApplicationTest {
 	}
 
 	@Test
-	public void testEmptyArgWithSimulatedStdin() throws CatException {
-		ByteArrayInputStream in = new ByteArrayInputStream("2".getBytes());
+	public void testPrintFromStdinWithNullArg() throws CatException {
+		ByteArrayInputStream in = new ByteArrayInputStream(testInput01.getBytes());
 		System.setIn(in);
 		cat.run(null, System.in, System.out);
-		assertEquals("2",outContent.toString());
+		assertEquals(testInput01,outContent.toString());
+	}
+	
+	@Test
+	public void testPrintFromStdinWithEmptyArg() throws CatException {
+		ByteArrayInputStream in = new ByteArrayInputStream(testInput01.getBytes());
+		String[] arg = {};
+		System.setIn(in);
+		cat.run(arg, System.in, System.out);
+		assertEquals(testInput01,outContent.toString());
 	}
 	
 	@Test
 	public void testInvalidFilePathException() throws CatException {
-		String[] input ={"this is a non directory"};
+		String[] arg ={"this is a non directory"};
 		try{
-			cat.run(input, System.in, System.out);
+			cat.run(arg, System.in, System.out);
 		}catch(CatException e){
 			assertEquals("cat: Could not read file", e.getMessage());
 		}
@@ -76,19 +114,30 @@ public class CatApplicationTest {
 	
 	@Test
 	public void testIsFileDirectoryException () throws CatException {
-		String[] input ={"/"};
+		String[] arg = {RELATIVE_TEST_DIRECTORY+"input"};
 		try{
-			cat.run(input, System.in, System.out);
+			cat.run(arg, System.in, System.out);
 		}catch(CatException e){
 			assertEquals("cat: This is a directory", e.getMessage());
 		}
 	}
 	
 	@Test
-	public void testValidFilePath () throws CatException {
-		String[] input ={"txt/test"};
+	public void testSingleFileRead () throws CatException {
+		String[] input ={RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input01"};
 		cat.run(input, System.in, System.out);
-		assertEquals("a simple test", outContent.toString());
+		assertEquals(testInput01, outContent.toString());
 	}
+	
+	@Test
+	public void testMultipleFileRead () throws CatException {
+		String[] input ={RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input01",
+				RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input02",
+				RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input03"};
+		cat.run(input, System.in, System.out);
+		assertEquals(testInput01+testInput02+testInput03, outContent.toString());
+	}
+	
+	
 
 }
