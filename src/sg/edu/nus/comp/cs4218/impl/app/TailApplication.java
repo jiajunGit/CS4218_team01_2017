@@ -19,16 +19,21 @@ public class TailApplication implements Tail {
 	String[] lines;
 	
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
+	private static final String INVALID_FORMAT = "Invalid command format";
 	private static final String NUMBER_NOT_SPECIFIED = "Specify proper number with \"-n\" option";
 	private static final String ERROR_EXP_INVALID_OUTSTREAM = "OutputStream not provided";
+	private static final String ERROR_EXP_INVALID_INSTREAM = "InputStream not provided";
 	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
 	
 	
 	@Override
-	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws TailException {
 		try {
 			if( stdout == null ){
-				throw new SortException(ERROR_EXP_INVALID_OUTSTREAM);
+				throw new TailException(ERROR_EXP_INVALID_OUTSTREAM);
+			}
+			if( stdin == null ){
+				throw new TailException(ERROR_EXP_INVALID_INSTREAM);
 			}
 			
 			int noLines = 10;
@@ -36,13 +41,16 @@ public class TailApplication implements Tail {
 			if(args!=null && args.length!=0){
 				if(args.length==1 && !args[0].substring(0, 3).equals("-n "))
 					load(args[0]);
-				if(args.length==2 && args[0].substring(0, 3).equals("-n ")){
+				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){
+					loadFromStdIn(stdin);
+					noLines = Integer.parseInt(args[0].substring(3));
+				}
+				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){
 					load(args[1]);
 					noLines = Integer.parseInt(args[0].substring(3));
 				}
-				if(args.length==1 && args[0].substring(0, 3).equals("-n ") && stdin!=null){
-					loadFromStdIn(stdin);
-					noLines = Integer.parseInt(args[0].substring(3));
+				else{
+					throw new TailException(INVALID_FORMAT);
 				}
 			}else{
 				if (stdin!=null)
