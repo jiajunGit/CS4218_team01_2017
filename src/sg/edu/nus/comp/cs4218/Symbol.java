@@ -15,6 +15,10 @@ public final class Symbol {
     public static final char OUTPUT_OP = '>';
     public static final char GLOB_OP = '*';
     public static final char UNRELATED = '_';
+    public static final char UNQUOTED_UNRELATED = '$';
+    public static final char EMPTY_OUTPUT = '#';
+    public static final char LINE_FEED = '\n';
+    public static final char CARRIAGE_RETURN = '\r';
     public static final char PATH_SEPARATOR = File.separatorChar;
     public static final char CURRENT_DIR = '.';
     
@@ -29,6 +33,8 @@ public final class Symbol {
     public static final String OUTPUT_OP_S = ">";
     public static final String GLOB_OP_S = "*";
     public static final String UNRELATED_S = "_";
+    public static final String UNQUOTED_UNRELATED_S = "$";
+    public static final String EMPTY_OUTPUT_S = "#";
     public static final String NEW_LINE_S = System.lineSeparator();
     public static final String PATH_SEPARATOR_S = File.separator;
     public static final String CURRENT_DIR_S = ".";
@@ -39,6 +45,7 @@ public final class Symbol {
     public static final String REGEX_NON_WINDOWS_PATH_SEPARATOR = "/";
     public static final String REGEX_WILDCARD = ".*";
     public static final String REGEX_CASE_INSENSITIVE = "(?i)";
+    public static final String REGEX_EMPTY_OUTPUT = "#+";
     
     private Symbol() {}
 }
