@@ -38,9 +38,9 @@ public class HeadApplication implements Head {
 			if( stdout == null ){
 				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			if( stdin == null ){
+			/*if( stdin == null ){
 				throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
-			}
+			}*/
 			int noLines = 10;
 
 			if(args!=null && args.length!=0){
@@ -49,6 +49,7 @@ public class HeadApplication implements Head {
 				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){ //load stdin with N lines
 					noLines = Integer.parseInt(args[0].substring(3));
 					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new HeadException(NUMBER_NOT_SPECIFIED);
+					if(stdin==null) throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
 					loadFromStdIn(stdin);
 				}
 				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){ //load file with N lines
@@ -57,12 +58,13 @@ public class HeadApplication implements Head {
 					load(args[1]);
 				}
 				else{
-					throw new HeadException(INVALID_FORMAT);
+					throw new HeadException(INVALID_FORMAT); //Invalid input
 				}
 
 			}else{
 				if (stdin!=null)
 					loadFromStdIn(stdin);  //print from stdin
+				else throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
 			}
 
 			printLines(noLines);

@@ -94,17 +94,6 @@ public class HeadApplicationTest {
 	}
 
 	@Test
-	public void testEmptyStdinWithValidArgException() throws HeadException {
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n 10", file};
-		try{
-			head.run(arg, null, System.out);
-		}catch(HeadException e){
-			assertEquals("head:InputStream not provided",e.getMessage());
-		}
-	}
-
-	@Test
 	public void testPrintFromInvalidFileException() throws HeadException{
 		String[] arg = {"-n 99", "INVALID_FILE"};
 		try{
