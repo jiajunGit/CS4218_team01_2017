@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.File;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -46,7 +47,7 @@ public class Globber {
         String dirPathStr = path;
         if(!Environment.isDirectory(path)){
             dirPathStr = Environment.getParentPathFrom(path);
-            if(dirPathStr.isEmpty() || !Environment.isDirectory(path)){
+            if(dirPathStr.isEmpty() || !Environment.isDirectory(dirPathStr)){
                 return new String[0];
             }
         }
@@ -59,8 +60,8 @@ public class Globber {
         String pathToSplit = input.substring(start, input.length());
         String pathSymbolToSplit = inputSymbols.substring(start, inputSymbols.length());
         
-        String[] segments = pathToSplit.split(PATH_REGEX);
-        String[] symbolSegments = pathSymbolToSplit.split(PATH_REGEX);
+        String[] segments = pathToSplit.split(PATH_REGEX);        
+        String[] symbolSegments = splitSegmentSymbols(pathToSplit, pathSymbolToSplit, PATH_REGEX, segments.length);
         
         LinkedList<String> dirPaths = new LinkedList<String>();
         LinkedList<String> listReference = dirPaths;
@@ -110,6 +111,33 @@ public class Globber {
         }  
     }
     
+    private String[] splitSegmentSymbols( String pathToSplit, String pathSymbolToSplit, String regex, int numSegments ) {
+        
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(pathToSplit);
+        
+        String[] splitPaths = new String[numSegments]; 
+        
+        int index = 0;
+        int startFrom = 0;
+        while(matcher.find()){
+            
+            int start = matcher.start();
+            int end = matcher.end();
+            
+            if( end > start ){
+                splitPaths[index++] = pathSymbolToSplit.substring(startFrom, start);
+                startFrom = end;
+            }
+        }
+        
+        if( startFrom < pathSymbolToSplit.length()) {
+            splitPaths[index] = pathSymbolToSplit.substring(startFrom);
+        }
+        
+        return splitPaths;
+    }
+    
     private String generateGlobRegex( String glob, String globSymbol ) {
         
         StringBuilder sb = new StringBuilder(glob.length());
@@ -119,10 +147,8 @@ public class Globber {
         
         for( int i = 0, length = globSymbol.length(); i < length; ++i ){
             
-            char currentChar = globSymbol.charAt(i);
-            
-            if( currentChar != Symbol.GLOB_OP ){
-                sb.append(currentChar);
+            if( globSymbol.charAt(i) != Symbol.GLOB_OP ){
+                sb.append(glob.charAt(i));
             } else {
                 if( sb.length() > 0 ){
                     String pattern = Pattern.quote(sb.toString());
