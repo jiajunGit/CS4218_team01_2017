@@ -1,37 +1,34 @@
 /**
- * 
+ * PWD application test
  */
 package test;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.Environment;
+import sg.edu.nus.comp.cs4218.exception.PwdException;
+import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
+
 public class PwdApplicationTest {
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
+	private static PwdApplication pwd;
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+	private final static String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		pwd = new PwdApplication();
+		System.setOut(new PrintStream(outContent));
 	}
 
 	/**
@@ -39,11 +36,24 @@ public class PwdApplicationTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		System.setOut(null);
+		pwd = null;
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testEmptyStdoutException() {
+		try{
+			pwd.run(null, System.in, null);
+		}catch(PwdException e){
+			assertEquals("pwd: OutputStream not provided",e.getMessage());
+		}
 	}
-
+	
+	@Test
+	public void testDirectoryReporting() throws PwdException{
+		pwd.run(null, System.in, System.out);
+		String file = CURRENT_DIRECTORY + LINE_SEPARATOR;
+		assertEquals(file, outContent.toString());
+	}
+	
 }
