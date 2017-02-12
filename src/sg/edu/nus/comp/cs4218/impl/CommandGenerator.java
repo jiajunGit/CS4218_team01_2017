@@ -96,7 +96,7 @@ public class CommandGenerator {
         currentCmd.setStdinName(stdin);
     }
     
-    private Stage populateCommandForInputRedir( String segment, char symbol, boolean isGlobbedArgs ) 
+    private Stage populateCommandForInputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 
             throws ShellException {
         
         switch( symbol ){
@@ -137,7 +137,7 @@ public class CommandGenerator {
                         setStdin(segment);
                     }
                 } else if(currentCmd.hasStdin()){
-                    return populateCommandForNormal(segment, Symbol.UNRELATED);
+                    return populateCommandForNormal(segment, segmentSymbols, Symbol.UNRELATED);
                 } else{
                     setStdin(segment);
                     return Stage.NORMAL;
@@ -155,7 +155,7 @@ public class CommandGenerator {
         currentCmd.setStdoutName(stdout);
     }
     
-    private Stage populateCommandForOutputRedir( String segment, char symbol, boolean isGlobbedArgs ) 
+    private Stage populateCommandForOutputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 
             throws ShellException {
         
         switch( symbol ){
@@ -191,7 +191,7 @@ public class CommandGenerator {
                         setStdout(segment);
                     }
                 } else if(currentCmd.hasStdout()){
-                    return populateCommandForNormal(segment, Symbol.UNRELATED);
+                    return populateCommandForNormal(segment, segmentSymbols, Symbol.UNRELATED);
                 } else {
                     setStdout(segment);
                     return Stage.NORMAL;
@@ -201,7 +201,43 @@ public class CommandGenerator {
         return Stage.OUTPUT_REDIR;
     }
     
-    private Stage populateCommandForNormal( String segment, char symbol ) 
+    private void populateCommandEmptyArgs() throws ShellException {
+        if(currentCmd.hasAppName()) {
+            currentCmd.addArguments(new String());
+        } else {
+            throw new ShellException(Shell.EXP_SYNTAX);
+        }
+    }
+    
+    private void populateCommandNonEmptyArgs( String segment, String segmentSymbols ) throws ShellException {
+        if(currentCmd.hasAppName()) {
+            currentCmd.addArguments(segment);
+        } else {
+            char firstSymbol = segmentSymbols.charAt(0);
+            if(firstSymbol == Symbol.UNQUOTED_UNRELATED ){
+                int index = 1;
+                while(index < segmentSymbols.length()){
+                    if(segmentSymbols.charAt(index) != Symbol.UNQUOTED_UNRELATED){
+                        throw new ShellException(Shell.EXP_SYNTAX);
+                    }
+                    ++index;
+                }
+                currentCmd.setAppName(segment);
+            } else{
+                throw new ShellException(Shell.EXP_SYNTAX);
+            }
+        }
+    }
+    
+    private void populateCommandArgs( String segment, String segmentSymbols ) throws ShellException {
+        if(!segment.isEmpty()){
+            populateCommandNonEmptyArgs(segment, segmentSymbols);
+        } else {
+            populateCommandEmptyArgs();
+        }
+    }
+    
+    private Stage populateCommandForNormal( String segment, String segmentSymbols, char symbol ) 
             throws ShellException {
         
         switch( symbol ){
@@ -240,11 +276,7 @@ public class CommandGenerator {
                 
             default:
                 
-                if(currentCmd.hasAppName()){
-                    currentCmd.addArguments(segment);
-                } else{
-                    currentCmd.setAppName(segment);
-                }
+                populateCommandArgs(segment, segmentSymbols);
                 break;
         }
         return Stage.NORMAL;
@@ -295,7 +327,7 @@ public class CommandGenerator {
         processPostCommand();
     }
     
-    private Stage populateCommandForPipe( String segment, char symbol ) throws ShellException {
+    private Stage populateCommandForPipe( String segment, String segmentSymbols, char symbol ) throws ShellException {
         
         switch( symbol ){
         
@@ -315,7 +347,7 @@ public class CommandGenerator {
             default:
                 processPostPipe();
                 currentCmd = new Command();
-                return populateCommandForNormal(segment, symbol);
+                return populateCommandForNormal(segment, segmentSymbols, symbol);
         }
     }
     
@@ -324,7 +356,7 @@ public class CommandGenerator {
         processPostCommand();
     }
     
-    private Stage populateCommandForSeq( String segment, char symbol ) throws ShellException {
+    private Stage populateCommandForSeq( String segment, String segmentSymbols, char symbol ) throws ShellException {
         
             switch( symbol ){
             
@@ -345,7 +377,7 @@ public class CommandGenerator {
                 default:
                     processPostSeq();
                     currentCmd = new Command();
-                    return populateCommandForNormal(segment, symbol);
+                    return populateCommandForNormal(segment, segmentSymbols, symbol);
             }
     }
     
@@ -363,15 +395,15 @@ public class CommandGenerator {
         switch( stage ){
         
             case INPUT_REDIR:
-                return populateCommandForInputRedir(segment, symbol, isGlobbedArgs);
+                return populateCommandForInputRedir(segment, segmentSymbol, symbol, isGlobbedArgs);
             case OUTPUT_REDIR:
-                return populateCommandForOutputRedir(segment, symbol, isGlobbedArgs);
+                return populateCommandForOutputRedir(segment, segmentSymbol, symbol, isGlobbedArgs);
             case PIPE:
-                return populateCommandForPipe(segment, symbol);
+                return populateCommandForPipe(segment, segmentSymbol, symbol);
             case SEQUENCE:
-                return populateCommandForSeq(segment, symbol);
+                return populateCommandForSeq(segment, segmentSymbol, symbol);
             default:
-                return populateCommandForNormal(segment, symbol);
+                return populateCommandForNormal(segment, segmentSymbol, symbol);
         }
     }
 }

@@ -495,8 +495,7 @@ public class ShellImpl implements Shell {
                     } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
                         quoteStack.push(currentChar);
                         symbols.append(Symbol.UNRELATED);
-                    }
-                    else{
+                    } else{
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
@@ -516,7 +515,11 @@ public class ShellImpl implements Shell {
                     break;
                     
                 default:
-                    symbols.append(Symbol.UNRELATED);
+                    if(quoteStack.isEmpty()){
+                        symbols.append(Symbol.UNQUOTED_UNRELATED);
+                    } else {
+                        symbols.append(Symbol.UNRELATED);
+                    }
                     break;
             }
         }
@@ -593,7 +596,11 @@ public class ShellImpl implements Shell {
                     break;
                     
                 default:
-                    symbols.append(Symbol.UNRELATED);
+                    if(quoteStack.isEmpty()){
+                        symbols.append(Symbol.UNQUOTED_UNRELATED);
+                    } else {
+                        symbols.append(Symbol.UNRELATED);
+                    }
                     break;
             }
         }
@@ -604,14 +611,76 @@ public class ShellImpl implements Shell {
         return symbols;
     }
     
+    private boolean isContent( StringBuilder fullString, int index ) {
+        
+        if(index < 0 || index >= fullString.length()) {
+            return false;
+        }
+        
+        switch( fullString.charAt(index) ) {
+            case Symbol.SPACE:
+            case Symbol.TAB:
+            case Symbol.PIPE_OP:
+            case Symbol.SEQ_OP:
+            case Symbol.INPUT_OP:
+            case Symbol.OUTPUT_OP:
+            case Symbol.EMPTY_OUTPUT:
+            case Symbol.LINE_FEED:
+            case Symbol.CARRIAGE_RETURN:
+                return false;
+            default:
+                break;
+        }
+        return true;
+    }
+    
+    private int inverseSearch( StringBuilder fullString, int startIndex, char charNotToFind, int defaultReturn ) {
+        
+        if(startIndex < 0 || startIndex >= fullString.length()){
+            return defaultReturn;
+        }
+        while( startIndex < fullString.length() && fullString.charAt(startIndex) == charNotToFind ) {
+            ++startIndex;
+        }
+        return (startIndex < fullString.length() ? startIndex : defaultReturn);
+    }
+    
+    private void processEmptyOutputs( StringBuilder cmd, StringBuilder cmdSymbols ) {
+        
+        int index = 0;
+        
+        while(index < cmd.length()){
+            
+            if( cmdSymbols.charAt(index) == Symbol.EMPTY_OUTPUT ) {
+                
+                int start = index;
+                int end = inverseSearch( cmdSymbols, start + 1, Symbol.EMPTY_OUTPUT, start + 1 );
+                
+                boolean isContentBeforeStart = isContent(cmdSymbols, start-1);
+                boolean isContentAfterEnd = isContent(cmdSymbols, end);
+                
+                if( !isContentBeforeStart && !isContentAfterEnd ){
+                    cmd.replace(start, end, Symbol.EMPTY_OUTPUT_S);
+                    cmdSymbols.replace(start, end, Symbol.EMPTY_OUTPUT_S);
+                } else {
+                    cmd.replace(start, end, Symbol.EMPTY_S);
+                    cmdSymbols.replace(start, end, Symbol.EMPTY_S);
+                    continue;
+                }
+            }
+            ++index;
+        } 
+    }
+    
     private String parseAndEvaluateBQ( String input ) throws ShellException, AbstractApplicationException {
 
         StringBuilder cmdSymbols = generateSymbolsForBQ(input);
         
         StringBuilder cmd = new StringBuilder(input);
         
-        processSQ(cmd, cmdSymbols);
-        processDQ(cmd, cmdSymbols);
+        processSQ(cmd, cmdSymbols, false);
+        processDQ(cmd, cmdSymbols, false);
+        processEmptyOutputs(cmd, cmdSymbols);
         
         List<Segment> segments = split(cmd, cmdSymbols);
         
@@ -636,7 +705,7 @@ public class ShellImpl implements Shell {
         return outputSymbolsBuilder.toString();
     }
     
-    private void processBQ( StringBuilder cmd, StringBuilder cmdSymbols ) 
+    private void processBQ( StringBuilder cmd, StringBuilder cmdSymbols, boolean isIgnoreEmptyStrings ) 
             throws ShellException, AbstractApplicationException { 
         
         int fromIndex = 0;
@@ -655,7 +724,13 @@ public class ShellImpl implements Shell {
             
             String output = parseAndEvaluateBQ(cmd.substring(start+1, end));
             output = processBQOut(output);
-            String outputSymbols = generateSymbolsForBQOut(output);
+            String outputSymbols = Symbol.EMPTY_OUTPUT_S;
+            
+            if( !isIgnoreEmptyStrings && output.isEmpty() ){
+                output = Symbol.EMPTY_OUTPUT_S;
+            } else {
+                outputSymbols = generateSymbolsForBQOut(output);
+            }
             
             // Replace
             cmd.replace(start, end+1, output);
@@ -680,7 +755,7 @@ public class ShellImpl implements Shell {
         return sb.toString();
     }
     
-    private void processSQ( StringBuilder cmd, StringBuilder cmdSymbols ) 
+    private void processSQ( StringBuilder cmd, StringBuilder cmdSymbols, boolean isIgnoreEmptyStrings ) 
             throws ShellException { 
         
         int fromIndex = 0;
@@ -698,7 +773,13 @@ public class ShellImpl implements Shell {
             }
             
             String output = parseAndEvaluateSQ(cmd.substring(start+1, end));
-            String outputSymbol = generateSymbolsForSQOut(output);
+            String outputSymbol = Symbol.EMPTY_OUTPUT_S;
+            
+            if(!isIgnoreEmptyStrings && output.isEmpty()){
+                output = Symbol.EMPTY_OUTPUT_S;
+            } else {
+                outputSymbol = generateSymbolsForSQOut(output);
+            }
             
             // Replace
             cmd.replace(start, end+1, output);
@@ -790,8 +871,8 @@ public class ShellImpl implements Shell {
         
         StringBuilder cmd = new StringBuilder(input);
         
-        processSQ(cmd, cmdSymbols);
-        processBQ(cmd, cmdSymbols);
+        processSQ(cmd, cmdSymbols, true);
+        processBQ(cmd, cmdSymbols, true);
         
         return cmd.toString();
     }
@@ -804,7 +885,7 @@ public class ShellImpl implements Shell {
         return sb.toString();
     }
     
-    private void processDQ( StringBuilder cmd, StringBuilder cmdSymbols ) 
+    private void processDQ( StringBuilder cmd, StringBuilder cmdSymbols, boolean isIgnoreEmptyStrings ) 
             throws ShellException, AbstractApplicationException { 
         
         int fromIndex = 0;
@@ -822,7 +903,13 @@ public class ShellImpl implements Shell {
             }
             
             String output = parseAndEvaluateDQ(cmd.substring(start+1, end));
-            String outputSymbol = generateSymbolsForDQOut(output);
+            String outputSymbol = Symbol.EMPTY_OUTPUT_S;
+            
+            if( !isIgnoreEmptyStrings && output.isEmpty() ){
+                output = Symbol.EMPTY_OUTPUT_S;
+            } else {
+                outputSymbol = generateSymbolsForDQOut(output);
+            }
             
             // Replace
             cmd.replace(start, end+1, output);
@@ -864,7 +951,7 @@ public class ShellImpl implements Shell {
                 case Symbol.PIPE_OP:
                 case Symbol.INPUT_OP:
                 case Symbol.OUTPUT_OP:
-                    
+
                     if(segment.length() > 0){
                         segments.add( new Segment( segment.toString(), segmentSymbol.toString(), hasGlob ) );
                         segment.setLength(0);
@@ -877,6 +964,17 @@ public class ShellImpl implements Shell {
                 case Symbol.GLOB_OP:
                     
                     hasGlob = true;
+                    break;
+                    
+                case Symbol.EMPTY_OUTPUT:   // This case makes it accept empty arg strings
+                    
+                    if(segment.length() > 0){
+                        segments.add( new Segment( segment.toString(), segmentSymbol.toString(), hasGlob ) );
+                        segment.setLength(0);
+                        segmentSymbol.setLength(0);
+                    }
+                    segments.add(new Segment( new String(), new String(), false ));
+                    hasGlob = false;
                     break;
                     
                 default:
@@ -1082,7 +1180,7 @@ public class ShellImpl implements Shell {
         }
         StringBuilder cmdSymbols = generateSymbols(input);
         StringBuilder cmd = new StringBuilder(input);
-        processBQ(cmd, cmdSymbols);
+        processBQ(cmd, cmdSymbols, true);
         
         return cmd.toString();
     }
@@ -1113,9 +1211,10 @@ public class ShellImpl implements Shell {
         StringBuilder cmdSymbols = generateSymbols(cmdline);
         StringBuilder cmd = new StringBuilder(cmdline);
         
-        processBQ(cmd, cmdSymbols);
-        processSQ(cmd, cmdSymbols);
-        processDQ(cmd, cmdSymbols);
+        processBQ(cmd, cmdSymbols, false);
+        processSQ(cmd, cmdSymbols, false);
+        processDQ(cmd, cmdSymbols, false);
+        processEmptyOutputs(cmd, cmdSymbols);
         
         List<Segment> segments = split(cmd, cmdSymbols);
         
