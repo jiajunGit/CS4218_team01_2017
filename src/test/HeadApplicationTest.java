@@ -113,7 +113,7 @@ public class HeadApplicationTest {
 			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testPrintFromFileWithNoNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
@@ -124,7 +124,7 @@ public class HeadApplicationTest {
 			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testPrintFromFileWithEmptyOptionException() throws HeadException{
 		String[] arg = {""};
@@ -132,7 +132,7 @@ public class HeadApplicationTest {
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedString,outContent.toString());
 	}
-	
+
 	@Test
 	public void testPrintFrom2EmptyArgException() throws HeadException{
 		String[] arg = {"",""};
@@ -140,7 +140,7 @@ public class HeadApplicationTest {
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedString,outContent.toString());
 	}
-	
+
 	@Test
 	public void testPrintFromFileWithNegativeNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
@@ -151,11 +151,11 @@ public class HeadApplicationTest {
 			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testPrintFromFileWithMaxIntNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		
+
 		String[] arg = {"-n 2947483647", file}; //maxint=2147483647
 		try{
 			head.run(arg, System.in, System.out);
@@ -192,7 +192,7 @@ public class HeadApplicationTest {
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedString,outContent.toString());
 	}
-	
+
 
 	@Test
 	public void testPrintFromStdinWithEmptyArg() throws HeadException{
