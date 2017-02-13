@@ -30,6 +30,7 @@ public class SortApplication implements Sort {
 	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
 	private static final String ERROR_IO_WRITING = "IO ERROR WHEN WRITING FILE";
 	private static final String ERROR_IO_WRITING_OUTSTREAM = "IO ERROR WHEN WRITING TO OUTSTREAM";
+	private static final String ERROR_NOT_ALL_NUMBERS = "contents of file must start with numbers";
 	
 	public static final int SECOND_STRING_GREATER = 2;
 	public static final int FIRST_STRING_GREATER = 1;
@@ -69,13 +70,13 @@ public class SortApplication implements Sort {
 			sortN();
 		}
 		
-		if(args.length == 1 && !args[0].equals("-n")){
-			writeToFile(arrayToString(), args[0]);
-		}
-		
-		if(args.length == 2){
-			writeToFile(arrayToString(), args[1]);
-		}
+//		if(args.length == 1 && !args[0].equals("-n")){
+//			writeToFile(arrayToString(), args[0]);
+//		}
+//		
+//		if(args.length == 2){
+//			writeToFile(arrayToString(), args[1]);
+//		}
 		
 		
 		try {
@@ -121,33 +122,20 @@ public class SortApplication implements Sort {
 	}
 
 	private void sortN() throws AbstractApplicationException{
-		int start = getFirstNumberLine();
-		int end = getLastNumberLine();
-		mergeSortN(start, end);
-	}
-	
-	private int getLastNumberLine() {
-		int found = -1;
-		
-		for (int i = lines.length -1; i >= 0; i--){
-			if(Character.isDigit(lines[i].charAt(0))){
-				found = i;
-				break;
-			}
+		if(!isAllNumbers()){
+			throw new SortException(ERROR_NOT_ALL_NUMBERS);
 		}
-		return found;
+		mergeSortN(0, lines.length -1);
 	}
 
-	private int getFirstNumberLine() {
-		int found = -1;
+	private boolean isAllNumbers() {
 		
 		for (int i = 0; i < lines.length; i++){
-			if(!lines[i].isEmpty() && Character.isDigit(lines[i].charAt(0))){
-				found = i;
-				break;
+			if(!lines[i].isEmpty() && !isNumber(lines[i].split(" ")[0])){
+				return false;
 			}
 		}
-		return found;
+		return true;
 	}
 
 	private void mergeSortN(int lo, int hi) throws AbstractApplicationException {
@@ -185,8 +173,19 @@ public class SortApplication implements Sort {
 	}	
 	
 	private int compareNumber(String a, String b) throws SortException {
-		if(isNullOrEmpty(a) || isNullOrEmpty(b)){
+		if(a==null || b==null){
 			throw new SortException(ERROR_EXP_NULL_STRING);
+		}
+		
+		if(a.isEmpty() || b.isEmpty()){
+			if(!b.isEmpty()){
+				return SECOND_STRING_GREATER;
+			}else if(!a.isEmpty()){
+				return FIRST_STRING_GREATER;
+			}else{
+				return BOTH_STRING_EQUAL;
+			}
+				
 		}
 		
 		if (isNumber(a) && isNumber(b)){
@@ -386,7 +385,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -398,7 +397,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -410,7 +409,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -422,7 +421,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -434,7 +433,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -446,7 +445,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -458,7 +457,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -470,7 +469,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -482,7 +481,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -494,7 +493,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -506,7 +505,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -518,7 +517,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -530,7 +529,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -542,7 +541,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
@@ -554,7 +553,7 @@ public class SortApplication implements Sort {
 		try {
 			this.run(arguments, null, new ByteArrayOutputStream());
 		} catch (AbstractApplicationException e) {
-			e.printStackTrace();
+			return e.getClass().getName();
 		}
 		return arrayToString();
 	}
