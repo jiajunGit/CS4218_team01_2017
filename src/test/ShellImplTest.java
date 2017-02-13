@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -32,22 +34,13 @@ public class ShellImplTest {
 		System.setOut(new PrintStream(outContent));
 	}
 	
-	@Test
-	public void testRedirectInput(){
-		ShellImpl shell = new ShellImpl();
-		try {
-			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectInput.txt")));
-			Assert.assertEquals(expectedOutput, shell.redirectInput("cat < " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectInput.txt"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
     @Test
-    public void testRedirectOutput(){
+    public void testRedirOutputEcho(){
 		ShellImpl shell = new ShellImpl();
 		
+		
 		try {
+			clearFromFile(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectOutput.txt")));
 			shell.redirectOutput("echo helloworld > " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
 			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt")));
@@ -85,6 +78,78 @@ public class ShellImplTest {
 		
 		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat > input.txt > input.txt "));
     }	
+    
+    @Test
+    public void redirectInputInvalidFile(){
+    	ShellImpl shell = new ShellImpl();
+    	
+    	Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat < doesntexist.txt "));
+    	
+    }
+    
+    @Test
+    public void redirectOutputNonExistFile(){
+    	File noExist = new File(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
+    	
+    	Assert.assertFalse(noExist.exists());
+    	
+    	try{
+		String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "outputNoExist.txt")));
+    	shell.redirectOutput("echo le wild file appears > " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
+		String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt")));
+
+		Assert.assertEquals(expectedOutput, actualOutput);
+
+    	File nowExists = new File(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
+    	
+    	if(nowExists.exists()){
+    		nowExists.delete();
+    	}
+		
+    	}catch (IOException e){
+    		e.printStackTrace();
+    		fail();
+    	}
+    }
+    
+    @Test
+    public void testRedirOutputBeforeEcho(){
+		ShellImpl shell = new ShellImpl();
+		
+		
+		try {
+			clearFromFile(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectOutput.txt")));
+			shell.redirectOutput("> " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt" + " echo helloworld");
+			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt")));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    @Test 
+    public void testRedirInputBeforeCat(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectInput.txt")));
+			Assert.assertEquals(expectedOutput, shell.redirectInput("< " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectInput.txt" + " cat"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}    	
+    }
+    
+	@Test
+	public void testRedirInputCat(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRedirectInput.txt")));
+			Assert.assertEquals(expectedOutput, shell.redirectInput("cat < " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectInput.txt"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}    
     
     /**
      * Calls Command
@@ -153,4 +218,10 @@ public class ShellImplTest {
     	
     	assertEquals(expectedOut, outContent.toString());
     }
+    
+	private void clearFromFile(String fileName) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter(new File(fileName));
+		writer.print("");
+		writer.close();
+	}
 }
