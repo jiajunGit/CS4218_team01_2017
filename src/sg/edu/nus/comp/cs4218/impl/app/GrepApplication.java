@@ -9,9 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.app.Grep;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 /**
  * The grep command searches for lines containing a match to a specified
@@ -262,6 +266,12 @@ public class GrepApplication implements Grep {
         BufferedInputStream bis = null;
         try {
 
+            fileName = Environment.getAbsPath(fileName);
+            
+            if(fileName.isEmpty() || !Environment.isFile(fileName)){
+                throw new GrepException(ERROR_EXP_INVALID_FILE);
+            }
+
             FileInputStream fs = new FileInputStream(fileName);
             bis = new BufferedInputStream(fs);
 
@@ -328,6 +338,12 @@ public class GrepApplication implements Grep {
                     throw new GrepException(ERROR_EXP_INVALID_FILE);
                 }
 
+                fileName = Environment.getAbsPath(fileName);
+                
+                if(fileName.isEmpty() || !Environment.isFile(fileName)){
+                    throw new GrepException(ERROR_EXP_INVALID_FILE);
+                }
+                
                 FileInputStream fs = new FileInputStream(fileName);
                 bis = new BufferedInputStream(fs);
 
@@ -352,31 +368,51 @@ public class GrepApplication implements Grep {
 
     @Override
     public String grepFromStdin(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        ShellImpl shell = new ShellImpl();
+        try {
+            return shell.parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            return e.getMessage();
+        }
     }
 
     @Override
     public String grepFromOneFile(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        ShellImpl shell = new ShellImpl();
+        try {
+            return shell.parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            return e.getMessage();
+        }
     }
 
     @Override
     public String grepFromMultipleFiles(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        ShellImpl shell = new ShellImpl();
+        try {
+            return shell.parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            return e.getMessage();
+        }
     }
 
     @Override
     public String grepInvalidPatternInStdin(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        ShellImpl shell = new ShellImpl();
+        try {
+            return shell.parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            return e.getMessage();
+        }
     }
 
     @Override
     public String grepInvalidPatternInFile(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        ShellImpl shell = new ShellImpl();
+        try {
+            return shell.parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            return e.getMessage();
+        }
     }
 }
