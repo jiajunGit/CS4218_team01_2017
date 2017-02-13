@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -46,7 +45,6 @@ import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
  */
 
 public class ShellImpl implements Shell {
-	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 	
     @Override
     public String pipeTwoCommands(String args) {
@@ -68,100 +66,112 @@ public class ShellImpl implements Shell {
 
     @Override
     public String globNoPaths(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     @Override
     public String globOneFile(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     @Override
     public String globFilesDirectories(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     @Override
     public String globWithException(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     @Override
     public String redirectInput(String args) {
-		System.setOut(new PrintStream(out));
+        String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
     public String redirectOutput(String args) {
-		System.setOut(new PrintStream(out));
+        String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
     public String redirectInputWithNoFile(String args) {
-		System.setOut(new PrintStream(out));
+        String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			return e.getClass().getName();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
     public String redirectOutputWithNoFile(String args) {
-		System.setOut(new PrintStream(out));
+        String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			return e.getClass().getName();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
     public String redirectInputWithException(String args) {
-		System.setOut(new PrintStream(out));
+        String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			return e.getClass().getName();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
     public String redirectOutputWithException(String args) {
-		System.setOut(new PrintStream(out));
+		String out = new String();
 		try {
-			this.parseAndEvaluate(args, System.out);
+			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
-			return e.getClass().getName();
+		    out = e.getMessage();
 		}
-		
-		return out.toString(); 
+		return out; 
     }
 
     @Override
@@ -1113,8 +1123,19 @@ public class ShellImpl implements Shell {
        executeCommands(commands, stdout);
     }
     
+    private void writeToOut(OutputStream stdout, String content ) throws ShellException {
+        if( stdout != null && content != null ){
+            try {
+                stdout.write(content.getBytes());
+                stdout.flush();
+            } catch (IOException e) {
+                throw new ShellException(e.getMessage());
+            }
+        }
+    }
+    
     // TODO Need to check with prof about the validity of a command that ends with a consecutive sequence of new lines at the end
-    private boolean hasNewLineViolation(String input) {
+    public boolean hasNewLineViolation(String input) {
         
         int fromIndex = 0;
         int newLineLength = Symbol.NEW_LINE_S.length();
@@ -1139,15 +1160,96 @@ public class ShellImpl implements Shell {
         return (lastNewLineIndex >= 0 && ((input.length() - newLineLength) != lastNewLineIndex));
     }
     
-    private void writeToOut(OutputStream stdout, String content ) throws ShellException {
-        if( stdout != null && content != null ){
-            try {
-                stdout.write(content.getBytes());
-                stdout.flush();
-            } catch (IOException e) {
-                throw new ShellException(e.getMessage());
-            }
+    // This method is in call command. It is NOT used internally.
+    public void evaluateOneCommand( StringBuilder input, StringBuilder inputSymbols, InputStream stdin, OutputStream stdout ) 
+            throws ShellException, AbstractApplicationException {
+        
+        if( input == null || inputSymbols == null || input.length() != inputSymbols.length() ){
+            throw new ShellException(Shell.EXP_INTERNAL);
         }
+        
+        if( stdin == null ){
+            throw new ShellException(Shell.EXP_STDIN);
+        }
+        
+        if( stdout == null ){
+            throw new ShellException(Shell.EXP_STDOUT);
+        }
+        
+        processBQ(input, inputSymbols, false);
+        processSQ(input, inputSymbols, false);
+        processDQ(input, inputSymbols, false);
+        processEmptyOutputs(input, inputSymbols);
+        
+        List<Segment> segments = split(input, inputSymbols);
+        
+        List<Command> commands = generateCommands(segments);
+        
+        if( commands.size() == 1 ){
+            Command firstCmd = commands.get(0);
+            if(!firstCmd.hasStdin()){
+                firstCmd.setStdin(stdin);
+            }
+        } else {
+            throw new ShellException(Shell.EXP_SYNTAX);
+        }
+        
+        executeCommands(commands, stdout);
+        
+        writeToOut(stdout, Symbol.NEW_LINE_S);
+        
+        closeInputStream(stdin);
+        closeOutputStream(stdout);
+    }
+    
+    // This method is in call command. It is NOT used internally.
+    public void evaluateAllCommands( StringBuilder input, StringBuilder inputSymbols, InputStream stdin, OutputStream stdout ) 
+            throws ShellException, AbstractApplicationException {
+        
+        if( input == null || inputSymbols == null || input.length() != inputSymbols.length() ){
+            throw new ShellException(Shell.EXP_INTERNAL);
+        }
+        
+        if( stdin == null ){
+            throw new ShellException(Shell.EXP_STDIN);
+        }
+        
+        if( stdout == null ){
+            throw new ShellException(Shell.EXP_STDOUT);
+        }
+        
+        processBQ(input, inputSymbols, false);
+        processSQ(input, inputSymbols, false);
+        processDQ(input, inputSymbols, false);
+        processEmptyOutputs(input, inputSymbols);
+        
+        List<Segment> segments = split(input, inputSymbols);
+        
+        List<Command> commands = generateCommands(segments);
+        
+        if( commands.size() >= 1 ){
+            Command firstCmd = commands.get(0);
+            if(!firstCmd.hasStdin()){
+                firstCmd.setStdin(stdin);
+            }
+        } else {
+            throw new ShellException(Shell.EXP_SYNTAX);
+        }
+        
+        executeCommands(commands, stdout);
+        
+        writeToOut(stdout, Symbol.NEW_LINE_S);
+        
+        closeInputStream(stdin);
+        closeOutputStream(stdout);
+    }
+    
+    // This method is in call command. It is NOT used internally.
+    public StringBuilder generateSymbolsForInput( String input ) throws ShellException {
+        if(input == null){
+            return null;
+        }
+        return generateSymbols(input);
     }
     
     // This method is in the testing of globbing. It is NOT used internally.
