@@ -949,6 +949,8 @@ public class ShellImpl implements Shell {
                 case Symbol.GLOB_OP:
                     
                     hasGlob = true;
+                    segment.append(cmd.charAt(i));
+                    segmentSymbol.append(cmdSymbols.charAt(i));
                     break;
                     
                 case Symbol.EMPTY_OUTPUT:   // This case makes it accept empty arg strings
