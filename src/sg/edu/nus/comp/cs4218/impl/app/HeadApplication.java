@@ -38,21 +38,79 @@ public class HeadApplication implements Head {
 			if( stdout == null ){
 				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			int noLines = 10;
+			int noLines = 10; //default 10 lines
 
 			if(args!=null && args.length!=0){
-				if(args.length==1 && !args[0].substring(0, 3).equals("-n "))  //load file with no options
-					load(args[0]);
-				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){ //load stdin with N lines
-					noLines = Integer.parseInt(args[0].substring(3));
-					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new HeadException(NUMBER_NOT_SPECIFIED);
-					if(stdin==null) throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
-					loadFromStdIn(stdin);
+				if(args.length==1){
+					if(args[0].length()==0){ 
+						//empty arg
+						loadFromStdIn(stdin);
+					}
+					else if(args[0].length()>0 && args[0].length()<=3){ 
+						//load from file with short file names within 3char i.e head /ab
+						load(args[0]);
+					}
+					else if(args[0].length()>3){
+						if(args[0].substring(0, 3).equals("-n ")){ 
+							// read from stdin with options
+							noLines = Integer.parseInt(args[0].substring(3));
+							if(noLines<0 || noLines>Integer.MAX_VALUE) {
+								//Negative numbers and integer overflow
+								throw new HeadException(NUMBER_NOT_SPECIFIED); 
+							}else{
+								loadFromStdIn(stdin);
+							}
+						}
+						else{
+							//load from file with long file names
+							load(args[0]);
+						}
+					}
+					else{
+						//this should not happen
+						throw new HeadException(INVALID_FORMAT); 
+					}
 				}
-				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){ //load file with N lines
-					noLines = Integer.parseInt(args[0].substring(3));
-					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new HeadException(NUMBER_NOT_SPECIFIED);
-					load(args[1]);
+				else if(args.length==2){
+					if(args[0].length()==0){
+						if(args[1].length()==0){
+							loadFromStdIn(stdin);
+						}
+						else{
+							load(args[0]);
+						}
+					}
+					else if(args[0].length()!=0){
+						if(args[0].length()>0 && args[0].length()<=3){
+							throw new HeadException(NUMBER_NOT_SPECIFIED); //head -n_ file
+						}
+						else if(args[0].length()>3){
+							if(args[0].substring(0, 3).equals("-n ")){
+								if(args[1].length()==0){
+									noLines = Integer.parseInt(args[0].substring(3));
+									if(noLines<0 || noLines>Integer.MAX_VALUE) {
+										//Negative numbers and integer overflow
+										throw new HeadException(NUMBER_NOT_SPECIFIED); 
+									}else{
+										loadFromStdIn(stdin);
+									}
+								}
+								else{
+									noLines = Integer.parseInt(args[0].substring(3));
+									if(noLines<0 || noLines>Integer.MAX_VALUE) {
+										//Negative numbers and integer overflow
+										throw new HeadException(NUMBER_NOT_SPECIFIED); 
+									}else{
+										load(args[1]);
+									}
+								}
+							}
+							else{
+								throw new HeadException(INVALID_FORMAT);
+							}
+						}
+
+					}
 				}
 				else{
 					throw new HeadException(INVALID_FORMAT); //Invalid input
@@ -63,7 +121,6 @@ public class HeadApplication implements Head {
 					loadFromStdIn(stdin);  //print from stdin
 				else throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
 			}
-
 			printLines(noLines);
 		} catch (NumberFormatException e) {
 			throw new HeadException(NUMBER_NOT_SPECIFIED);
@@ -85,23 +142,32 @@ public class HeadApplication implements Head {
 
 
 
-	private void loadFromStdIn(InputStream stdin){
-		String wholeText = convertStreamToString(stdin);
-		lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+	private void loadFromStdIn(InputStream stdin) throws HeadException{
+		if(stdin==null){
+			throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
+		}
+		else{
+			String wholeText = convertStreamToString(stdin);
+			lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+		}
 	}
 
 	private void load(String fileName) throws IOException, HeadException {
 		File workingFile = new File(fileName);
-		Vector<String> linesVector; 
-
-		if (workingFile.exists()) {
+		if(workingFile.exists()){
+			Vector<String> linesVector; 
 			linesVector = importFile(fileName);
 			lines = linesVector.toArray(new String[linesVector.size()]);
-
-		} else {
+		}
+		else{
 			throw new HeadException(FILE_NOT_FOUND);
 		}
-	}	
+	}
+
+	private Boolean isFileExists(String fileName) throws IOException{ 
+		File workingFile = new File(fileName);
+		return workingFile.exists();
+	}
 
 	private Vector<String> importFile(String fileName) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
