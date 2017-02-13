@@ -1,0 +1,14 @@
+cat 'hello world'
+echo 'blah blah black sheep'
+cal -m
+head -n 15
+tail -n 15
+`tail -n 5`
+echo 'hello world' | grep hello
+Heal up!
+if (this.helloWorld){
+return crazy;
+}
+else{
+cry
+}
