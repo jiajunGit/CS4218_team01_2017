@@ -278,6 +278,26 @@ public class GrepApplicationTest {
                 + Symbol.NEW_LINE_S );
 	}
 	
+	@Test(expected=GrepException.class)
+    public void testGrepFromNonExistentFilePath() throws GrepException {
+        
+        String pattern = "some";
+        
+        String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        grep.grepFromOneFile( pattern, filePath );
+    }
+	
+	@Test(expected=GrepException.class)
+    public void testGrepFromInvalidFilePath() throws GrepException {
+        
+        String pattern = "some";
+        
+        String filePath = ":grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        grep.grepFromOneFile( pattern, filePath );
+    }
+	
 	@Test
     public void testGrepFromOneEmptyFile() throws GrepException, IOException {
         
@@ -290,7 +310,7 @@ public class GrepApplicationTest {
         File tempFile = new File(filePath);
         tempFile.deleteOnExit();
         
-        String output = grep.grepFromOneFile( pattern, tempFile.getAbsolutePath() );
+        String output = grep.grepFromOneFile( pattern, filePath );
         
         tempFile.delete();
         
@@ -356,6 +376,30 @@ public class GrepApplicationTest {
         grep.grepFromMultipleFiles( arguments );
 	}
     
+	@Test(expected=GrepException.class)
+    public void testGrepFromMultipleFilesWithNonExistentFilePaths() throws GrepException, IOException {
+        
+        String filePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", filePathOne, filePathTwo, filePathThree };
+        
+        grep.grepFromMultipleFiles( arguments );
+    }
+	
+	@Test(expected=GrepException.class)
+    public void testGrepFromMultipleFilesWithInvalidFilePaths() throws GrepException, IOException {
+        
+        String filePathOne = ":grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = ":grep" + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = ":grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", filePathOne, filePathTwo, filePathThree };
+        
+        grep.grepFromMultipleFiles( arguments );
+    }
+	
 	@Test
 	public void testGrepFromMultipleFilesRelativePaths() throws GrepException, IOException {
         
