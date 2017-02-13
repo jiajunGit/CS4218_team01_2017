@@ -2,9 +2,11 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -17,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 
 public class SortApplicationTest {
@@ -93,7 +96,33 @@ public class SortApplicationTest {
 		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testSortSimpleSpecialChars";
 		assertEquals("simple sort", "\"" + LINE_SEPARATOR + "\'" + LINE_SEPARATOR + "*" + LINE_SEPARATOR + ";" + LINE_SEPARATOR + "<" + LINE_SEPARATOR + ">" + LINE_SEPARATOR + "`" + LINE_SEPARATOR + "|", sort.sortSimpleNumbers("sort "+file));
 	}
-
+	
+	@Test(expected=SortException.class)
+	public void testRunNullArgNullStdin() throws AbstractApplicationException {
+		SortApplication sort = new SortApplication();
+		
+		sort.run(null, null, System.out);
+	}
+	
+	@Test(expected=SortException.class)
+	public void testRunNullStdout() throws AbstractApplicationException {
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunOption";
+		String[] args = {"-n", file};
+		
+		sort.run(args, System.in, null);
+		
+	}
+	
+	@Test(expected=SortException.class)
+	public void testRandomTwoArg() throws AbstractApplicationException{
+		SortApplication sort = new SortApplication();
+		System.setOut(new PrintStream(out));
+		String file = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunNoOption" ;
+		String[] args = {file, "-l"};
+		sort.run(args, System.in, System.out);
+	}
+	
 	@Test
 	public void testRunSortStartLineNumberNoOpt() throws AbstractApplicationException{
 		String expectedOutput = "";
@@ -150,4 +179,34 @@ public class SortApplicationTest {
 		
 		assertEquals(expectedOutput, out.toString());
 	}
+	
+	@Test
+	public void testSortFromStdin() throws AbstractApplicationException{
+		String inputFile = RELATIVE_TEST_DIRECTORY + "toTest" + PATH_SEPARATOR + "testRunSortFromStdin";
+		String input = "";
+		String outputFile = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunSortFromStdin";
+		String expectedOutput = "";
+		String[] args = {};
+		System.setOut(new PrintStream(out));
+		SortApplication sort = new SortApplication();
+		
+		try{
+			input = new String(Files.readAllBytes(Paths.get(inputFile)));
+		}catch (IOException e){
+			System.out.println(e);
+		}
+		
+		InputStream is = new ByteArrayInputStream(input.getBytes());
+		
+		try{
+			expectedOutput = new String(Files.readAllBytes(Paths.get(outputFile)));
+		}catch (IOException e){
+			System.out.println(e);
+		}
+		
+		sort.run(args, is, System.out);
+		
+		assertEquals(expectedOutput, out.toString());
+	}
+	
 }
