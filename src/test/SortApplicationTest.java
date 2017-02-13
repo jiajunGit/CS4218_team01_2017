@@ -142,7 +142,7 @@ public class SortApplicationTest {
 			System.out.println(ex);
 		}
 
-		assertEquals(expectedOut, sort.sortSpecialChars("sort -n " + inFilePath));
+		assertEquals(SortException.class.getName(), sort.sortSpecialChars("sort -n " + inFilePath));
 	}
 	
 	@Test
@@ -177,8 +177,8 @@ public class SortApplicationTest {
 		} catch (IOException ex) {
 			System.out.println(ex);
 		}
-
-		assertEquals(expectedOut, sort.sortCapitalNumbers("sort -n " + inFilePath));
+		
+		assertEquals(SortException.class.getName(), sort.sortCapitalNumbers("sort -n " + inFilePath));
 	}
 	
 	@Test
