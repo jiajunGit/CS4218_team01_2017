@@ -87,7 +87,7 @@ public class TailApplicationTest {
 	@Test
 	public void testEmptyStdoutWithValidArgException() throws TailException {
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n 10", file};
+		String[] arg = {"-n", "10", file};
 		try{
 			tail.run(arg, System.in, null);
 		}catch(TailException e){
@@ -97,7 +97,7 @@ public class TailApplicationTest {
 	
 	@Test
 	public void testPrintFromInvalidFileException() throws TailException{
-		String[] arg = {"-n 99", "INVALID_FILE"};
+		String[] arg = {"-n", "99", "INVALID_FILE"};
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){
@@ -108,7 +108,7 @@ public class TailApplicationTest {
 	@Test
 	public void testPrintFromFileWithInvalidNumOfLinesException() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n xx", file};
+		String[] arg = {"-n", "xx", file};
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){
@@ -119,7 +119,7 @@ public class TailApplicationTest {
 	@Test
 	public void testPrintFromFileWithNegativeNumOfLinesException() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n -10", file};
+		String[] arg = {"-n", "-10", file};
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){
@@ -131,7 +131,7 @@ public class TailApplicationTest {
 	public void testPrintFromFileWithMaxIntNumOfLinesException() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 		
-		String[] arg = {"-n 2947483647", file}; //maxint=2147483647
+		String[] arg = {"-n", "2947483647", file}; //maxint=2147483647
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){
@@ -153,7 +153,7 @@ public class TailApplicationTest {
 	@Test
 	public void testExcessArgException() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n 10", file, "EXCESS01", "EXCESS02"};
+		String[] arg = {"-n", "10", file, "EXCESS01", "EXCESS02"};
 		try{
 			tail.run(arg, System.in, System.out);
 		}catch(TailException e){
@@ -194,7 +194,7 @@ public class TailApplicationTest {
 	public void testPrintFromStdinNLines() throws TailException {
 		String testStdinInput = testString11lines;
 		String expectedOutput = testString10lines;
-		String[] arg = {"-n 10"};
+		String[] arg = {"-n", "10"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		tail.run(arg, System.in, System.out);
@@ -205,7 +205,7 @@ public class TailApplicationTest {
 	public void testPrintFromStdinMoreThanMaxLines() throws TailException {
 		String testStdinInput = testString10lines;
 		String expectedOutput = testString10lines;
-		String[] arg = {"-n 99"};
+		String[] arg = {"-n", "99"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		tail.run(arg, System.in, System.out);
@@ -224,7 +224,7 @@ public class TailApplicationTest {
 	@Test
 	public void testPrintFromFileNLines() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n 10", file};
+		String[] arg = {"-n", "10", file};
 		String expectedOutput = testString10lines;
 		tail.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
@@ -233,7 +233,7 @@ public class TailApplicationTest {
 	@Test
 	public void testPrintFromFileMoreThanMaxLines() throws TailException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
-		String[] arg = {"-n 99", file};
+		String[] arg = {"-n", "99", file};
 		String expectedOutput = testString11lines;
 		tail.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
