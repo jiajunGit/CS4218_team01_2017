@@ -1185,6 +1185,56 @@ public class ShellImpl implements Shell {
         return cmd.toString();
     }
     
+    // For use in application interface methods
+    public SimpleCommand parse( String cmdline ) throws ShellException, AbstractApplicationException {
+        
+        if(cmdline == null){
+            throw new ShellException(EXP_SYNTAX);
+        }
+        
+        cmdline = cmdline.trim();
+        
+        if( cmdline.length() <= 0 || hasNewLineViolation(cmdline) ) {
+            throw new ShellException(EXP_SYNTAX);
+        }
+        
+        cmdline = cmdline.replace(Symbol.NEW_LINE_S, Symbol.EMPTY_S);
+        
+        if( cmdline.length() <= 0) {
+            throw new ShellException(EXP_SYNTAX);
+        }
+        
+        StringBuilder cmdSymbols = generateSymbols(cmdline);
+        StringBuilder cmd = new StringBuilder(cmdline);
+        
+        processBQ(cmd, cmdSymbols, false);
+        processSQ(cmd, cmdSymbols, false);
+        processDQ(cmd, cmdSymbols, false);
+        processEmptyOutputs(cmd, cmdSymbols);
+        
+        List<Segment> segments = split(cmd, cmdSymbols);
+        
+        List<Command> commands = generateCommands(segments);
+        
+        SimpleCommand cmdObj = null;
+        if( commands.size() == 1 ){
+            Command command = commands.get(0);
+            cmdObj = new SimpleCommand( command.getAppName(), command.getArguments(), command.getStdinName(), command.getStdoutName() );
+        } else {
+            cmdObj = new SimpleCommand();
+        }
+        return cmdObj;
+    }
+    
+    // Used for testing
+    public String parseAndEvaluate( String input ) throws AbstractApplicationException, ShellException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        parseAndEvaluate(input, out);
+        String outString = out.toString();
+        try { out.close(); } catch (IOException e) {}
+        return outString;
+    }
+    
     @Override
     public void parseAndEvaluate(String cmdline, OutputStream stdout)
             throws AbstractApplicationException, ShellException {
