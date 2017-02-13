@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
@@ -182,26 +184,10 @@ public class ShellImpl implements Shell {
      */
     public static void main(String... args) {
         
-        System.out.println("Use Shell.java");
-        
-        /*
-        try {
-            
-            ShellImp shell = new ShellImp();
-            String readLine = " echo 'hi'";
-            shell.parseAndEvaluate(readLine, System.out);
-            
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Terminated");
-        }
-        */
-        
-        /*
-        BufferedReader bReader = new BufferedReader(new InputStreamReader(
-                System.in));
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
         String readLine = null;
         String currentDir;
+        Shell shell = new ShellImpl();
 
         while (true) {
             try {
@@ -214,12 +200,11 @@ public class ShellImpl implements Shell {
                 if (("").equals(readLine)) {
                     continue;
                 }
-                //shell.parseAndEvaluate(readLine, System.out);
+                shell.parseAndEvaluate(readLine, System.out);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-        */
     }
     
     /**
