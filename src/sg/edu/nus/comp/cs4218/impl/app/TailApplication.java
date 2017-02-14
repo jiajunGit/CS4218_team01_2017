@@ -36,26 +36,55 @@ public class TailApplication implements Tail {
 			int noLines = 10;
 			
 			if(args!=null && args.length!=0){
-				if(args.length==1 && !args[0].substring(0, 3).equals("-n ")) //load file with no options
-					load(args[0]);
-				else if(args.length==1 && args[0].substring(0, 3).equals("-n ")){ //load stin with N lines
-					noLines = Integer.parseInt(args[0].substring(3));
-					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
-					if(stdin==null) throw new TailException(ERROR_EXP_INVALID_INSTREAM);
-					loadFromStdIn(stdin);
-				}
-				else if(args.length==2 && args[0].substring(0, 3).equals("-n ")){ //load file with N lines
-					noLines = Integer.parseInt(args[0].substring(3));
-					if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
-					load(args[1]);
-				}
-				else{
+				if(args.length==3){
+					if(args[2].equals("-n")){
+						throw new TailException(INVALID_FORMAT);
+					}
+					if(args[1].equals("-n")){
+						if(isInteger(args[2])){
+							noLines = Integer.parseInt(args[2]);
+							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
+							load(args[0]);
+						}else{
+							throw new TailException(NUMBER_NOT_SPECIFIED);
+						}
+					}else if(args[0].equals("-n")){
+						if(isInteger(args[1])){
+							noLines = Integer.parseInt(args[1]);
+							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
+							load(args[2]);
+						}else{
+							throw new TailException(NUMBER_NOT_SPECIFIED);
+						}
+					}else{
+						throw new TailException(INVALID_FORMAT);
+					}
+				}else if(args.length==2){
+					if(args[0].equals("-n")){
+						if(isInteger(args[1])){
+							noLines = Integer.parseInt(args[1]);
+							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
+							if(stdin==null) throw new TailException(ERROR_EXP_INVALID_INSTREAM);
+							loadFromStdIn(stdin);
+						}else{
+							throw new TailException(NUMBER_NOT_SPECIFIED); 
+						}
+					}else{
+						throw new TailException(INVALID_FORMAT);
+					}
+				}else if(args.length==1){
+					if(args[0].equals("-n")){
+						throw new TailException(NUMBER_NOT_SPECIFIED);
+					}else{
+						load(args[0]);
+					}
+				}else{
 					throw new TailException(INVALID_FORMAT); //Invalid input
 				}
 			}else{
 				if (stdin!=null)
 					loadFromStdIn(stdin);
-				else throw new TailException(ERROR_EXP_INVALID_INSTREAM);
+				else throw new TailException(ERROR_EXP_INVALID_INSTREAM);				
 			}
 			
 			printLines(noLines);
@@ -123,6 +152,22 @@ public class TailApplication implements Tail {
 		{
 			return s.hasNext() ? s.next() : "";
 		}
-	}	
+	}
+	
+	public static boolean isInteger(String s) {
+	    return isInteger(s,10);
+	}
+
+	public static boolean isInteger(String s, int radix) {
+	    if(s.isEmpty()) return false;
+	    for(int i = 0; i < s.length(); i++) {
+	        if(i == 0 && s.charAt(i) == '-') {
+	            if(s.length() == 1) return false;
+	            else continue;
+	        }
+	        if(Character.digit(s.charAt(i),radix) < 0) return false;
+	    }
+	    return true;
+	}
 	
 }
