@@ -1123,17 +1123,6 @@ public class ShellImpl implements Shell {
        executeCommands(commands, stdout);
     }
     
-    private void writeToOut(OutputStream stdout, String content ) throws ShellException {
-        if( stdout != null && content != null ){
-            try {
-                stdout.write(content.getBytes());
-                stdout.flush();
-            } catch (IOException e) {
-                throw new ShellException(e.getMessage());
-            }
-        }
-    }
-    
     // TODO Need to check with prof about the validity of a command that ends with a consecutive sequence of new lines at the end
     public boolean hasNewLineViolation(String input) {
         
@@ -1196,8 +1185,6 @@ public class ShellImpl implements Shell {
         
         executeCommands(commands, stdout);
         
-        writeToOut(stdout, Symbol.NEW_LINE_S);
-        
         closeInputStream(stdin);
         closeOutputStream(stdout);
     }
@@ -1237,8 +1224,6 @@ public class ShellImpl implements Shell {
         }
         
         executeCommands(commands, stdout);
-        
-        writeToOut(stdout, Symbol.NEW_LINE_S);
         
         closeInputStream(stdin);
         closeOutputStream(stdout);
@@ -1358,8 +1343,6 @@ public class ShellImpl implements Shell {
         List<Segment> segments = split(cmd, cmdSymbols);
         
         evaluate(segments, stdout);
-        
-        writeToOut(stdout, Symbol.NEW_LINE_S);
         
         closeOutputStream(stdout);
     }
