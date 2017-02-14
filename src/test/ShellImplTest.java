@@ -54,7 +54,7 @@ public class ShellImplTest {
     @Test
     public void redirectInputWithNoFile(){
 		ShellImpl shell = new ShellImpl();
-		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithNoFile("cat < "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithNoFile("cat < "));
 		
     }
 
@@ -62,28 +62,28 @@ public class ShellImplTest {
     public void redirectOutputWithNoFile(){
 		ShellImpl shell = new ShellImpl();
 		
-		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithNoFile("cat > "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithNoFile("cat > "));
     }
 
     @Test
     public void redirectInputWithException(){
 		ShellImpl shell = new ShellImpl();
 		
-		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat < input.txt < input.txt "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithException("cat < input.txt < input.txt "));
     }
 
     @Test
     public void redirectOutputWithException(){
 		ShellImpl shell = new ShellImpl();
 		
-		Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat > input.txt > input.txt "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithException("cat > input.txt > input.txt "));
     }	
     
     @Test
     public void redirectInputInvalidFile(){
     	ShellImpl shell = new ShellImpl();
     	
-    	Assert.assertEquals("sg.edu.nus.comp.cs4218.exception.ShellException", shell.redirectInputWithException("cat < doesntexist.txt "));
+    	Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_STDIN, shell.redirectInputWithException("cat < doesntexist.txt "));
     	
     }
     
@@ -217,6 +217,93 @@ public class ShellImplTest {
 		}
     	
     	assertEquals(expectedOut, outContent.toString());
+    }
+    
+    @Test
+    public void testLoneSingleSemicolon(){
+    	try {
+			shell.parseAndEvaluate(";");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, e.getMessage());
+		}
+    	
+    }
+    
+    @Test
+    public void testLoneMultipleSemicolon(){
+    	try {
+			shell.parseAndEvaluate(";;;;");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, e.getMessage());
+		}
+    	
+    }
+    
+    @Test
+    public void testNoCommandBeforeSemicolon(){
+    	try {
+			shell.parseAndEvaluate(";echo hello");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, e.getMessage());
+		}
+    	
+    }
+    
+    @Test
+    public void testNoCommandAfterSemicolon(){
+    	try {
+			shell.parseAndEvaluate("echo hello;");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, e.getMessage());
+		}   	
+    }
+    
+    @Test
+    public void testInvalidCommandBeforeSemicolon(){
+    	try {
+			shell.parseAndEvaluate("tai file.txt;echo hello");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: tai: " +sg.edu.nus.comp.cs4218.Shell.EXP_INVALID_APP, e.getMessage());
+		}
+    	
+    }
+    
+    @Test
+    public void testInvalidCommandAfterSemicolon(){
+    	try {
+			shell.parseAndEvaluate("echo hello;pw");
+			fail();
+		} catch (AbstractApplicationException | ShellException e) {
+			assertEquals("shell: pw: " +sg.edu.nus.comp.cs4218.Shell.EXP_INVALID_APP, e.getMessage());
+		}
+    	
+    }
+    
+    @Test
+    public void testSequenceTwoValidCommands(){
+    	try {
+			String actual = shell.parseAndEvaluate("echo hello;echo world");
+			Assert.assertEquals("hello" + System.lineSeparator() + "world" + System.lineSeparator(), actual);
+		} catch (AbstractApplicationException | ShellException e) {
+			fail();
+		}
+    }
+    
+    @Test
+    public void testSequenceMultipleValidCommands(){
+    	try {
+    		String expected = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_SHELL_DIRECTORY + "output" + PATH_SEPARATOR + "testSeqOut")));
+			shell.parseAndEvaluate("echo hello;tail -n 13 " + RELATIVE_TEST_SHELL_DIRECTORY + "input" + PATH_SEPARATOR  + "testSeqIn; echo world; head " + RELATIVE_TEST_SHELL_DIRECTORY + "input" + PATH_SEPARATOR + "testSeqIn", outContent);
+			Assert.assertEquals(expected, outContent.toString());
+		} catch (AbstractApplicationException | ShellException | IOException e) {
+			e.printStackTrace();
+			fail();
+		}
     }
     
 	private void clearFromFile(String fileName) throws FileNotFoundException {
