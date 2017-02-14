@@ -93,7 +93,7 @@ public class CommandGenerator {
             throw new ShellException(Shell.EXP_MULTI_STDIN);
         }
         
-        currentCmd.setStdinName(stdin);
+        currentCmd.setStdinName(stdin != null ? stdin : new String());
     }
     
     private Stage populateCommandForInputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 
@@ -152,7 +152,7 @@ public class CommandGenerator {
         if(!stdin.isEmpty() && stdin.compareToIgnoreCase(stdout) == 0){
             throw new ShellException(Shell.EXP_SAME_REDIR);
         }
-        currentCmd.setStdoutName(stdout);
+        currentCmd.setStdoutName(stdout != null ? stdout : new String());
     }
     
     private Stage populateCommandForOutputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 

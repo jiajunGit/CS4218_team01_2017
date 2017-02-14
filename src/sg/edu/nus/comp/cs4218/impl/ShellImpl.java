@@ -680,7 +680,15 @@ public class ShellImpl implements Shell {
         List<Segment> segments = split(cmd, cmdSymbols);
         
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        evaluate(segments, outStream);
+        
+        List<Command> commands = generateCommands(segments);
+        
+        if(commands.isEmpty()) {
+            throw new ShellException(Shell.EXP_SYNTAX);
+        }
+        
+        executeCommands(commands, outStream);
+        
         return outStream.toString();
     }
     
