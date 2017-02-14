@@ -212,7 +212,7 @@ public class CommandGenerator {
     private void populateCommandNonEmptyArgs( String segment, String segmentSymbols ) throws ShellException {
         if(currentCmd.hasAppName()) {
             currentCmd.addArguments(segment);
-        } else {
+        } else if( segmentSymbols != null && segmentSymbols.length() > 0 ) {
             char firstSymbol = segmentSymbols.charAt(0);
             if(firstSymbol == Symbol.UNQUOTED_UNRELATED ){
                 int index = 1;
@@ -226,6 +226,8 @@ public class CommandGenerator {
             } else{
                 throw new ShellException(Shell.EXP_SYNTAX);
             }
+        } else {
+            throw new ShellException(Shell.EXP_SYNTAX);
         }
     }
     
