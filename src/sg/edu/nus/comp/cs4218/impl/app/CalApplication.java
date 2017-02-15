@@ -1,5 +1,6 @@
 package sg.edu.nus.comp.cs4218.impl.app;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,6 +55,7 @@ public class CalApplication implements Cal{
 	private static final String MONDAY_OPT = "-m";
 	private static final int MONTH_OFFSET = 1;
 	private static final int YEAR_WIDTH = 64;
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	public CalApplication() {
 	}
@@ -208,6 +210,7 @@ public class CalApplication implements Cal{
 		calOutput.append(printDaysHeader(false));
 		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysOfMonth(currMonth, false));
+		calOutput.append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -227,6 +230,7 @@ public class CalApplication implements Cal{
 		calOutput.append(printDaysHeader(true));
 		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysOfMonth(currMonth, true));
+		calOutput.append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 		
@@ -248,6 +252,7 @@ public class CalApplication implements Cal{
 		calOutput.append(printDaysHeader(false));
 		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysOfMonth(currMonth, false));
+		calOutput.append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -303,6 +308,7 @@ public class CalApplication implements Cal{
 		calOutput.append(printDaysHeader(true));
 		calOutput.append(System.lineSeparator());
 		calOutput.append(printDaysOfMonth(currMonth, true));
+		calOutput.append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -481,8 +487,10 @@ public class CalApplication implements Cal{
 			day++;
 			counter++;
 			if (counter == 7){
+				if (day <= daysInMonth){
+					calendar.append(System.lineSeparator());
+				}
 				counter = 0;
-				calendar.append(System.lineSeparator());
 			}
 			else{
 				calendar.append(EMPTY_SPACE);
