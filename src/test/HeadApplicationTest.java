@@ -85,7 +85,7 @@ public class HeadApplicationTest {
 	@Test
 	public void testEmptyStdoutWithValidArgException() throws HeadException {
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n 10", file};
+		String[] arg = {"-n","10", file};
 		try{
 			head.run(arg, System.in, null);
 		}catch(HeadException e){
@@ -94,8 +94,8 @@ public class HeadApplicationTest {
 	}
 
 	@Test
-	public void testPrintFromInvalidFileException() throws HeadException{
-		String[] arg = {"-n 99", "INVALID_FILE"};
+	public void testPrintFromNonExistentFileException() throws HeadException{
+		String[] arg = {"-n", "99", "INVALID_FILE"};
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
@@ -106,22 +106,22 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromFileWithInvalidNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n xx", file};
+		String[] arg = {"-n", "xx", file};
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
-			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
+			assertEquals("head:Invalid command format",e.getMessage());
 		}
 	}
 
 	@Test
-	public void testPrintFromFileWithNoNumOfLinesException() throws HeadException{
+	public void testPrintFromFileWithMissingNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n", file};
+		String[] arg = {"-n","", file};
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
-			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
+			assertEquals("head:Invalid command format",e.getMessage());
 		}
 	}
 
@@ -140,11 +140,29 @@ public class HeadApplicationTest {
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedString,outContent.toString());
 	}
+	
+	@Test
+	public void testPrintFrom3EmptyArgException() throws HeadException{
+		String[] arg = {"","",""};
+		String expectedString = LINE_SEPARATOR;
+		head.run(arg, System.in, System.out);
+		assertEquals(expectedString,outContent.toString());
+	}
+	
+	@Test
+	public void testExcessArgException() throws HeadException{
+		String[] arg = {"-n", "10","EXCESS01", "EXCESS02"};
+		try{
+			head.run(arg, System.in, System.out);
+		}catch(HeadException e){
+			assertEquals("head:Invalid command format",e.getMessage());
+		}
+	}
 
 	@Test
 	public void testPrintFromFileWithNegativeNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n -10", file};
+		String[] arg = {"-n", "-10", file};
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
@@ -156,35 +174,44 @@ public class HeadApplicationTest {
 	public void testPrintFromFileWithMaxIntNumOfLinesException() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 
-		String[] arg = {"-n 2947483647", file}; //maxint=2147483647
-		try{
-			head.run(arg, System.in, System.out);
-		}catch(HeadException e){
-			assertEquals("head:Specify proper number with \"-n\" option",e.getMessage());
-		}
-	}
-
-	@Test
-	public void testInvalidOptionsException() throws HeadException{
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"INVALID", file};
+		String[] arg = {"-n", "2947483647", file}; //maxint=2147483647
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
 			assertEquals("head:Invalid command format",e.getMessage());
 		}
 	}
+	
 	@Test
-	public void testExcessArgException() throws HeadException{
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n 10", file, "EXCESS01", "EXCESS02"};
+	public void test1ArgumentsWithInvalidInputException() throws HeadException{
+		String[] arg = {"-x"};
+		try{
+			head.run(arg, System.in, System.out);
+		}catch(HeadException e){
+			assertEquals("head:Specify a file which exists",e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test2ArgumentsWithInvalidOptionsException() throws HeadException{
+		String[] arg = {"-x", "5"};
 		try{
 			head.run(arg, System.in, System.out);
 		}catch(HeadException e){
 			assertEquals("head:Invalid command format",e.getMessage());
 		}
 	}
-
+	
+	@Test
+	public void test3ArgumentsWithInvalidOptionsException() throws HeadException{
+		String[] arg = {"-x", "5", "INVALIDFILE"};
+		try{
+			head.run(arg, System.in, System.out);
+		}catch(HeadException e){
+			assertEquals("head:Invalid command format",e.getMessage());
+		}
+	}
+	
 	@Test
 	public void testPrintFromEmptyStdinWithEmptyArg() throws HeadException{
 		String[] arg = {};
@@ -219,7 +246,7 @@ public class HeadApplicationTest {
 	public void testPrintFromStdinNLines() throws HeadException {
 		String testStdinInput = testString11lines;
 		String expectedOutput = testString10lines;
-		String[] arg = {"-n 10"};
+		String[] arg = {"-n", "10"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -230,7 +257,7 @@ public class HeadApplicationTest {
 	public void testPrintFromStdinMoreThanMaxLines() throws HeadException {
 		String testStdinInput = testString10lines;
 		String expectedOutput = testString10lines;
-		String[] arg = {"-n 99"};
+		String[] arg = {"-n", "99"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -249,7 +276,7 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromFileNLines() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n 10", file};
+		String[] arg = {"-n", "10", file};
 		String expectedOutput = testString10lines;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
@@ -258,7 +285,7 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromFileMoreThanMaxLines() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n 99", file};
+		String[] arg = {"-n", "99", file};
 		String expectedOutput = testString11lines;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
