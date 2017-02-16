@@ -189,23 +189,23 @@ public class SortApplication implements Sort {
 		return false;
 	}
 
-	private static void writeToFile(String newString, String fileName) throws SortException{
-		FileWriter fw;
-		try {
-			clearFromFile(fileName);
-			fw = new FileWriter(fileName, true);
-			fw.write(newString);
-			fw.close();
-		} catch (IOException e) {
-			throw new SortException(ERROR_IO_WRITING);
-		}
-	}
-	
-	private static void clearFromFile(String fileName) throws FileNotFoundException {
-		PrintWriter writer = new PrintWriter(new File(fileName));
-		writer.print("");
-		writer.close();
-	}
+//	private static void writeToFile(String newString, String fileName) throws SortException{
+//		FileWriter fw;
+//		try {
+//			clearFromFile(fileName);
+//			fw = new FileWriter(fileName, true);
+//			fw.write(newString);
+//			fw.close();
+//		} catch (IOException e) {
+//			throw new SortException(ERROR_IO_WRITING);
+//		}
+//	}
+//	
+//	private static void clearFromFile(String fileName) throws FileNotFoundException {
+//		PrintWriter writer = new PrintWriter(new File(fileName));
+//		writer.print("");
+//		writer.close();
+//	}
 	
 	private String arrayToString(){
 		StringBuilder strBuilder = new StringBuilder();
