@@ -80,24 +80,20 @@ public class HeadApplication implements Head {
 			if(args[1].length()==0){
 				loadFromStdIn(stdin); //head "",""
 			}
-			else if (args[1].length()>0){ //head "",[number]/[file]
-				if(!isNumeric(args[1])){//head"",[file}
-					load(args[1]);
-				}
-				else{
-					throw new HeadException(INVALID_FORMAT); //head"",[number]
-				}
+			else{ //head "",[number]/[file]
+				load(args[1]);
 			}
 		}
-		else if(args[0].length()>0 && args[0].length()<3){
-			if(args[0].substring(0, 2).equals("-n")){
-				if( isNumeric(args[1]) ){ //head -n, 10
-					noLines=Integer.parseInt(args[1]);
-					loadFromStdIn(stdin);
+		else if(args[0].equals("-n")){
+			if( isNumeric(args[1]) ){ //head -n, 10
+				if(args[1].contains("-") || args[1].contains("+")){
+					throw new HeadException(NUMBER_NOT_SPECIFIED);
 				}
+				noLines=Integer.parseInt(args[1]);
+				loadFromStdIn(stdin);
 			}
 			else{
-				throw new HeadException(INVALID_FORMAT); //head -x xx
+				throw new HeadException(NUMBER_NOT_SPECIFIED);
 			}
 		}
 		else{
@@ -116,24 +112,22 @@ public class HeadApplication implements Head {
 				load(args[2]); //head "" "" file
 			}
 		}
-		else if (args[0].length()>0 && args[0].length()<3){
-			if(args[0].substring(0, 2).equals("-n")){ //head -n x x
-				if(isNumeric(args[1])){
-					if(args[2].length()==0){ //head -n 10 ""
-						noLines=Integer.parseInt(args[1]);
-						loadFromStdIn(stdin);
-					}
-					else{
-						noLines=Integer.parseInt(args[1]); //head -n 10 file
-						load(args[2]);
-					}
+		else if (args[0].equals("-n")){ //head -n x x
+			if(isNumeric(args[1])){
+				if(args[1].contains("-") || args[1].contains("+")){
+					throw new HeadException(NUMBER_NOT_SPECIFIED);
+				}
+				if(args[2].length()==0){ //head -n 10 ""
+					noLines=Integer.parseInt(args[1]);
+					loadFromStdIn(stdin);
 				}
 				else{
-					throw new HeadException(INVALID_FORMAT); //head -n x file
+					noLines=Integer.parseInt(args[1]); //head -n 10 file
+					load(args[2]);
 				}
 			}
 			else{
-				throw new HeadException(INVALID_FORMAT); //head -x 10 file
+				throw new HeadException(NUMBER_NOT_SPECIFIED);
 			}
 		}
 		else{
@@ -152,11 +146,12 @@ public class HeadApplication implements Head {
 	}
 
 	private Boolean isNumeric(String s){
-		try
-		{ int i = Integer.parseInt(s); return true; }
-
-		catch(NumberFormatException er)
-		{ return false; }
+		try{ 
+			int i = Integer.parseInt(s); return true;
+		}
+		catch(NumberFormatException e){ 
+			return false; 
+		}
 	}
 
 	private void loadFromStdIn(InputStream stdin) throws HeadException{

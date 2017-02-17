@@ -162,6 +162,16 @@ public class TailApplicationTest {
 	}
 	
 	@Test
+	public void testExcessArg1Exception() throws TailException{
+		//tring file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
+		String[] arg = {"-n", "10", ""};
+		try{
+			tail.run(arg, System.in, System.out);
+		}catch(TailException e){
+			assertEquals("tail:Invalid command format",e.getMessage());
+		}
+	}
+	@Test
 	public void testPrintFromEmptyStdinWithEmptyArg() throws TailException{
 		String[] arg = {};
 		String expectedString = LINE_SEPARATOR;
