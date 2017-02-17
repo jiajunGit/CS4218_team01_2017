@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,11 @@ public class ShellImplTest {
 	public void setUpBeforeTest(){
 		shell = new ShellImpl();
 		System.setOut(new PrintStream(outContent));
+	}
+	
+	@After
+	public void tearDownAfterTest(){
+		System.setOut(System.out);
 	}
 	
     @Test

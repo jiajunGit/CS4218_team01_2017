@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,7 +30,11 @@ public class SortApplicationTest {
 	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "sort"
 			+ PATH_SEPARATOR;
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
-
+	
+	@AfterClass
+	public static void tearDownAfterTest(){
+		System.setOut(System.out);
+	}
 //	@BeforeClass
 //	public static void setUpOnce() {
 //		try {
@@ -656,6 +661,26 @@ public class SortApplicationTest {
 		try {
 			expectedOutput = new String(Files
 					.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortStringsSimple")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+		assertEquals(expectedOutput, out.toString());
+	}
+	
+	@Test
+	public void testRunSortEmptyFile() throws AbstractApplicationException {
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortEmptyFile";
+		String[] args = { file };
+		System.setOut(new PrintStream(out));
+
+		sort.run(args, System.in, System.out);
+
+		try {
+			expectedOutput = new String(Files
+					.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortEmptyFile")));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
