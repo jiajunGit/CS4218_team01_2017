@@ -8,14 +8,10 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import sg.edu.nus.comp.cs4218.exception.CdException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 
@@ -98,8 +94,7 @@ public class HeadApplicationTest {
 
 	@Test(expected=HeadException.class)
 	public void testEmptyStdoutWith1ArgException() throws HeadException {
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {file};
+		String[] arg = {};
 		head.run(arg, System.in, null);
 	}
 
@@ -202,16 +197,16 @@ public class HeadApplicationTest {
 		String[] arg = {"-x", "5"};
 		head.run(arg, System.in, System.out);
 	}
-
+	
 	@Test(expected=HeadException.class)
-	public void testExcessArgException() throws HeadException{
-		String[] arg = {"-n", "10","EXCESS01", "EXCESS02"};
+	public void test3ArgumentsWithInvalidOptionsException() throws HeadException{
+		String[] arg = {"-x", "5", "INVALIDFILE"};
 		head.run(arg, System.in, System.out);
 	}
 
 	@Test(expected=HeadException.class)
-	public void test3ArgumentsWithInvalidOptionsException() throws HeadException{
-		String[] arg = {"-x", "5", "INVALIDFILE"};
+	public void testExcessArgException() throws HeadException{
+		String[] arg = {"-n", "10","EXCESS01", "EXCESS02"};
 		head.run(arg, System.in, System.out);
 	}
 
