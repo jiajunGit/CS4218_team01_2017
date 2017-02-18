@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
@@ -20,15 +22,63 @@ import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 
 public class GrepApplicationTest {
 	
-    private String absTestDirPath;
-    private String relativeDirPath;
-    private GrepApplication grep;
+    private static String absTestDirPath;
+    private static String relativeDirPath;
+    
+    private static File tempFileOne;
+    private static File tempFileTwo;
+    private static File tempFileThree;
+    
+    private static GrepApplication grep;
+    
+    @BeforeClass
+    public static void setup(){
+        
+        grep = new GrepApplication();
+        
+        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S + "test";
+        relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test";
+        
+        tempFileOne = null;
+        tempFileTwo = null;
+        tempFileThree = null;
+    }
+    
+    @AfterClass
+    public static void tearDown(){
+        
+        grep = null;
+        
+        absTestDirPath = "";
+        relativeDirPath = "";
+        
+        assertTrue( deleteFile(tempFileOne) );
+        assertTrue( deleteFile(tempFileTwo) );
+        assertTrue( deleteFile(tempFileThree) );
+        
+        tempFileOne = null;
+        tempFileTwo = null;
+        tempFileThree = null;
+    }
     
     @Before
-    public void setUpBeforeTest(){
-        grep = new GrepApplication();
-        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S + "test";
-        relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test"; ;
+    public void preTest() {
+        
+        assertTrue( deleteFile(tempFileOne) );
+        assertTrue( deleteFile(tempFileTwo) );
+        assertTrue( deleteFile(tempFileThree) );
+        
+        tempFileOne = null;
+        tempFileTwo = null;
+        tempFileThree = null;
+    }
+    
+    @After
+    public void postTest() {
+        
+        assertTrue( deleteFile(tempFileOne) );
+        assertTrue( deleteFile(tempFileTwo) );
+        assertTrue( deleteFile(tempFileThree) );
     }
     
 	@Test(expected=GrepException.class)
@@ -184,16 +234,17 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
 		                 + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
 		
-		FileOutputStream outStream = new FileOutputStream(tempFile);
+		FileOutputStream outStream = new FileOutputStream(tempFileOne);
 		outStream.write(content.getBytes());
 		outStream.close();
 		
-		FileInputStream inStream = new FileInputStream(tempFile);
+		FileInputStream inStream = new FileInputStream(tempFileOne);
 		inStream.close();
-		
-		tempFile.deleteOnExit();
 		
 		grep.grepFromStdin( pattern, inStream );
 	}
@@ -204,15 +255,16 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
 
-		FileOutputStream outStream = new FileOutputStream(tempFile);
+		FileOutputStream outStream = new FileOutputStream(tempFileOne);
 		outStream.write(content.getBytes());
 		outStream.close();
 		
-		tempFile.deleteOnExit();
-		
-		grep.grepFromOneFile( null, tempFile.getAbsolutePath() );
+		grep.grepFromOneFile( null, filePath );
 	}
 	
 	@Test(expected=GrepException.class)
@@ -221,15 +273,16 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                           + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
-
-        FileOutputStream outStream = new FileOutputStream(tempFile);
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
         outStream.write(content.getBytes());
         outStream.close();
         
-        tempFile.deleteOnExit();
-        
-        grep.grepFromOneFile( "", tempFile.getAbsolutePath() );
+        grep.grepFromOneFile( "", filePath );
     }
 	
 	@Test(expected=GrepException.class)
@@ -245,10 +298,12 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
-		assertTrue( tempFile.delete() );
+		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+		assertTrue( tempFileOne.delete() );
 		
-		grep.grepFromOneFile( pattern, tempFile.getAbsolutePath() );
+		grep.grepFromOneFile( pattern, filePath );
 	}
 	
 	@Test
@@ -263,16 +318,14 @@ public class GrepApplicationTest {
 	    
 	    assertTrue(Environment.createNewFile(filePath));
 	    
-	    File tempFile = new File(filePath);
-	    tempFile.deleteOnExit();
+	    tempFileOne = new File(filePath);
+	    tempFileOne.deleteOnExit();
 	    
-	    FileOutputStream outStream = new FileOutputStream(tempFile);
+	    FileOutputStream outStream = new FileOutputStream(tempFileOne);
 	    outStream.write(content.getBytes());
 	    outStream.close();
 	    
-	    String output = grep.grepFromOneFile( pattern, tempFile.getAbsolutePath() );
-	    
-	    tempFile.delete();
+	    String output = grep.grepFromOneFile( pattern, filePath );
 	    
 	    assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
                 + Symbol.NEW_LINE_S );
@@ -307,12 +360,10 @@ public class GrepApplicationTest {
         
         assertTrue(Environment.createNewFile(filePath));
         
-        File tempFile = new File(filePath);
-        tempFile.deleteOnExit();
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
         
         String output = grep.grepFromOneFile( pattern, filePath );
-        
-        tempFile.delete();
         
         assertEquals( output, "" );
     }
@@ -324,15 +375,16 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
 
-		FileOutputStream outStream = new FileOutputStream(tempFile);
+		FileOutputStream outStream = new FileOutputStream(tempFileOne);
 		outStream.write(content.getBytes());
 		outStream.close();
 		
-		tempFile.deleteOnExit();
-		
-		String output = grep.grepFromOneFile( pattern, tempFile.getAbsolutePath() );
+		String output = grep.grepFromOneFile( pattern, filePath );
 		
 		assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
 		              + Symbol.NEW_LINE_S );
@@ -344,15 +396,16 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
 
-		FileOutputStream outStream = new FileOutputStream(tempFile);
+		FileOutputStream outStream = new FileOutputStream(tempFileOne);
 		outStream.write(content.getBytes());
 		outStream.close();
 		
-		tempFile.deleteOnExit();
-		
-		String[] arguments = { null, tempFile.getAbsolutePath() };
+		String[] arguments = { null, filePath };
 	
 		grep.grepFromMultipleFiles( arguments );
 	}
@@ -363,15 +416,16 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                          + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        File tempFile = File.createTempFile("temp", Long.toString(System.nanoTime()));
+        String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
 
-        FileOutputStream outStream = new FileOutputStream(tempFile);
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
         outStream.write(content.getBytes());
         outStream.close();
         
-        tempFile.deleteOnExit();
-        
-        String[] arguments = { "", tempFile.getAbsolutePath() };
+        String[] arguments = { "", filePath };
     
         grep.grepFromMultipleFiles( arguments );
 	}
@@ -411,21 +465,21 @@ public class GrepApplicationTest {
         String filePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         assertTrue(Environment.createNewFile(filePathOne));
-        File tempFileOne = new File(filePathOne);
+        tempFileOne = new File(filePathOne);
         tempFileOne.deleteOnExit();
         FileOutputStream outStream = new FileOutputStream(tempFileOne);
         outStream.write(content.getBytes());
         outStream.close();
         
         assertTrue(Environment.createNewFile(filePathTwo));
-        File tempFileTwo = new File(filePathTwo);
+        tempFileTwo = new File(filePathTwo);
         tempFileTwo.deleteOnExit();
         outStream = new FileOutputStream(tempFileTwo);
         outStream.write(content.getBytes());
         outStream.close();
         
         assertTrue(Environment.createNewFile(filePathThree));
-        File tempFileThree = new File(filePathThree);
+        tempFileThree = new File(filePathThree);
         tempFileThree.deleteOnExit();
         outStream = new FileOutputStream(tempFileThree);
         outStream.write(content.getBytes());
@@ -444,10 +498,6 @@ public class GrepApplicationTest {
                           absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
         
         String output = grep.grepFromMultipleFiles( arguments );
-        
-        tempFileOne.delete();
-        tempFileTwo.delete();
-        tempFileThree.delete();
         
         assertEquals( output, expected );
     }
@@ -463,21 +513,21 @@ public class GrepApplicationTest {
         String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         assertTrue(Environment.createNewFile(filePathOne));
-        File tempFileOne = new File(filePathOne);
+        tempFileOne = new File(filePathOne);
         tempFileOne.deleteOnExit();
         FileOutputStream outStream = new FileOutputStream(tempFileOne);
         outStream.write(content.getBytes());
         outStream.close();
         
         assertTrue(Environment.createNewFile(filePathTwo));
-        File tempFileTwo = new File(filePathTwo);
+        tempFileTwo = new File(filePathTwo);
         tempFileTwo.deleteOnExit();
         outStream = new FileOutputStream(tempFileTwo);
         outStream.write(content.getBytes());
         outStream.close();
         
         assertTrue(Environment.createNewFile(filePathThree));
-        File tempFileThree = new File(filePathThree);
+        tempFileThree = new File(filePathThree);
         tempFileThree.deleteOnExit();
         outStream = new FileOutputStream(tempFileThree);
         outStream.write(content.getBytes());
@@ -497,17 +547,19 @@ public class GrepApplicationTest {
         
         String output = grep.grepFromMultipleFiles( arguments );
         
-        tempFileOne.delete();
-        tempFileTwo.delete();
-        tempFileThree.delete();
-        
         assertEquals( output, expected );
     }
 	
-	 @After
-     public void tearDown() {
-        grep = null;
-        absTestDirPath = "";
-        relativeDirPath = "";
-     }
+	private static boolean deleteFile( File file ) {
+	    
+	    boolean isDeleted = false;
+	    
+	    if(file != null && file.exists()){
+	        try { isDeleted = file.delete(); }
+	        catch( SecurityException e ){}
+	    } else {
+	        isDeleted = true;
+	    }
+	    return isDeleted;
+	}
 }
