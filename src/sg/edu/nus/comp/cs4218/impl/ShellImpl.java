@@ -176,14 +176,24 @@ public class ShellImpl implements Shell {
 
     @Override
     public String performCommandSubstitution(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     @Override
     public String performCommandSubstitutionWithException(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     /**
