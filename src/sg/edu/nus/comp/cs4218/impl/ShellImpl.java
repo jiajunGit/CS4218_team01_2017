@@ -400,7 +400,7 @@ public class ShellImpl implements Shell {
      */
     public static void writeToStdout(OutputStream outputStream,
             OutputStream stdout) throws ShellException {
-        if (stdout == null || outputStream instanceof FileOutputStream) {
+        if (stdout == null || outputStream == null) {
             return;
         }
         try {
