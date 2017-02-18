@@ -387,6 +387,26 @@ public class SortApplicationTest {
 
 		assertEquals(expectedOutput, out.toString());
 	}
+	
+	@Test
+	public void testRunSortStartLineNumberWithOptSpace() throws AbstractApplicationException {
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunOptionSpace";
+		String[] args = { "-n", file };
+		System.setOut(new PrintStream(out));
+
+		sort.run(args, System.in, System.out);
+
+		try {
+			expectedOutput = new String(Files
+					.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunOptionSpace")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+		assertEquals(expectedOutput, out.toString());
+	}	
 
 	@Test
 	public void testRunMixed() throws AbstractApplicationException {
@@ -527,6 +547,26 @@ public class SortApplicationTest {
 
 		assertEquals(expectedOutput, out.toString());
 	}
+
+	@Test
+	public void testRunSortSimpleCapitalSpace() throws AbstractApplicationException {
+		String expectedOutput = "";
+		SortApplication sort = new SortApplication();
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleCapitalSpace";
+		String[] args = { file };
+		System.setOut(new PrintStream(out));
+
+		sort.run(args, System.in, System.out);
+
+		try {
+			expectedOutput = new String(Files
+					.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortSimpleCapitalSpace")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+		assertEquals(expectedOutput, out.toString());
+	}	
 	
 	@Test
 	public void testRunSortSimpleCapitalNumber() throws AbstractApplicationException {

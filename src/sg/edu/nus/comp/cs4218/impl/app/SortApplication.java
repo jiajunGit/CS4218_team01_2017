@@ -2,13 +2,10 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Vector;
@@ -19,23 +16,20 @@ import sg.edu.nus.comp.cs4218.exception.SortException;
 
 public class SortApplication implements Sort {
 	
-	private static final String ERROR_EXP_NULL_ARGS = "Null arguments";
-	private static final String ERROR_EXP_INVALID_OUTSTREAM = "OutputStream not provided";
-	private static final String ERROR_EXP_INVALID_INSTREAM = "InputStream not provided";
-	private static final String ERROR_EXP_NULL_STRING = "Comparing empty string";
+	private static final String ERROR_EXP_NULL = "Null arguments";
+	private static final String ERR_INVALID_OUT = "OutputStream not provided";
+	private static final String ERR_NULL_STRING = "Comparing empty string";
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
-	private static final String IO = "I/O exception";
-	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
-	private static final String ERROR_IO_WRITING = "IO ERROR WHEN WRITING FILE";
-	private static final String ERROR_IO_WRITING_OUTSTREAM = "IO ERROR WHEN WRITING TO OUTSTREAM";
-	private static final String ERROR_NOT_ALL_NUMBERS = "contents of file must start with numbers";
+	private static final String ERR_READ = "IO ERROR WHEN READING FILE";
+	private static final String ERR_WRITE_OUT = "IO ERROR WHEN WRITING TO OUTSTREAM";
+	private static final String ERR_NOTALL_NUM = "contents of file must start with numbers";
 	
-	public static final int SECOND_STRING_GREATER = 2;
-	public static final int FIRST_STRING_GREATER = 1;
-	public static final int BOTH_STRING_EQUAL = 0;
+	public static final int STR_2_GREATER = 2;
+	public static final int STR_1_GREATER = 1;
+	public static final int BOTH_STR_EQ = 0;
 	
-	public static final int SECOND_CHAR_GREATER = 2;
-	public static final int FIRST_CHAR_GREATER = 1;
+	public static final int CHAR_2_GREATER = 2;
+	public static final int CHAR_1_GREATER = 1;
 	public static final int BOTH_CHAR_EQUAL = 0;
 	
 	private String[] lines;
@@ -47,10 +41,10 @@ public class SortApplication implements Sort {
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		// TODO Auto-generated method stub
 		if( (args == null || args.length == 0) && stdin == null){
-			throw new SortException(ERROR_EXP_NULL_ARGS);
+			throw new SortException(ERROR_EXP_NULL);
 		}
 		if( stdout == null ){
-			throw new SortException(ERROR_EXP_INVALID_OUTSTREAM);
+			throw new SortException(ERR_INVALID_OUT);
 		}
 		
 		load(args, stdin);
@@ -59,6 +53,7 @@ public class SortApplication implements Sort {
 		
 		if((args.length == 1 && args[0].equals("-n")) 
 				|| (args.length == 2 && args[0].equals("-n"))){
+			sort();
 			sortN();
 		}else{
 			filterAndSort(args);
@@ -68,7 +63,7 @@ public class SortApplication implements Sort {
 			stdout.write(arrayToString().getBytes());
 			stdout.flush();
 		} catch (IOException e) {
-			throw new SortException(ERROR_IO_WRITING_OUTSTREAM);
+			throw new SortException(ERR_WRITE_OUT);
 		}		
 	}
 
@@ -91,17 +86,22 @@ public class SortApplication implements Sort {
 		boolean hasNumber = false;
 		
 		for(int i = 0; i< lines.length; i++){
-			if(!hasCapital) 
+			if(!hasCapital) {
 				hasCapital = hasCapital(lines[i]);
-			if(!hasCapital) 
+			}
+			if(!hasSimple) {
 				hasSimple = hasSimple(lines[i]);
-			if(!hasCapital) 
+			}
+			if(!hasSpecial) {
 				hasSpecial = hasSpecial(lines[i]);
-			if(!hasCapital) 
+			}
+			if(!hasNumber) {
 				hasNumber = hasNumber(lines[i]);
+			}
 			
-			if (hasCapital && hasSimple && hasSpecial && hasNumber) 
+			if (hasCapital && hasSimple && hasSpecial && hasNumber) {
 				break;
+			}
 		}
 		
 		return sort(args, hasSimple, hasCapital, hasNumber, hasSpecial);
@@ -212,8 +212,9 @@ public class SortApplication implements Sort {
 		
 		for (int i = 0; i < lines.length; i++) {
 		   strBuilder.append(lines[i]);
-		   if(i != lines.length-1)
+		   if(i != lines.length-1){
 			   strBuilder.append(System.getProperty("line.separator"));
+		   }
 		}
 		return strBuilder.toString();
 	}
@@ -225,7 +226,7 @@ public class SortApplication implements Sort {
 
 	private void sortN() throws AbstractApplicationException{
 		if(!isAllNumbers()){
-			throw new SortException(ERROR_NOT_ALL_NUMBERS);
+			throw new SortException(ERR_NOTALL_NUM);
 		}
 		tempArr = new String[lines.length];		
 		mergeSortN(0, lines.length -1);
@@ -241,105 +242,96 @@ public class SortApplication implements Sort {
 		return true;
 	}
 
-	private void mergeSortN(int lo, int hi) throws AbstractApplicationException {
-		if (lo < hi) {
-			int mid = lo + (hi - lo)/2;
-			mergeSortN(lo, mid);
-			mergeSortN(mid+1, hi);
-			mergeN(lo, mid, hi);
+	private void mergeSortN(int loIndex, int hiIndex) throws AbstractApplicationException {
+		if (loIndex < hiIndex) {
+			int mid = loIndex + (hiIndex - loIndex)/2;
+			mergeSortN(loIndex, mid);
+			mergeSortN(mid+1, hiIndex);
+			mergeN(loIndex, mid, hiIndex);
 		}
 	}
 
-	private void mergeN(int lo, int mid, int hi) throws AbstractApplicationException {
-        for (int i = lo; i <= hi; i++) {
+	private void mergeN(int loIndex, int midIndex, int hiIndex) throws AbstractApplicationException {
+        for (int i = loIndex; i <= hiIndex; i++) {
             tempArr[i] = lines[i];
         }
-        int i = lo;
-        int j = mid + 1;
-        int k = lo;
-        while (i <= mid && j <= hi) {
-            if (compareNumber(tempArr[i], tempArr[j]) == SECOND_STRING_GREATER ||
-            		compareNumber(tempArr[i], tempArr[j]) == BOTH_STRING_EQUAL) {
-                lines[k] = tempArr[i];
-                i++;
+        int currLo = loIndex;
+        int currMid = midIndex + 1;
+        int newLo = loIndex;
+        while (currLo <= midIndex && currMid <= hiIndex) {
+            if (compareNumber(tempArr[currLo], tempArr[currMid]) == STR_2_GREATER ||
+            		compareNumber(tempArr[currLo], tempArr[currMid]) == BOTH_STR_EQ) {
+                lines[newLo] = tempArr[currLo];
+                currLo++;
             } else {
-                lines[k] = tempArr[j];
-                j++;
+                lines[newLo] = tempArr[currMid];
+                currMid++;
             }
-            k++;
+            newLo++;
         }
-        while (i <= mid) {
-            lines[k] = tempArr[i];
-            k++;
-            i++;
+        while (currLo <= midIndex) {
+            lines[newLo] = tempArr[currLo];
+            newLo++;
+            currLo++;
         }
 	}	
 	
-	private int compareNumber(String a, String b) throws SortException {
-		if(a==null || b==null){
-			throw new SortException(ERROR_EXP_NULL_STRING);
+	private int compareNumber(String str1, String str2) throws SortException {
+		if(str1==null || str2==null){
+			throw new SortException(ERR_NULL_STRING);
 		}
 		
-		if(a.isEmpty() || b.isEmpty()){
-			if(!b.isEmpty()){
-				return SECOND_STRING_GREATER;
-			}else if(!a.isEmpty()){
-				return FIRST_STRING_GREATER;
-			}else{
-				return BOTH_STRING_EQUAL;
+		if(str1.isEmpty()){
+			if(!str2.isEmpty()){
+				return STR_2_GREATER;
+			}
+			if(str2.isEmpty()){
+				return BOTH_STR_EQ;
 			}
 				
 		}
 		
-		if (isNumber(a) && isNumber(b)){
-			if(Double.parseDouble(a.split(" ")[0]) > Double.parseDouble(b.split(" ")[0])){
-				return FIRST_STRING_GREATER;
-			}else if (Double.parseDouble(a.split(" ")[0]) < Double.parseDouble(b.split(" ")[0])){
-				return SECOND_STRING_GREATER;
-			}else{
-				return BOTH_STRING_EQUAL;
-			}
-		}else if (isNumber(a)){
-			return SECOND_STRING_GREATER;
-		}else if (isNumber(b)){
-			return FIRST_STRING_GREATER;
+		if(Double.parseDouble(str1.split(" ")[0]) > Double.parseDouble(str2.split(" ")[0])){
+			return STR_1_GREATER;
+		}else if (Double.parseDouble(str1.split(" ")[0]) < Double.parseDouble(str2.split(" ")[0])){
+			return STR_2_GREATER;
+		}else{
+			return BOTH_STR_EQ;
 		}
-		
-		return BOTH_STRING_EQUAL;
 	}
 
-	private void mergeSort(int lo, int hi) throws AbstractApplicationException {
-		if (lo < hi) {
-			int mid = lo + (hi - lo)/2;
-			mergeSort(lo, mid);
-			mergeSort(mid+1, hi);
-			merge(lo, mid, hi);
+	private void mergeSort(int loIndex, int hiIndex) throws AbstractApplicationException {
+		if (loIndex < hiIndex) {
+			int mid = loIndex + (hiIndex - loIndex)/2;
+			mergeSort(loIndex, mid);
+			mergeSort(mid+1, hiIndex);
+			merge(loIndex, mid, hiIndex);
 		}
 		
 	}
 
-	private void merge(int lo, int mid, int hi) throws AbstractApplicationException {
-        for (int i = lo; i <= hi; i++) {
-            tempArr[i] = lines[i];
+	private void merge(int loIndex, int midIndex, int hiIndex) throws AbstractApplicationException {
+        for (int copyIndex = loIndex; copyIndex <= hiIndex; copyIndex++) {
+            tempArr[copyIndex] = lines[copyIndex];
         }
-        int i = lo;
-        int j = mid + 1;
-        int k = lo;
-        while (i <= mid && j <= hi) {
-            if (compareStrings(tempArr[i], tempArr[j]) == SECOND_STRING_GREATER ||
-            		compareStrings(tempArr[i], tempArr[j]) == BOTH_STRING_EQUAL) {
-                lines[k] = tempArr[i];
-                i++;
+        int currLo = loIndex;
+        int currMid = midIndex + 1;
+        int newLo = loIndex;
+        while (currLo <= midIndex && currMid <= hiIndex) {
+            if (compareStrings(tempArr[currLo], tempArr[currMid]) == STR_2_GREATER ||
+            		compareStrings(tempArr[currLo], tempArr[currMid]) == BOTH_STR_EQ) {
+                lines[newLo] = tempArr[currLo];
+                currLo++;
             } else {
-                lines[k] = tempArr[j];
-                j++;
+                lines[newLo] = tempArr[currMid];
+                currMid++;
             }
-            k++;
+            newLo++;
         }
-        while (i <= mid) {
-            lines[k] = tempArr[i];
-            k++;
-            i++;
+        while (currLo <= midIndex) {
+            lines[newLo] = tempArr[currLo];
+            newLo++;
+            currLo++;
         }
 	}
 
@@ -356,7 +348,7 @@ public class SortApplication implements Sort {
 			try {
 				linesVector = importFile(fileName);
 			} catch (IOException e) {
-				throw new SortException(ERROR_IO_READING);
+				throw new SortException(ERR_READ);
 			}
 			lines = linesVector.toArray(new String[linesVector.size()]);
 			
@@ -385,82 +377,84 @@ public class SortApplication implements Sort {
 	}	
 	
 	static String convertStreamToString(InputStream stdin) {
-		try(Scanner s = new Scanner(stdin).useDelimiter("\\A");)
+		try(Scanner scanner = new Scanner(stdin).useDelimiter("\\A");)
 		{
-			return s.hasNext() ? s.next() : "";
+			return scanner.hasNext() ? scanner.next() : "";
 		}
 	}
 	
-	private boolean isSpecialChar(char ch){
-		return !Character.isLetterOrDigit(ch);
+	private boolean isSpecialChar(char toCheck){
+		return !Character.isLetterOrDigit(toCheck);
 	}
 	
-	private boolean isNumber(String a){
+	private boolean isNumber(String toCheck){
         try {
-            Double.parseDouble(a.split(" ")[0]);
+            Double.parseDouble(toCheck.split(" ")[0]);
             return true;
         } catch (NumberFormatException e) {
             return false;
         }
 	}
 	
-	private int compareStrings(String a, String b) throws AbstractApplicationException{
-		if(a == null || b == null){
-			throw new SortException(ERROR_EXP_NULL_STRING);
+	private int compareStrings(String str1, String str2) throws AbstractApplicationException{
+		if(str1 == null || str2 == null){
+			throw new SortException(ERR_NULL_STRING);
 		}
 		
-		if(a.isEmpty() || b.isEmpty()){
-			if(!b.isEmpty()){
-				return SECOND_STRING_GREATER;
-			}else if(!a.isEmpty()){
-				return FIRST_STRING_GREATER;
-			}else{
-				return BOTH_STRING_EQUAL;
+		if(str1.isEmpty() || str2.isEmpty()){
+			if(!str2.isEmpty()){
+				return STR_2_GREATER;
 			}
-				
+			if(!str1.isEmpty()){
+				return STR_1_GREATER;
+			}
+			return BOTH_STR_EQ;
 		}
 		
-		int result = BOTH_STRING_EQUAL;
+		int result = BOTH_STR_EQ;
 		int index = 0;
 		
-		while(result == BOTH_STRING_EQUAL && index<a.length() && index<b.length()){
-			result = compareChars(a.charAt(index), b.charAt(index));
+		while(result == BOTH_STR_EQ && index<str1.length() && index<str2.length()){
+			result = compareChars(str1.charAt(index), str2.charAt(index));
 			index ++;			
 		}
 		
-		if(result == BOTH_STRING_EQUAL){
-			if (index==a.length()-1 && index<b.length()-1){
-				result = SECOND_STRING_GREATER;
-			}else if(index<a.length()-1 && index==b.length()-1){
-				result = FIRST_STRING_GREATER;
+		if(result == BOTH_STR_EQ){
+			if (index==str1.length() && index<str2.length()){
+				result = STR_2_GREATER;
+			}else if(index<str1.length() && index==str2.length()){
+				result = STR_1_GREATER;
 			}
 		}
 		
 		return result;
 	}
 	
-	private int compareChars(char a, char b){
-		if (isSpecialChar(a) || isSpecialChar(b)){
-			if(!isSpecialChar(b)){
-				return SECOND_STRING_GREATER;
-			}else if(!isSpecialChar(a)){
-				return FIRST_STRING_GREATER;
-			}else if (a == b){
-				return BOTH_STRING_EQUAL;
-			}else{
-				return (int)a > (int)b ? FIRST_STRING_GREATER : SECOND_STRING_GREATER;
+	private int compareChars(char char1, char char2){
+		if (isSpecialChar(char1) || isSpecialChar(char2)){
+			if(!isSpecialChar(char2)){
+				return STR_2_GREATER;
 			}
+			if(!isSpecialChar(char1)){
+				return STR_1_GREATER;
+			}
+			if (char1 == char2){
+				return BOTH_STR_EQ;
+			}
+			
+			return (int)char1 > (int)char2 ? STR_1_GREATER : STR_2_GREATER;
+
 		}
 		
-		if((int) a > (int)b){
-			return FIRST_STRING_GREATER;
+		if((int) char1 > (int)char2){
+			return STR_1_GREATER;
 		}
 		
-		if((int) b > (int) a){
-			return SECOND_STRING_GREATER;
+		if((int) char2 > (int) char1){
+			return STR_2_GREATER;
 		}
 		
-		return BOTH_STRING_EQUAL;
+		return BOTH_STR_EQ;
 	}
 
 	@Override
@@ -469,17 +463,7 @@ public class SortApplication implements Sort {
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 			
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -491,17 +475,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -513,17 +487,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -535,17 +499,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -557,17 +511,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -579,17 +523,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -601,17 +535,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -623,17 +547,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -645,17 +559,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -667,17 +571,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -689,17 +583,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -711,17 +595,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -733,17 +607,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -755,17 +619,7 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
@@ -777,21 +631,27 @@ public class SortApplication implements Sort {
 		String[] split = toSort.split(" ");
 		String[] arguments = Arrays.copyOfRange(split, 1, split.length);
 		try {
-			if(!loaded){
-				load(arguments, null);
-				if((arguments.length == 1 && arguments[0].equals("-n")) 
-						|| (arguments.length == 2 && arguments[0].equals("-n"))){
-					sortN();
-				}else{
-					sort();
-				}
-			}else{
-				sort();
-			}
+			sortFromInterface(arguments);
 		} catch (AbstractApplicationException e) {
 			return e.getClass().getName();
 		}
 		return arrayToString();
+	}
+
+	private void sortFromInterface(String[] arguments) throws SortException, AbstractApplicationException {
+		if(!loaded){
+			load(arguments, null);
+			if((arguments.length == 1 && arguments[0].equals("-n")) 
+					|| (arguments.length == 2 && arguments[0].equals("-n"))){
+				sort();
+				sortN();
+			}else{
+				sort();
+			}
+		}
+		if (loaded){
+			sort();
+		}
 	}
 
 }
