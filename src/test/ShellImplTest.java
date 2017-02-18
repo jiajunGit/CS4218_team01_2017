@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import jdk.nashorn.tools.Shell;
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
@@ -157,33 +160,125 @@ public class ShellImplTest {
 		}
 	}
 
-
-
-
-
-
 	/**
-	 * Quoting Command
+	 * Quoting Commands Section
+	 * Single quote: disables the interpretation of all special symbols 
+	 * Double quote: disable the interpretation of all special symbols, except for single quote and back quote
+	 * Back quote: used for command substitution
+	 * 
+	 * Patterns: BB, DD, SS, BDDB, DBBD, BSSB, DSSD
 	 */
 	//Test section for single quotes
 	@Test
-	public void testSingleQuote() throws AbstractApplicationException, ShellException {
-		shell.parseAndEvaluate("echo 'black \"double quote\" `backquote` !@#$%%^ cat'", System.out);
-		String expectedOut = "black \"double quote\" `backquote` !@#$%%^ cat" + LINE_SEPARATOR;
-
-		assertEquals(expectedOut, outContent.toString());
+	public void testSingleQuoteSimple() throws AbstractApplicationException, ShellException {
+		String output = shell.processSQ("'hi'");
+		String expectedOut = "hi";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testSingleQuoteComplex() throws AbstractApplicationException, ShellException {
+		String output = shell.processSQ("'cat head `echo tail` pwd cd cal grep -> \t * \" ` | < > ; '");
+		String expectedOut = "cat head `echo tail` pwd cd cal grep -> \t * \" ` | < > ; ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testSingleQuoteNullArg() throws AbstractApplicationException, ShellException {
+		String output = shell.processSQ(null);
+		String expectedOut = null;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test(expected=ShellException.class)
+	public void testSingleQuoteOddSingleQuoteException() throws AbstractApplicationException, ShellException {
+		shell.processSQ(" ''''odd number of single quote' ");
+	}
+	
+	//Test section for double quotes
+	@Test
+	public void testDoubleQuoteSimple() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi\"");
+		String expectedOut = "hi";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testDoubleQuoteComplex() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi <> | * echo test grep tail pwd cd cal cat --> \t ;\"");
+		String expectedOut = "hi <> | * echo test grep tail pwd cd cal cat --> \t ;";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testDoubleQuoteNullArg() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ(null);
+		String expectedOut = null;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test(expected=ShellException.class)
+	public void testDoubleQuoteOddNumberDoubleQuoteException() throws AbstractApplicationException, ShellException {
+		shell.processDQ("\"\"odd number double quote\"");
+	}
+	
+	//Test section for double quotes combination with single quote and back quote
+	@Test
+	public void testDoubleQuoteWithInnerBackquote() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi `echo inner quote`\""); // "hi `echo inner quote`"
+		String expectedOut = "hi inner quote "; //extra space because of inner echo
+		assertEquals(expectedOut, output);
 	}
 
 	@Test
-	public void testDoubleQuote() throws AbstractApplicationException, ShellException {
-		shell.parseAndEvaluate("echo 'black \"double quote\" `backquote` !@#$%%^ cat'", System.out);
-		String expectedOut = "black \"double quote\" `backquote` !@#$%%^ cat" + LINE_SEPARATOR;
-
-		assertEquals(expectedOut, outContent.toString());
+	public void testDoubleQuoteWithInnerSinglequote() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi 'echo inner quote'\""); // "hi '`echo inner quote`'"
+		String expectedOut = "hi echo inner quote";
+		assertEquals(expectedOut, output);
 	}
-
-
-
+	
+	@Test(expected=ShellException.class)
+	public void testDoubleQuoteWithOddBackquoteException() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi ``inner backquote`\"");
+	}
+	
+	@Test(expected=ShellException.class)
+	public void testDoubleQuoteWithOddSinglequoteException() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\"hi '''inner singlequote''\"");
+	}
+	
+	//Test Section for backquote
+	@Test
+	public void testBackquoteEcho() throws AbstractApplicationException, ShellException {
+		String output = shell.processBQ("`echo hi`");
+		String expectedOut = "hi ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteCat() throws AbstractApplicationException, ShellException {
+		String output = shell.processBQ("`cat`");
+		ByteArrayInputStream in = new ByteArrayInputStream("hello world".getBytes());
+		System.setIn(in);
+		String expectedOut = "hello world";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquotePwd() throws AbstractApplicationException, ShellException {
+		String output = shell.processBQ("`pwd`");
+		String expectedOut = Environment.currentDirectory+" ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteHead() throws AbstractApplicationException, ShellException {
+		String output = shell.processBQ("`head`");
+		ByteArrayInputStream in = new ByteArrayInputStream("hello world".getBytes());
+		System.setIn(in);
+		String expectedOut = "hello world";
+		assertEquals(expectedOut, output);
+	}
 
 	/**
 	 * Calls Command
