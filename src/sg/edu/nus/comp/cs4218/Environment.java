@@ -114,7 +114,37 @@ public final class Environment {
         File file = new File(absPath);
         try {
             isCreated = file.createNewFile();
-        } catch (IOException e) {}
+        } catch (IOException | SecurityException e) {}
+
+        return isCreated;
+    }
+    
+    public static boolean deleteFile(String absPath) {
+
+        if (absPath == null) {
+            return false;
+        }
+
+        boolean isDeleted = false;
+        File file = new File(absPath);
+        try {
+            isDeleted = file.delete();
+        } catch (SecurityException e) {}
+
+        return isDeleted;
+    }
+    
+    public static boolean createNewDirectory(String absPath) {
+
+        if (absPath == null) {
+            return false;
+        }
+
+        boolean isCreated = false;
+        File file = new File(absPath);
+        try {
+            isCreated = file.mkdir();
+        } catch (SecurityException e) {}
 
         return isCreated;
     }
