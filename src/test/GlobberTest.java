@@ -683,8 +683,8 @@ public class GlobberTest {
     @Test
     public void testMultiplePathSeparator() throws ShellException {
         
-        String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" 
-                       + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + "c*r*";
+        String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S 
+                       + Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + "c*r*";
         
         String inputSymbols = ShellImpl.generateSymbolString(input);
         
