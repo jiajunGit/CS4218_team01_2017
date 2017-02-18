@@ -216,44 +216,6 @@ public class ShellImpl implements Shell {
             }
         }
     }
-    
-    /**
-     * Searches for and processes the commands enclosed by back quotes for
-     * command substitution.If no back quotes are found, the argsArray from the
-     * input is returned unchanged. If back quotes are found, the back quotes
-     * and its enclosed commands substituted with the output from processing the
-     * commands enclosed in the back quotes.
-     * 
-     * @param argsArray
-     *            String array of the individual commands.
-     * 
-     * @return String array with the back quotes command processed.
-     * 
-     * @throws AbstractApplicationException
-     *             If an exception happens while processing the content in the
-     *             back quotes.
-     * @throws ShellException
-     *             If an exception happens while processing the content in the
-     *             back quotes.
-     */
-    public static String[] processBQ(String... argsArray)
-            throws AbstractApplicationException, ShellException {
-        // echo "this is space `echo "nbsp"`"
-        // echo "this is space `echo "nbsp"` and `echo "2nd space"`"
-        // Back quoted: any char except \n,`
-        
-        String[] resultArr = new String[argsArray.length];
-        
-        ShellImpl shell = new ShellImpl();
-        
-        for( int i = 0, size = argsArray.length; i < size; ++i ){
-            String output = shell.processBQ(argsArray[i]);
-            if(output != null){
-                resultArr[i] = output;
-            }
-        }
-        return resultArr;
-    }
 
     /**
      * Static method to run the application as specified by the application
@@ -1254,7 +1216,7 @@ public class ShellImpl implements Shell {
         return out.toString();
     }
     
-    // This method is for the static method processBQ(). It is NOT used internally.
+    // This method is for the static method processBQ()
     public String processBQ( String input ) throws ShellException, AbstractApplicationException{
         
         if(input == null){
@@ -1263,6 +1225,32 @@ public class ShellImpl implements Shell {
         StringBuilder cmdSymbols = generateSymbols(input);
         StringBuilder cmd = new StringBuilder(input);
         processBQ(cmd, cmdSymbols, true);
+        
+        return cmd.toString();
+    }
+    
+    // This method is for the static method processSQ()
+    public String processSQ( String input ) throws ShellException, AbstractApplicationException{
+        
+        if(input == null){
+            return null;
+        }
+        StringBuilder cmdSymbols = generateSymbols(input);
+        StringBuilder cmd = new StringBuilder(input);
+        processSQ(cmd, cmdSymbols, true);
+        
+        return cmd.toString();
+    }
+    
+    // This method is for the static method processDQ()
+    public String processDQ( String input ) throws ShellException, AbstractApplicationException{
+        
+        if(input == null){
+            return null;
+        }
+        StringBuilder cmdSymbols = generateSymbols(input);
+        StringBuilder cmd = new StringBuilder(input);
+        processDQ(cmd, cmdSymbols, true);
         
         return cmd.toString();
     }
