@@ -24,6 +24,7 @@ public class GrepApplicationTest {
 	
     private static String absTestDirPath;
     private static String relativeDirPath;
+    private static String baseDirName;
     
     private static File tempFileOne;
     private static File tempFileTwo;
@@ -38,6 +39,7 @@ public class GrepApplicationTest {
         
         absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "grep";
         relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "grep";
+        baseDirName = "grep";
         
         tempFileOne = null;
         tempFileTwo = null;
@@ -51,6 +53,7 @@ public class GrepApplicationTest {
         
         absTestDirPath = "";
         relativeDirPath = "";
+        baseDirName = "";
         
         assertTrue( deleteFile(tempFileOne) );
         assertTrue( deleteFile(tempFileTwo) );
@@ -332,6 +335,58 @@ public class GrepApplicationTest {
                 + Symbol.NEW_LINE_S );
 	}
 	
+	@Test
+    public void testGrepFromOneFileRelativePathWithCurrentDirectorySymbol() throws GrepException, IOException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String output = grep.grepFromOneFile( pattern, relativeFilePath );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromOneFileRelativePathWithPreviousDirectorySymbol() throws GrepException, IOException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String output = grep.grepFromOneFile( pattern, relativeFilePath );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
 	@Test(expected=GrepException.class)
     public void testGrepFromNonExistentFilePath() throws GrepException {
         
@@ -370,7 +425,7 @@ public class GrepApplicationTest {
     }
 	
 	@Test
-	public void testGrepFromOneFileValidPatternAndValidFile() throws GrepException, IOException {
+	public void testGrepFromOneFileWithValidFile() throws GrepException, IOException {
 		
 		String pattern = "some";
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
@@ -390,6 +445,52 @@ public class GrepApplicationTest {
 		assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
 		              + Symbol.NEW_LINE_S );
 	}
+	
+	@Test
+    public void testGrepFromOneFileWithValidFileWithCurrentDirectorySymbol() throws GrepException, IOException {
+        
+        String pattern = "some";
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+                         + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String output = grep.grepFromOneFile( pattern, inputFilePath );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                      + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromOneFileWithValidFileWithPreviousDirectorySymbol() throws GrepException, IOException {
+        
+        String pattern = "some";
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
+                         + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String output = grep.grepFromOneFile( pattern, inputFilePath );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                      + Symbol.NEW_LINE_S );
+    }
 	
 	@Test(expected=GrepException.class)
 	public void testGrepFromMultipleFilesNullPattern() throws GrepException, IOException {
@@ -456,6 +557,272 @@ public class GrepApplicationTest {
     }
 	
 	@Test
+	public void testGrepFromMultipleFilesWithOneFileRelativePath() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, relativeFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesWithOneFileRelativePathWithCurrentDirectorySymbol() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, relativeFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesWithOneFileRelativePathWithPreviousDirectorySymbol() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, relativeFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesWithOneFile() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, inputFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesWithOneFileWithCurrentDirectorySymbol() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, inputFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesWithOneFileWithPreviousDirectorySymbol() throws IOException, GrepException {
+        
+        String pattern = "some";
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        
+        assertTrue(Environment.createNewFile(filePath));
+        
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String[] arguments = { pattern, inputFilePath };
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
+                + Symbol.NEW_LINE_S );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesRelativePathsWithCurrentDirectorySymbol() throws GrepException, IOException {
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                         + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        assertTrue(Environment.createNewFile(filePathOne));
+        tempFileOne = new File(filePathOne);
+        tempFileOne.deleteOnExit();
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathTwo));
+        tempFileTwo = new File(filePathTwo);
+        tempFileTwo.deleteOnExit();
+        outStream = new FileOutputStream(tempFileTwo);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathThree));
+        tempFileThree = new File(filePathThree);
+        tempFileThree.deleteOnExit();
+        outStream = new FileOutputStream(tempFileThree);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String relativeFilePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String relativeFilePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", relativeFilePathOne, relativeFilePathTwo, relativeFilePathThree };
+    
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, expected );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesRelativePathsWithPreviousDirectorySymbol() throws GrepException, IOException {
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                         + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        assertTrue(Environment.createNewFile(filePathOne));
+        tempFileOne = new File(filePathOne);
+        tempFileOne.deleteOnExit();
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathTwo));
+        tempFileTwo = new File(filePathTwo);
+        tempFileTwo.deleteOnExit();
+        outStream = new FileOutputStream(tempFileTwo);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathThree));
+        tempFileThree = new File(filePathThree);
+        tempFileThree.deleteOnExit();
+        outStream = new FileOutputStream(tempFileThree);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String relativeFilePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String relativeFilePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String relativeFilePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", relativeFilePathOne, relativeFilePathTwo, relativeFilePathThree };
+    
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, expected );
+    }
+	
+	@Test
 	public void testGrepFromMultipleFilesRelativePaths() throws GrepException, IOException {
         
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
@@ -491,6 +858,108 @@ public class GrepApplicationTest {
         String relativeFilePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         String[] arguments = { "some", relativeFilePathOne, relativeFilePathTwo, relativeFilePathThree };
+    
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, expected );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesValidPatternWithCurrentDirectorySymbol() throws GrepException, IOException {
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                         + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        assertTrue(Environment.createNewFile(filePathOne));
+        tempFileOne = new File(filePathOne);
+        tempFileOne.deleteOnExit();
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathTwo));
+        tempFileTwo = new File(filePathTwo);
+        tempFileTwo.deleteOnExit();
+        outStream = new FileOutputStream(tempFileTwo);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathThree));
+        tempFileThree = new File(filePathThree);
+        tempFileThree.deleteOnExit();
+        outStream = new FileOutputStream(tempFileThree);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String inputFilePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "2.txt";
+        
+        String[] arguments = { "some", inputFilePathOne, inputFilePathTwo, filePathThree };
+    
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        
+        String output = grep.grepFromMultipleFiles( arguments );
+        
+        assertEquals( output, expected );
+    }
+	
+	@Test
+    public void testGrepFromMultipleFilesValidPatternWithPreviousDirectorySymbol() throws GrepException, IOException {
+        
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
+                         + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        assertTrue(Environment.createNewFile(filePathOne));
+        tempFileOne = new File(filePathOne);
+        tempFileOne.deleteOnExit();
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathTwo));
+        tempFileTwo = new File(filePathTwo);
+        tempFileTwo.deleteOnExit();
+        outStream = new FileOutputStream(tempFileTwo);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        assertTrue(Environment.createNewFile(filePathThree));
+        tempFileThree = new File(filePathThree);
+        tempFileThree.deleteOnExit();
+        outStream = new FileOutputStream(tempFileThree);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String inputFilePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String inputFilePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S + baseDirName + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", inputFilePathOne, filePathTwo, inputFilePathThree };
     
         String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
                           absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
