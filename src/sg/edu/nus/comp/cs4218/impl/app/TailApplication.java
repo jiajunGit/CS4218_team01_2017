@@ -8,11 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
-
 import sg.edu.nus.comp.cs4218.app.Tail;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.HeadException;
-import sg.edu.nus.comp.cs4218.exception.SortException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 
 public class TailApplication implements Tail {
@@ -33,60 +29,22 @@ public class TailApplication implements Tail {
 			if( stdout == null ){
 				throw new TailException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			int noLines = 10;
-			
-			if(args!=null && args.length!=0){
-				if(args.length==3){
-					if(args[2].equals("-n")){
-						throw new TailException(INVALID_FORMAT);
-					}
-					if(args[1].equals("-n")){
-						if(isInteger(args[2])){
-							noLines = Integer.parseInt(args[2]);
-							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
-							load(args[0]);
-						}else{
-							throw new TailException(NUMBER_NOT_SPECIFIED);
-						}
-					}else if(args[0].equals("-n")){
-						if(isInteger(args[1])){
-							noLines = Integer.parseInt(args[1]);
-							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
-							load(args[2]);
-						}else{
-							throw new TailException(NUMBER_NOT_SPECIFIED);
-						}
-					}else{
-						throw new TailException(INVALID_FORMAT);
-					}
-				}else if(args.length==2){
-					if(args[0].equals("-n")){
-						if(isInteger(args[1])){
-							noLines = Integer.parseInt(args[1]);
-							if(noLines<0 || noLines>Integer.MAX_VALUE) throw new TailException(NUMBER_NOT_SPECIFIED);
-							if(stdin==null) throw new TailException(ERROR_EXP_INVALID_INSTREAM);
-							loadFromStdIn(stdin);
-						}else{
-							throw new TailException(NUMBER_NOT_SPECIFIED); 
-						}
-					}else{
-						throw new TailException(INVALID_FORMAT);
-					}
-				}else if(args.length==1){
-					if(args[0].equals("-n")){
-						throw new TailException(NUMBER_NOT_SPECIFIED);
-					}else{
-						load(args[0]);
-					}
-				}else{
-					throw new TailException(INVALID_FORMAT); //Invalid input
-				}
-			}else{
-				if (stdin!=null)
-					loadFromStdIn(stdin);
-				else throw new TailException(ERROR_EXP_INVALID_INSTREAM);				
+			int noLines = 10; //default 10 lines
+			if(args==null || args.length==0){
+				loadFromStdIn(stdin);
 			}
-			
+			else if (args.length==1){
+				logicFor1Argument(args, stdin);
+			}
+			else if (args.length==2){
+				noLines = logicFor2Arguments(args, stdin, noLines);
+			}
+			else if (args.length==3){ 
+				noLines = logicFor3Arguments(args, stdin, noLines);
+			}
+			else{
+				throw new TailException(INVALID_FORMAT);
+			}
 			printLines(noLines);
 		} catch (NumberFormatException e) {
 			throw new TailException(NUMBER_NOT_SPECIFIED);
@@ -95,7 +53,75 @@ public class TailApplication implements Tail {
 		}
 	}
 	
+	private void logicFor1Argument(String[] args, InputStream stdin) throws TailException, IOException {
+		if(args[0].length()==0){
+			loadFromStdIn(stdin); //stdin 10 lines
+		}
+		else{
+			load(args[0]); //tail [file], tail [option]
+		}
+		
+	}
 	
+	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
+		if(args[0].length()==0){
+			if(args[1].length()==0){
+				loadFromStdIn(stdin); //tail "",""
+			}
+			else{ //tail "",[number]/[file]
+				load(args[1]);
+			}
+		}
+		else if(args[0].equals("-n")){
+			if( isNumeric(args[1]) ){ //tail -n, 10
+				if(args[1].contains("-") || args[1].contains("+")){
+					throw new TailException(NUMBER_NOT_SPECIFIED);
+				}
+				noLines=Integer.parseInt(args[1]);
+				loadFromStdIn(stdin);
+			}
+			else{
+				throw new TailException(NUMBER_NOT_SPECIFIED);
+			}
+		}
+		else{
+			throw new TailException(INVALID_FORMAT); //tail -nxx file
+		}
+		return noLines;
+	}
+	
+	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
+		if(args[0].length()==0 && args[1].length()==0){
+			if(args[2].length()==0){ //tail "" "" ""
+				loadFromStdIn(stdin);
+			}
+			else{
+				load(args[2]); //tail "" "" file
+			}
+		}
+		else if (args[0].equals("-n")){ //tail -n x x
+			if(isNumeric(args[1])){
+				if(args[1].contains("-") || args[1].contains("+")){
+					throw new TailException(NUMBER_NOT_SPECIFIED);
+				}
+				if(args[2].length()==0){ //tail -n 10 ""
+					noLines=Integer.parseInt(args[1]);
+					loadFromStdIn(stdin);
+				}
+				else{
+					noLines=Integer.parseInt(args[1]); //tail -n 10 file
+					load(args[2]);
+				}
+			}
+			else{
+				throw new TailException(NUMBER_NOT_SPECIFIED);
+			}
+		}
+		else{
+			throw new TailException(INVALID_FORMAT); //head -xxx 10 file
+		}
+		return noLines;
+	}
 
 	private void printLines(int noLines) {
 		int startIndex = lines.length - noLines;
@@ -108,11 +134,23 @@ public class TailApplication implements Tail {
 		
 	}
 
-
-
-	private void loadFromStdIn(InputStream stdin){
-		String wholeText = convertStreamToString(stdin);
-		lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+	private void loadFromStdIn(InputStream stdin) throws TailException{
+		if(stdin==null){
+			throw new TailException(ERROR_EXP_INVALID_INSTREAM);
+		}
+		else{
+			String wholeText = convertStreamToString(stdin);
+			lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+		}
+	}
+	
+	private Boolean isNumeric(String s){
+		try{ 
+			int i = Integer.parseInt(s); return true;
+		}
+		catch(NumberFormatException e){ 
+			return false; 
+		}
 	}
 	
 	private void load(String fileName) throws IOException, TailException {
@@ -153,21 +191,5 @@ public class TailApplication implements Tail {
 			return s.hasNext() ? s.next() : "";
 		}
 	}
-	
-	public static boolean isInteger(String s) {
-	    return isInteger(s,10);
-	}
 
-	public static boolean isInteger(String s, int radix) {
-	    if(s.isEmpty()) return false;
-	    for(int i = 0; i < s.length(); i++) {
-	        if(i == 0 && s.charAt(i) == '-') {
-	            if(s.length() == 1) return false;
-	            else continue;
-	        }
-	        if(Character.digit(s.charAt(i),radix) < 0) return false;
-	    }
-	    return true;
-	}
-	
 }
