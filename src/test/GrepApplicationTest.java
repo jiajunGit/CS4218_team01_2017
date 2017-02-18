@@ -36,8 +36,8 @@ public class GrepApplicationTest {
         
         grep = new GrepApplication();
         
-        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S + "test";
-        relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test";
+        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "grep";
+        relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "grep";
         
         tempFileOne = null;
         tempFileTwo = null;
@@ -234,7 +234,7 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
 		                 + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -255,7 +255,7 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -273,7 +273,7 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                           + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -298,7 +298,7 @@ public class GrepApplicationTest {
 		
 		String pattern = "some";
 		
-		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
 		assertTrue( tempFileOne.delete() );
@@ -314,7 +314,7 @@ public class GrepApplicationTest {
 	    String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                 + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 
-	    String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+	    String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
 	    
 	    assertTrue(Environment.createNewFile(filePath));
 	    
@@ -325,7 +325,8 @@ public class GrepApplicationTest {
 	    outStream.write(content.getBytes());
 	    outStream.close();
 	    
-	    String output = grep.grepFromOneFile( pattern, filePath );
+	    String relativeFilePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+	    String output = grep.grepFromOneFile( pattern, relativeFilePath );
 	    
 	    assertEquals( output, "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "seom  some" 
                 + Symbol.NEW_LINE_S );
@@ -336,7 +337,7 @@ public class GrepApplicationTest {
         
         String pattern = "some";
         
-        String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         
         grep.grepFromOneFile( pattern, filePath );
     }
@@ -356,7 +357,7 @@ public class GrepApplicationTest {
         
         String pattern = "some";
         
-        String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         
         assertTrue(Environment.createNewFile(filePath));
         
@@ -375,7 +376,7 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -396,7 +397,7 @@ public class GrepApplicationTest {
 		String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S 
 		                 + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 		
-		String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+		String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -416,7 +417,7 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                          + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        String filePath = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePath = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
         assertTrue(Environment.createNewFile(filePath));
         tempFileOne = new File(filePath);
         tempFileOne.deleteOnExit();
@@ -433,9 +434,9 @@ public class GrepApplicationTest {
 	@Test(expected=GrepException.class)
     public void testGrepFromMultipleFilesWithNonExistentFilePaths() throws GrepException, IOException {
         
-        String filePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
-        String filePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt";
-        String filePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         String[] arguments = { "some", filePathOne, filePathTwo, filePathThree };
         
@@ -460,9 +461,9 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                          + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        String filePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
-        String filePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt";
-        String filePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         assertTrue(Environment.createNewFile(filePathOne));
         tempFileOne = new File(filePathOne);
@@ -485,17 +486,21 @@ public class GrepApplicationTest {
         outStream.write(content.getBytes());
         outStream.close();
         
-        String[] arguments = { "some", filePathOne, filePathTwo, filePathThree };
+        String relativeFilePathOne = relativeDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String relativeFilePathTwo = relativeDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String relativeFilePathThree = relativeDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
+        
+        String[] arguments = { "some", relativeFilePathOne, relativeFilePathTwo, relativeFilePathThree };
     
-        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
         
         String output = grep.grepFromMultipleFiles( arguments );
         
@@ -508,9 +513,9 @@ public class GrepApplicationTest {
         String content = "some day" + Symbol.NEW_LINE_S + "    somsome some\t" + Symbol.NEW_LINE_S + "      somme" 
                          + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt";
-        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt";
-        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt";
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        String filePathTwo = absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt";
+        String filePathThree = absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt";
         
         assertTrue(Environment.createNewFile(filePathOne));
         tempFileOne = new File(filePathOne);
@@ -535,15 +540,15 @@ public class GrepApplicationTest {
         
         String[] arguments = { "some", filePathOne, filePathTwo, filePathThree };
     
-        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
-                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "grep" + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
+        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: some day" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt:     somsome some\t" + Symbol.NEW_LINE_S + 
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
+                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
         
         String output = grep.grepFromMultipleFiles( arguments );
         
