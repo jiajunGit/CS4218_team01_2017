@@ -48,20 +48,35 @@ public class ShellImpl implements Shell {
 	
     @Override
     public String pipeTwoCommands(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     @Override
     public String pipeMultipleCommands(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     @Override
     public String pipeWithException(String args) {
-        // TODO Auto-generated method stub
-        return null;
+        String out = new String();
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     @Override
@@ -72,7 +87,7 @@ public class ShellImpl implements Shell {
         } catch (AbstractApplicationException | ShellException e) {
             out = e.getMessage();
         }
-        return out; 
+        return out;
     }
 
     @Override
@@ -83,7 +98,7 @@ public class ShellImpl implements Shell {
         } catch (AbstractApplicationException | ShellException e) {
             out = e.getMessage();
         }
-        return out; 
+        return out;
     }
 
     @Override
@@ -94,7 +109,7 @@ public class ShellImpl implements Shell {
         } catch (AbstractApplicationException | ShellException e) {
             out = e.getMessage();
         }
-        return out; 
+        return out;
     }
 
     @Override
@@ -105,7 +120,7 @@ public class ShellImpl implements Shell {
         } catch (AbstractApplicationException | ShellException e) {
             out = e.getMessage();
         }
-        return out; 
+        return out;
     }
 
     @Override
@@ -116,7 +131,7 @@ public class ShellImpl implements Shell {
 		} catch (AbstractApplicationException | ShellException e) {
 		    out = e.getMessage();
 		}
-		return out; 
+		return out;
     }
 
     @Override
@@ -171,7 +186,7 @@ public class ShellImpl implements Shell {
 		} catch (AbstractApplicationException | ShellException e) {
 		    out = e.getMessage();
 		}
-		return out; 
+		return out;
     }
 
     @Override
