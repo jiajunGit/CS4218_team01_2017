@@ -1,4 +1,4 @@
-package test;
+package test.ef2.sed;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
