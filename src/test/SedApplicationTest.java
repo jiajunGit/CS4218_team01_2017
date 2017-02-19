@@ -51,6 +51,11 @@ public class SedApplicationTest {
     @AfterClass
     public static void tearDown() {
         
+        assertTrue( closeStdin(stdin) );
+        assertTrue( closeStdout(stdout) );
+        assertTrue( deleteFile(tempFileOne) );
+        assertTrue( deleteFile(tempFileTwo) );
+        
         sed = null;
         absTestDirPath = "";
         relativeDirPath = "";
@@ -972,7 +977,9 @@ public class SedApplicationTest {
         boolean isDeleted = false;
         
         if(file != null && file.exists()){
-            try { isDeleted = file.delete(); }
+            try { 
+                isDeleted = file.delete(); 
+            }
             catch( SecurityException e ){}
         } else {
             isDeleted = true;
