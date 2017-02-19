@@ -315,6 +315,9 @@ public class GrepApplication implements Grep {
         if (args.length < 2) {
             throw new GrepException(ERROR_EXP_INVALID_ARGS_COUNT);
         }
+        if( args.length == 2 ) {
+            return grepFromOneFile( args[0], args[1] );
+        }
 
         String pattern = args[0];
 

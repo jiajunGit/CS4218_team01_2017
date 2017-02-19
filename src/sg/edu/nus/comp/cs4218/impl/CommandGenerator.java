@@ -44,11 +44,16 @@ public class CommandGenerator {
                 currentStage = populateCommand( segment.getSegment(), segment.getSegmentSymbol(), currentStage, false );
             } else{
                 String[] globs = globber.processGlob( segment.getSegment(), segment.getSegmentSymbol() );
-                for( String glob : globs ){
-                    if( currentCmd == null ){
-                        currentCmd = new Command();
+                
+                if(globs.length > 0){
+                    for( String glob : globs ){
+                        if( currentCmd == null ){
+                            currentCmd = new Command();
+                        }
+                        currentStage = populateCommand( glob, currentStage, true );
                     }
-                    currentStage = populateCommand( glob, currentStage, true );
+                } else {
+                    currentStage = populateCommand( segment.getSegment(), segment.getSegmentSymbol(), currentStage, false );
                 }
             }
         }
