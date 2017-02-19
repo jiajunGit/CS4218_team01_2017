@@ -12,7 +12,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
+import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 
 public class DateApplicationTest {
 	static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -36,27 +38,27 @@ public class DateApplicationTest {
 	
 
 	@Test(expected=AbstractApplicationException.class)
-	public void testRunNonNullStdinException(){
+	public void testRunNonNullStdinException() throws AbstractApplicationException{
 		String[] args = {};
 		
 		dateApp.run(args, System.in, null);
 	}
 	
 	@Test(expected=AbstractApplicationException.class)
-	public void testRunNullStdoutException(){
+	public void testRunNullStdoutException() throws AbstractApplicationException{
 		String[] args = {};
 		
 		dateApp.run(args, null, null);
 	}
 	
 	@Test(expected=AbstractApplicationException.class)
-	public void testRunException(){
+	public void testRunException() throws AbstractApplicationException{
 		String[] args = {"randomString"};
 		
 		dateApp.run(args, null, System.out);
 	}
 	
-	public void testRun(){
+	public void testRun() throws AbstractApplicationException{
 		String[] args ={};
 		
 		ZonedDateTime exactTime = dateApp.getZonedDateTime();

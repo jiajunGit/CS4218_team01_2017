@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218.impl.app;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.ZonedDateTime;
 
 import sg.edu.nus.comp.cs4218.app.Date;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
@@ -19,5 +20,10 @@ public class DateApplication implements Date {
         // TODO Auto-generated method stub
         return null;
     }
+
+	public ZonedDateTime getZonedDateTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
