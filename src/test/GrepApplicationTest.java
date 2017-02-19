@@ -43,6 +43,8 @@ public class GrepApplicationTest {
         relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "grep";
         baseDirName = "grep";
         
+        cleanUpFilesLeftOver();
+        
         tempFileOne = null;
         tempFileTwo = null;
         tempFileThree = null;
@@ -51,15 +53,17 @@ public class GrepApplicationTest {
     @AfterClass
     public static void tearDown(){
         
+        assertTrue( deleteFile(tempFileOne) );
+        assertTrue( deleteFile(tempFileTwo) );
+        assertTrue( deleteFile(tempFileThree) );
+        
+        cleanUpFilesLeftOver();
+        
         grep = null;
         
         absTestDirPath = "";
         relativeDirPath = "";
         baseDirName = "";
-        
-        assertTrue( deleteFile(tempFileOne) );
-        assertTrue( deleteFile(tempFileTwo) );
-        assertTrue( deleteFile(tempFileThree) );
         
         tempFileOne = null;
         tempFileTwo = null;
@@ -73,6 +77,8 @@ public class GrepApplicationTest {
         assertTrue( deleteFile(tempFileTwo) );
         assertTrue( deleteFile(tempFileThree) );
         
+        cleanUpFilesLeftOver();
+        
         tempFileOne = null;
         tempFileTwo = null;
         tempFileThree = null;
@@ -84,6 +90,8 @@ public class GrepApplicationTest {
         assertTrue( deleteFile(tempFileOne) );
         assertTrue( deleteFile(tempFileTwo) );
         assertTrue( deleteFile(tempFileThree) );
+        
+        cleanUpFilesLeftOver();
         
         tempFileOne = null;
         tempFileTwo = null;
@@ -1568,5 +1576,22 @@ public class GrepApplicationTest {
 	        isDeleted = true;
 	    }
 	    return isDeleted;
+	}
+	
+	private static String[] getPathsOfFilesCreated() {
+	    String[] paths = {
+            absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt",
+            absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt",
+            absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt"
+	    };
+	    return paths;
+	}
+	
+	private static void cleanUpFilesLeftOver() {
+	    String[] paths = getPathsOfFilesCreated();
+	    for(String path : paths) {
+	        File file = new File(path);
+	        assertTrue(deleteFile(file));
+	    }
 	}
 }
