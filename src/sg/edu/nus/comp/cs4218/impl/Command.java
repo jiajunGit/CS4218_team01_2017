@@ -136,8 +136,5 @@ public class Command {
     
     public void setAppName(String applicationName) {
         appName = applicationName;
-        if(appName != null){
-            appName = appName.toLowerCase();
-        }
     }
 }
