@@ -39,8 +39,9 @@ public class SedApplicationTest {
     public static void setup() {
         
         sed = new SedApplication();
-        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR + "src" + Symbol.PATH_SEPARATOR + "test" + Symbol.PATH_SEPARATOR + "sed";
-        relativeDirPath = "src" + Symbol.PATH_SEPARATOR + "test" + Symbol.PATH_SEPARATOR + "sed";
+        absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR + "src" + Symbol.PATH_SEPARATOR + "test" + Symbol.PATH_SEPARATOR + "ef2" 
+                         + Symbol.PATH_SEPARATOR + "sed" + Symbol.PATH_SEPARATOR + "sed" ;
+        relativeDirPath = "src" + Symbol.PATH_SEPARATOR + "test" + Symbol.PATH_SEPARATOR + "ef2" + Symbol.PATH_SEPARATOR + "sed" + Symbol.PATH_SEPARATOR + "sed" ;
         
         stdin = null;
         stdout = null;
