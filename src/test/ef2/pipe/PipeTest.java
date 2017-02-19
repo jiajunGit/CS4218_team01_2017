@@ -45,7 +45,12 @@ public class PipeTest {
 	
 	@Test(expected=AbstractApplicationException.class)
 	public void testFailedPipeException() throws AbstractApplicationException, ShellException{
-		shell.pipeWithException("echo \"helloworld\" | sort aFileThatDoesNotExist");
+		shell.pipeWithException("echo \"hello world\" | sort aFileThatDoesNotExist");
+	}
+	
+	@Test(expected=ShellException.class)
+	public void testInvalidPipeException() throws AbstractApplicationException, ShellException{
+		shell.pipeWithException("echo \"hello world\" | gerp random");
 	}
 	
 	@Test
