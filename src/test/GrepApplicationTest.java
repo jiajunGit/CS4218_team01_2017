@@ -82,6 +82,10 @@ public class GrepApplicationTest {
         assertTrue( deleteFile(tempFileOne) );
         assertTrue( deleteFile(tempFileTwo) );
         assertTrue( deleteFile(tempFileThree) );
+        
+        tempFileOne = null;
+        tempFileTwo = null;
+        tempFileThree = null;
     }
     
 	@Test(expected=GrepException.class)
