@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
 import sg.edu.nus.comp.cs4218.app.Tail;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 
 public class TailApplication implements Tail {
@@ -22,6 +23,8 @@ public class TailApplication implements Tail {
 	private static final String ERROR_EXP_INVALID_INSTREAM = "InputStream not provided";
 	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
 	
+    private static final int TEMP_BUF_SZ = 10000;
+    private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
 	
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws TailException {
@@ -186,11 +189,22 @@ public class TailApplication implements Tail {
 		}
 	}	
 	
-	static String convertStreamToString(InputStream stdin) {
-		try(Scanner s = new Scanner(stdin).useDelimiter("\\A");)
-		{
-			return s.hasNext() ? s.next() : "";
-		}
+	static String convertStreamToString(InputStream stdin) throws TailException {
+        int bytesRead = 0;
+        StringBuilder content = new StringBuilder();
+        while (true) {
+            try {
+                bytesRead = stdin.read(tempBuf);
+                if (bytesRead <= -1) {
+                    break;
+                }
+                content.append(new String(tempBuf, 0, bytesRead));
+            } catch (IOException e) {
+                throw new TailException(ERROR_EXP_INVALID_INSTREAM);
+            }
+        }
+        return content.toString();
 	}
+
 
 }

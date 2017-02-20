@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
 public class SortApplication implements Sort {
@@ -32,6 +33,9 @@ public class SortApplication implements Sort {
 	public static final int CHAR_2_GREATER = 2;
 	public static final int CHAR_1_GREATER = 1;
 	public static final int BOTH_CHAR_EQUAL = 0;
+	
+    private static final int TEMP_BUF_SZ = 10000;
+    private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
 	
 	private String[] lines;
 	private String[] tempArr;
@@ -338,7 +342,7 @@ public class SortApplication implements Sort {
         }
 	}
 
-	private void loadFromStdIn(InputStream stdin){
+	private void loadFromStdIn(InputStream stdin) throws SortException{
 		String wholeText = convertStreamToString(stdin);
 		lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
 	}
@@ -379,11 +383,21 @@ public class SortApplication implements Sort {
 		}
 	}	
 	
-	static String convertStreamToString(InputStream stdin) {
-		try(Scanner scanner = new Scanner(stdin).useDelimiter("\\A");)
-		{
-			return scanner.hasNext() ? scanner.next() : "";
-		}
+	static String convertStreamToString(InputStream stdin) throws SortException {
+        int bytesRead = 0;
+        StringBuilder content = new StringBuilder();
+        while (true) {
+            try {
+                bytesRead = stdin.read(tempBuf);
+                if (bytesRead <= -1) {
+                    break;
+                }
+                content.append(new String(tempBuf, 0, bytesRead));
+            } catch (IOException e) {
+                throw new SortException(ERR_READ);
+            }
+        }
+        return content.toString();
 	}
 	
 	private boolean isSpecialChar(char toCheck){
