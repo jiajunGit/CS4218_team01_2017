@@ -159,8 +159,8 @@ public class HeadApplication implements Head {
 			throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
 		}
 		else{
-			String wholeText = convertStreamToString(stdin);
-			lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+			String wholeText = convertStreamToString(stdin);	
+			lines = wholeText.split(LINE_SEPARATOR);
 		}
 	}
 

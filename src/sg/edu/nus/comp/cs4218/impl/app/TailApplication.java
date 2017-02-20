@@ -141,7 +141,7 @@ public class TailApplication implements Tail {
 		}
 		else{
 			String wholeText = convertStreamToString(stdin);
-			lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+			lines = wholeText.split(LINE_SEPARATOR);
 		}
 	}
 	
