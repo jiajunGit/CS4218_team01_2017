@@ -13,8 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
@@ -23,14 +25,28 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class ShellImplTest {
+    
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "IOredirect"
-			+ PATH_SEPARATOR;
+	
+	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "IOredirect"+ PATH_SEPARATOR;
 	final static String RELATIVE_TEST_SHELL_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR;
+	private final static String RELATIVE_TEST_GLOB_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "glob";
+    private static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_GLOB_DIRECTORY;
+    
 	private ShellImpl shell = new ShellImpl();
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
+	@BeforeClass
+    public static void setup() {
+        GlobTestHelper.setupGlobFiles(ABSOLUTE_TEST_GLOB_DIRECTORY);
+    }
+    
+    @AfterClass
+    public static void tearDown() {
+        GlobTestHelper.cleanUpGlobFiles(ABSOLUTE_TEST_GLOB_DIRECTORY);
+    }
+	
 	@Before
 	public void setUpBeforeTest(){
 		shell = new ShellImpl();
@@ -601,6 +617,112 @@ public class ShellImplTest {
 		}
 	}
 
+	/**
+     * Tests for glob
+     */
+    
+    @Test
+    public void testGlobWithGlobInQuotes() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"cab*\"";
+        String output = shell.globNoPaths(command);
+        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobWithGlobWithEscapeCharacters() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"\\Q-.-\\E\"*";
+        String output = shell.globNoPaths(command);
+        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "\\Q-.-\\E*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobWithGlobWithSpecialCharacters() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"-..*\"";
+        String output = shell.globNoPaths(command);
+        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "-..*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobInvalidPathWithFileAsDirectory() {
+        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "-.-" 
+                         + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "*";
+        String output = shell.globNoPaths(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "-.-" 
+                          + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobNoMatchingPaths() {
+        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "t*";
+        String output = shell.globNoPaths(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "t*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobNoMatchingRelativePaths() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "t*";
+        String output = shell.globNoPaths(command);
+        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "t*" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobOneDirectory() {
+        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "cab*";
+        String output = shell.globOneFile(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobOneFileWithSpaces() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"FiLe WiTh SpAcEs\"" + PATH_SEPARATOR + "\"file with spaces.\"*";
+        String output = shell.globOneFile(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "FiLe WiTh SpAcEs" + PATH_SEPARATOR + "file with spaces.txt" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobMultipleFilesAndDirectoriesInSingleDirectory() {
+        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"" + PATH_SEPARATOR + "*";
+        String output = shell.globFilesDirectories(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-.- "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-carr "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712 "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712 2712 2712 "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "cab "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "car "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "cat" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobMultipleFilesAndDirectoriesInMultipleDirectories() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "ca*" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712*";
+        String output = shell.globFilesDirectories(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712.txt "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "car" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "car" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712.txt "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 "
+                          + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712.txt"
+                          + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobWithMultipleOutputRedir() {
+        String command = "echo hi >\"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "2712*";
+        String output = shell.globWithException(command);
+        String expected = "shell: Invalid syntax encountered.";
+        assertEquals(output, expected);
+    }
+	
 	private void clearFromFile(String fileName) throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(new File(fileName));
 		writer.print("");
