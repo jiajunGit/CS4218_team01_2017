@@ -681,7 +681,7 @@ public class ShellImplTest {
     
     @Test
     public void testGlobOneFileWithSpaces() {
-        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"FiLe WiTh SpAcEs\"" + PATH_SEPARATOR + "\"file with spaces.\"*";
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"FiLe WiTh SpAcEs\"" + PATH_SEPARATOR + "*\"ile with spac\"*\"s.\"*";
         String output = shell.globOneFile(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "FiLe WiTh SpAcEs" + PATH_SEPARATOR + "file with spaces.txt" + LINE_SEPARATOR;
         assertEquals(output, expected);
@@ -723,6 +723,14 @@ public class ShellImplTest {
         assertEquals(output, expected);
     }
 	
+    @Test
+    public void testGlobWithMultipleInputRedir() {
+        String command = "cat <\"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "2712*";
+        String output = shell.globWithException(command);
+        String expected = "shell: Multiple input streams.";
+        assertEquals(output, expected);
+    }
+    
 	private void clearFromFile(String fileName) throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(new File(fileName));
 		writer.print("");
