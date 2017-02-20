@@ -27,6 +27,7 @@ public class PipeTest {
 	final static String PATH_SEPARATOR = File.separator;
 	final static String RELATIVE_TEST_PIPE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR;
 	
+	
 	@Before
 	public void setUpBeforeTest() throws Exception {
 		outContent = new ByteArrayOutputStream();
@@ -43,14 +44,14 @@ public class PipeTest {
 		System.setOut(System.out);
 	}
 	
-	@Test(expected=AbstractApplicationException.class)
+	@Test
 	public void testFailedPipeException() throws AbstractApplicationException, ShellException{
-		shell.pipeWithException("echo \"hello world\" | sort aFileThatDoesNotExist");
+		assertEquals("sort:Specify a file which exists", shell.pipeWithException("echo \"hello world\" | sort aFileThatDoesNotExist"));
 	}
 	
-	@Test(expected=ShellException.class)
+	@Test
 	public void testInvalidPipeException() throws AbstractApplicationException, ShellException{
-		shell.pipeWithException("echo \"hello world\" | gerp random");
+		assertEquals("shell: gerp: Invalid app.", shell.pipeWithException("echo \"hello world\" | gerp random"));
 	}
 	
 	@Test
