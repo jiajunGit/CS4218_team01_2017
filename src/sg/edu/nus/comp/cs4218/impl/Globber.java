@@ -36,24 +36,21 @@ public class Globber {
             return new String[0];
         }
         
-        String path = Environment.currentDirectory;
-        if( index > 0 ) {
-            path = Environment.getAbsPath(input.substring(0, index));
-            if(path.isEmpty()){
-                return new String[0];
-            }
-        }
-        
-        String dirPathStr = path;
-        if(!Environment.isDirectory(path)){
-            dirPathStr = Environment.getParentPathFrom(path);
-            if(dirPathStr.isEmpty() || !Environment.isDirectory(dirPathStr)){
-                return new String[0];
-            }
-        }
-        
         int start = findGlobStart( input, index );
         if( start < 0 ){
+            return new String[0];
+        }
+        
+        int dirPathEnd = start;
+        String dirPathStr = input.substring(0, dirPathEnd);
+        
+        if( dirPathStr.isEmpty() ){
+            dirPathStr = Environment.currentDirectory;
+        } else {
+            dirPathStr = Environment.getAbsPath(dirPathStr);
+        }
+        
+        if( dirPathStr.isEmpty() || !Environment.isDirectory(dirPathStr)){
             return new String[0];
         }
         
