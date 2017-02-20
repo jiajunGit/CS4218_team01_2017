@@ -413,39 +413,6 @@ public class ShellImplTest {
 		String output = shell.processDQ("\"hi '''inner singlequote''\"");
 	}
 	
-	//Test Section for backquote
-	@Test
-	public void testBackquoteEcho() throws AbstractApplicationException, ShellException {
-		String output = shell.processBQ("`echo hi`");
-		String expectedOut = "hi ";
-		assertEquals(expectedOut, output);
-	}
-	
-	@Test
-	public void testBackquoteCat() throws AbstractApplicationException, ShellException {
-		String output = shell.processBQ("`cat`");
-		ByteArrayInputStream in = new ByteArrayInputStream("hello world".getBytes());
-		System.setIn(in);
-		String expectedOut = "hello world";
-		assertEquals(expectedOut, output);
-	}
-	
-	@Test
-	public void testBackquotePwd() throws AbstractApplicationException, ShellException {
-		String output = shell.processBQ("`pwd`");
-		String expectedOut = Environment.currentDirectory+" ";
-		assertEquals(expectedOut, output);
-	}
-	
-	@Test
-	public void testBackquoteHead() throws AbstractApplicationException, ShellException {
-		String output = shell.processBQ("`head`");
-		ByteArrayInputStream in = new ByteArrayInputStream("hello world".getBytes());
-		System.setIn(in);
-		String expectedOut = "hello world";
-		assertEquals(expectedOut, output);
-	}
-
 	/**
 	 * Calls Command
 	 */
