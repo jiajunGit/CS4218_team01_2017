@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
 
+import javafx.scene.shape.Line;
 import sg.edu.nus.comp.cs4218.app.Head;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 
@@ -22,7 +23,7 @@ import sg.edu.nus.comp.cs4218.exception.HeadException;
  * FILE - the name of the file. If not specified, use stdin
  */
 public class HeadApplication implements Head {
-
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	String[] lines;
 
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
@@ -54,7 +55,7 @@ public class HeadApplication implements Head {
 			else{
 				throw new HeadException(INVALID_FORMAT);
 			}
-			printLines(noLines);
+			printLines(noLines, stdout);
 		} catch (NumberFormatException e) {
 			throw new HeadException(NUMBER_NOT_SPECIFIED);
 		} catch (IOException e) {
@@ -136,11 +137,12 @@ public class HeadApplication implements Head {
 		return noLines;
 	}
 
-	private void printLines(int noLines) {
+	private void printLines(int noLines, OutputStream stdout) throws IOException {
 		for(int i = 0; i<lines.length; i++){
 			if(noLines == i)
 				break;
-			System.out.println(lines[i]);
+			stdout.write(lines[i].getBytes());
+			stdout.write(LINE_SEPARATOR.getBytes());
 		}
 
 	}

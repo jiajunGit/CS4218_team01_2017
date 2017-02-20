@@ -12,7 +12,7 @@ import sg.edu.nus.comp.cs4218.app.Tail;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 
 public class TailApplication implements Tail {
-
+	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	String[] lines;
 	
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
@@ -45,7 +45,7 @@ public class TailApplication implements Tail {
 			else{
 				throw new TailException(INVALID_FORMAT);
 			}
-			printLines(noLines);
+			printLines(noLines, stdout);
 		} catch (NumberFormatException e) {
 			throw new TailException(NUMBER_NOT_SPECIFIED);
 		} catch (IOException e) {
@@ -123,13 +123,14 @@ public class TailApplication implements Tail {
 		return noLines;
 	}
 
-	private void printLines(int noLines) {
+	private void printLines(int noLines, OutputStream stdout ) throws IOException {
 		int startIndex = lines.length - noLines;
 		startIndex = startIndex < 0 ? 0 : startIndex;
 		for(int i = startIndex; i<lines.length; i++){
 			//if(noLines == i) <-- do this for head
 			//	break;
-			System.out.println(lines[i]);
+			stdout.write(lines[i].getBytes());
+			stdout.write(LINE_SEPARATOR.getBytes());
 		}
 		
 	}
