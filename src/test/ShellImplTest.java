@@ -70,7 +70,7 @@ public class ShellImplTest {
 	public void redirectOutputWithNoFile(){
 		ShellImpl shell = new ShellImpl();
 
-		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithNoFile("cat > "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectOutputWithNoFile("cat > "));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class ShellImplTest {
 	public void redirectOutputWithException(){
 		ShellImpl shell = new ShellImpl();
 
-		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithException("cat > input.txt > input.txt "));
+		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectOutputWithException("cat > input.txt > input.txt "));
 	}	
 
 	@Test
