@@ -12,9 +12,18 @@ import java.util.Vector;
 
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
 
+/**
+ * @author amirrasyid
+ *
+ */
+/**
+ * @author amirrasyid
+ *
+ */
 public class SortApplication implements Sort {
 	
 	private static final String ERROR_EXP_NULL = "Null arguments";
@@ -42,6 +51,29 @@ public class SortApplication implements Sort {
 	
 	private boolean loaded = false;
 	
+	
+    /**
+     * Runs the grep application with the specified arguments.
+     * 
+     * @param args
+     *      Array of arguments for the application. First array element is
+     *      the option -n or the file to sort. If -n is the first element, 
+     *      then second element can be the file. No files can be given. If
+     *      this is the case, then sort contents of stdin
+     *      
+     * @param stdin
+     *      An InputStream. The input for the command is read from this
+     *      inputStream if no files are specified.
+     * @param stdout
+     *      An OutputStream. The output of the command is written to this
+     *      OutputStream.
+     * 
+     * @throws SortException
+     *      If arguments do not follow assumption expected of args. Also
+     *      thrown if there are any I/O errors to/from stdin, stdout or 
+     *      file.
+     *      
+     */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		// TODO Auto-generated method stub
@@ -72,6 +104,14 @@ public class SortApplication implements Sort {
 		}		
 	}
 
+	/**
+	 * Decids where to load content from, stdin or file.
+	 * 
+	 * @param args specified input data
+	 * @param stdin
+	 * @throws SortException thrown if it args and stdin do not fit
+	 * 			app assumption
+	 */
 	private void load(String[] args, InputStream stdin) throws SortException {
 		if( args.length == 1 && !args[0].equals("-n")){
 			load(args[0]);
@@ -86,7 +126,14 @@ public class SortApplication implements Sort {
 		}
 	}
 	
-	private String filterAndSort(String[] args) {
+	
+	/**
+	 * Determins combination of types of characters in the input, 
+	 * simple, capital, number or special char.
+	 * 
+	 * @param args specified app input data
+	 */
+	private void filterAndSort(String[] args) {
 		boolean hasCapital = false;
 		boolean hasSimple = false;
 		boolean hasSpecial = false;
@@ -111,10 +158,19 @@ public class SortApplication implements Sort {
 			}
 		}
 		
-		return sort(args, hasSimple, hasCapital, hasNumber, hasSpecial);
+		sort(args, hasSimple, hasCapital, hasNumber, hasSpecial);
 	}
 
-	private String sort(String[] args, boolean hasSimple, boolean hasCapital, boolean hasNumber, boolean hasSpecial) {
+	/**
+	 * Determines which sort interface to call in order to sort the data
+	 * 
+	 * @param args specified app input data
+	 * @param hasSimple if input has simple chars
+	 * @param hasCapital if input has capital chars
+	 * @param hasNumber if input has numeric chars
+	 * @param hasSpecial if input has special chars
+	 */
+	private void sort(String[] args, boolean hasSimple, boolean hasCapital, boolean hasNumber, boolean hasSpecial) {
 		String cmd = constructCommand(args);
 		if(hasSimple && hasCapital && hasNumber && hasSpecial){
 			sortAll(cmd);
@@ -148,9 +204,16 @@ public class SortApplication implements Sort {
 			sortCapitalNumbersSpecialChars(cmd);
 		}
 		
-		return null;
 	}
 
+	/**
+	 * Reconstruct original command by piecing together arguments
+	 * becuase interface methods are designed that way and run has
+	 * to call these methods.
+	 * 
+	 * @param args specified app input data
+	 * @return original command
+	 */
 	private String constructCommand(String[] args) {
 		String cmd = "sort";
 		for (int i = 0; i < args.length; i++){
@@ -160,6 +223,13 @@ public class SortApplication implements Sort {
 		return cmd;
 	}
 
+	
+	/**
+	 * Checks if string contains a number
+	 * 
+	 * @param string the string to check
+	 * @return true if there is a number in the string
+	 */
 	private boolean hasNumber(String string) {
 		for(int i = 0; i < string.length(); i++){
 			if(Character.isDigit(string.charAt(i))){
@@ -169,6 +239,12 @@ public class SortApplication implements Sort {
 		return false;
 	}
 
+	/**
+	 * Checks if string contains a special char
+	 * 
+	 * @param string the string to check
+	 * @return true if there is a special char in the string
+	 */
 	private boolean hasSpecial(String string) {
 		for(int i = 0; i < string.length(); i++){
 			if(isSpecialChar(string.charAt(i))){
@@ -178,6 +254,12 @@ public class SortApplication implements Sort {
 		return false;
 	}
 
+	/**
+	 * Checks if string contains a simple char
+	 * 
+	 * @param string the string to check
+	 * @return true if there is a simple char in the string
+	 */
 	private boolean hasSimple(String string) {
 		for(int i = 0; i < string.length(); i++){
 			if(Character.isLowerCase(string.charAt(i))){
@@ -187,6 +269,12 @@ public class SortApplication implements Sort {
 		return false;
 	}
 
+	/**
+	 * Checks if string contains a capital char
+	 * 
+	 * @param string the string to check
+	 * @return true if there is a capital char in the string
+	 */
 	private boolean hasCapital(String string) {
 		for(int i = 0; i < string.length(); i++){
 			if(Character.isUpperCase(string.charAt(i))){
@@ -214,6 +302,12 @@ public class SortApplication implements Sort {
 //		writer.close();
 //	}
 	
+	
+	/**
+	 * transforms the array of lines into a string.
+	 * 
+	 * @return formatted string for output
+	 */
 	private String arrayToString(){
 		StringBuilder strBuilder = new StringBuilder();
 		
@@ -226,11 +320,22 @@ public class SortApplication implements Sort {
 		return strBuilder.toString();
 	}
 	
+	
+	/**
+	 * Driver method for merge sort algorithm
+	 * 
+	 * @throws AbstractApplicationException
+	 */
 	private void sort() throws AbstractApplicationException {
 		tempArr = new String[lines.length];
 		mergeSort(0, lines.length -1);
 	}
 
+	/**
+	 * Driver method for merge sort algorithm for -n option
+	 * 
+	 * @throws AbstractApplicationException
+	 */
 	private void sortN() throws AbstractApplicationException{
 		if(!isAllNumbers()){
 			throw new SortException(ERR_NOTALL_NUM);
@@ -239,6 +344,12 @@ public class SortApplication implements Sort {
 		mergeSortN(0, lines.length -1);
 	}
 
+	/**
+	 * Determines if the lines read from the input all start with numbers
+	 * 
+	 * @return true if the lines read from the input all start with
+	 * numbers, false otherwise
+	 */
 	private boolean isAllNumbers() {
 		
 		for (int i = 0; i < lines.length; i++){
@@ -249,6 +360,13 @@ public class SortApplication implements Sort {
 		return true;
 	}
 
+	/**
+	 * recursive "divide" portion of merge sort algorithm with -n options
+	 * 
+	 * @param loIndex
+	 * @param hiIndex
+	 * @throws AbstractApplicationException
+	 */
 	private void mergeSortN(int loIndex, int hiIndex) throws AbstractApplicationException {
 		if (loIndex < hiIndex) {
 			int mid = loIndex + (hiIndex - loIndex)/2;
@@ -258,6 +376,16 @@ public class SortApplication implements Sort {
 		}
 	}
 
+	
+	/**
+	 * Merge partitioned units to produce new sorted sublist. "Merging"
+	 * portion of mergesort algorithm. for -n option
+	 * 
+	 * @param loIndex
+	 * @param midIndex
+	 * @param hiIndex
+	 * @throws AbstractApplicationException
+	 */
 	private void mergeN(int loIndex, int midIndex, int hiIndex) throws AbstractApplicationException {
         for (int i = loIndex; i <= hiIndex; i++) {
             tempArr[i] = lines[i];
@@ -283,6 +411,14 @@ public class SortApplication implements Sort {
         }
 	}	
 	
+	/**
+	 * Compares which number is greater.
+	 * 
+	 * @param str1
+	 * @param str2
+	 * @return number of string which is greater, 0 if equal.
+	 * @throws SortException if either string is null
+	 */
 	private int compareNumber(String str1, String str2) throws SortException {
 		if(str1==null || str2==null){
 			throw new SortException(ERR_NULL_STRING);
@@ -307,6 +443,13 @@ public class SortApplication implements Sort {
 		}
 	}
 
+	/**
+	 * recursive "divide" portion of merge sort algorithm
+	 * 
+	 * @param loIndex
+	 * @param hiIndex
+	 * @throws AbstractApplicationException
+	 */
 	private void mergeSort(int loIndex, int hiIndex) throws AbstractApplicationException {
 		if (loIndex < hiIndex) {
 			int mid = loIndex + (hiIndex - loIndex)/2;
@@ -317,6 +460,15 @@ public class SortApplication implements Sort {
 		
 	}
 
+	/**
+	 * Merge partitioned units to produce new sorted sublist. "Merging"
+	 * portion of mergesort algorithm
+	 * 
+	 * @param loIndex
+	 * @param midIndex
+	 * @param hiIndex
+	 * @throws AbstractApplicationException
+	 */
 	private void merge(int loIndex, int midIndex, int hiIndex) throws AbstractApplicationException {
         for (int copyIndex = loIndex; copyIndex <= hiIndex; copyIndex++) {
             tempArr[copyIndex] = lines[copyIndex];
@@ -342,11 +494,23 @@ public class SortApplication implements Sort {
         }
 	}
 
+	/**
+	 * loads lines into array from stdin
+	 * 
+	 * @param stdin the given InputStream
+	 * @throws SortException
+	 */
 	private void loadFromStdIn(InputStream stdin) throws SortException{
 		String wholeText = convertStreamToString(stdin);
 		lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
 	}
 	
+	/**
+	 * loads lines into array from file
+	 * 
+	 * @param fileName name of file to load lines from 
+	 * @throws SortException if file does not exist
+	 */
 	private void load(String fileName) throws SortException {
 		File workingFile = new File(fileName);
 		Vector<String> linesVector;
@@ -364,6 +528,13 @@ public class SortApplication implements Sort {
 		}
 	}
 	
+	/**
+	 * imports lines from file into vector
+	 * 
+	 * @param fileName name of file  to load lines from
+	 * @return
+	 * @throws IOException
+	 */
 	private Vector<String> importFile(String fileName) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
 				fileName));
@@ -382,7 +553,15 @@ public class SortApplication implements Sort {
 			bufferedReader.close();
 		}
 	}	
+
 	
+	/**
+	 * Reads entire contents of stdin into a string
+	 * 
+	 * @param stdin the given InputStream
+	 * @return string of content of stdin
+	 * @throws SortException if there is error reading from inputstream
+	 */
 	static String convertStreamToString(InputStream stdin) throws SortException {
         int bytesRead = 0;
         StringBuilder content = new StringBuilder();
@@ -400,10 +579,22 @@ public class SortApplication implements Sort {
         return content.toString();
 	}
 	
+	/**
+	 * Checks if char is a special character
+	 * 
+	 * @param toCheck char to check
+	 * @return true if toCheck is a special character, false otherwise
+	 */
 	private boolean isSpecialChar(char toCheck){
 		return !Character.isLetterOrDigit(toCheck);
 	}
 	
+	/**
+	 * Checks if char is a number
+	 * 
+	 * @param toCheck char to check
+	 * @return true if toCheck is a number, false otherwise
+	 */
 	private boolean isNumber(String toCheck){
         try {
             Double.parseDouble(toCheck.split(" ")[0]);
@@ -413,6 +604,14 @@ public class SortApplication implements Sort {
         }
 	}
 	
+	/**
+	 * Determines which string is greater by checking char for char
+	 * 
+	 * @param str1 first string
+	 * @param str2 second string
+	 * @return number of the string which is greter, 0 if equal
+	 * @throws AbstractApplicationException
+	 */
 	private int compareStrings(String str1, String str2) throws AbstractApplicationException{
 		if(str1 == null || str2 == null){
 			throw new SortException(ERR_NULL_STRING);
@@ -447,6 +646,13 @@ public class SortApplication implements Sort {
 		return result;
 	}
 	
+	/**
+	 * Compares which char is greater according to project spec
+	 * 
+	 * @param char1 1st character
+	 * @param char2	2nd character
+	 * @return number of character greater, if equal then 0
+	 */
 	private int compareChars(char char1, char char2){
 		if (isSpecialChar(char1) || isSpecialChar(char2)){
 			if(!isSpecialChar(char2)){
@@ -655,6 +861,15 @@ public class SortApplication implements Sort {
 		return arrayToString();
 	}
 
+	/**
+	 * Helper method to sort the string from the interface directly
+	 * instead of through run
+	 * 
+	 * 
+	 * @param arguments constructed args from command string
+	 * @throws SortException
+	 * @throws AbstractApplicationException
+	 */
 	private void sortFromInterface(String[] arguments) throws SortException, AbstractApplicationException {
 		if(!loaded){
 			load(arguments, null);
