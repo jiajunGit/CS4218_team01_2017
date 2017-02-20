@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
-
-import javafx.scene.shape.Line;
 import sg.edu.nus.comp.cs4218.app.Head;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 
