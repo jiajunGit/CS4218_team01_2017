@@ -17,7 +17,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import jdk.nashorn.tools.Shell;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
@@ -285,10 +284,22 @@ public class ShellImplTest {
 	 */
 
 	@Test(expected=ShellException.class)
-	public void testInvalidCommand() throws AbstractApplicationException, ShellException{
+	public void testCallInvalidArgument() throws AbstractApplicationException, ShellException{
 		shell.parseAndEvaluate("\"echo\"", System.out);
 	}
-
+	
+	@Test(expected=ShellException.class)
+	public void testCallInvalidCommand() throws AbstractApplicationException, ShellException{
+		shell.parseAndEvaluate("ls", System.out);
+	}
+	
+	@Test
+	public void testCallExtraOption() throws AbstractApplicationException, ShellException{
+		shell.parseAndEvaluate("echo -l hello", outContent);
+		
+		assertEquals("-l hello" + LINE_SEPARATOR, outContent.toString());
+	}
+	
 	@Test
 	public void testCallArg() throws AbstractApplicationException, ShellException {
 		shell.parseAndEvaluate("cat " + RELATIVE_TEST_SHELL_DIRECTORY + "input" + PATH_SEPARATOR + "testCallArg", System.out);
@@ -358,6 +369,10 @@ public class ShellImplTest {
 		}
 
 	}
+	
+	/**
+	 * Tests for sequence
+	 */
 
 	@Test
 	public void testLoneMultipleSemicolon(){
