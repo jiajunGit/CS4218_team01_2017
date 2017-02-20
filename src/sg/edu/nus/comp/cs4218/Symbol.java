@@ -41,7 +41,7 @@ public final class Symbol {
     public static final String PREV_DIR_S = "..";
     public static final String EMPTY_S = "";
     
-    public static final String REGEX_WINDOWS_PATH_SEPARATOR = "/|\\\\";
+    public static final String REGEX_WINDOWS_PATH_SEPARATOR = "\\\\";
     public static final String REGEX_NON_WINDOWS_PATH_SEPARATOR = "/";
     public static final String REGEX_WILDCARD = ".*";
     public static final String REGEX_CASE_INSENSITIVE = "(?i)";

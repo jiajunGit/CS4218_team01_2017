@@ -99,6 +99,8 @@ public class GrepApplication implements Grep {
             }
             stdout.flush();
         } catch (IOException e) {
+            closeStdin(stdin);
+            closeStdout(stdout);
             throw new GrepException(ERROR_EXP_INVALID_OUTSTREAM);
         }
     }
@@ -226,6 +228,7 @@ public class GrepApplication implements Grep {
         try {
             regxPattern = Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
+            closeStdin(stdin);
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
         }
 
@@ -369,6 +372,20 @@ public class GrepApplication implements Grep {
         }
     }
 
+    private void closeStdin( InputStream stdin ) {
+        if(stdin != null && stdin != System.in){
+            try{ stdin.close(); }
+            catch( IOException e ) {}
+        }
+    }
+    
+    private void closeStdout( OutputStream stdout ) {
+        if(stdout != null && stdout != System.out){
+            try{ stdout.close(); }
+            catch( IOException e ) {}
+        }
+    }
+    
     @Override
     public String grepFromStdin(String args) {
         ShellImpl shell = new ShellImpl();
