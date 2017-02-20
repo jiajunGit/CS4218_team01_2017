@@ -159,7 +159,158 @@ public class ShellImplTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test 
+	public void testRedirectInputOutputCat(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "catOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "catOut";
+			shell.parseAndEvaluate("cat < " + inPath + " > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "catOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Test
+	public void testRedirectInputOutputHead(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "headOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "headOut";
+			shell.parseAndEvaluate("head < " + inPath + " > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "headOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Test
+	public void testRedirectInputOutputTail(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "tailOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "tailOut";
+			shell.parseAndEvaluate("tail < " + inPath + " > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "tailOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}			
+	}
+	
+	@Test
+	public void testRedirectInputOutputSort(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "sortOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut";
+			shell.parseAndEvaluate("sort -n < " + inPath + " > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Test
+	public void testRedirectInputOutputGrep(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "grepOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "grepOut";
+			shell.parseAndEvaluate("grep Please < " + inPath + " > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "grepOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}			
+	}
+	
+	@Test
+	public void testRedirectInputOutputCal(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "year2017")));
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "calOut";
+			shell.parseAndEvaluate("cal 2017 > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "calOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}			
+	}
+
+	@Test
+	public void testRedirectInputOutputPwd(){
+		ShellImpl shell = new ShellImpl();
+		try {
+			String expectedOutput = Environment.currentDirectory + LINE_SEPARATOR;
+			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "pwdOut";
+			shell.parseAndEvaluate("pwd > " + outPath);
+			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
+
+			Assert.assertEquals(expectedOutput, actualOutput);
+			
+			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "pwdOut");
+
+			if(nowExists.exists()){
+				nowExists.delete();
+			}
+		} catch (IOException | AbstractApplicationException | ShellException e) {
+			e.printStackTrace();
+		}			
+	}
 	/**
 	 * Quoting Commands Section
 	 * Single quote: disables the interpretation of all special symbols 
