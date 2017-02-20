@@ -23,6 +23,7 @@ public class SortApplication implements Sort {
 	private static final String ERR_READ = "IO ERROR WHEN READING FILE";
 	private static final String ERR_WRITE_OUT = "IO ERROR WHEN WRITING TO OUTSTREAM";
 	private static final String ERR_NOTALL_NUM = "contents of file must start with numbers";
+	private static final String INVALID_ARGS = "Invalid arguments";
 	
 	public static final int STR_2_GREATER = 2;
 	public static final int STR_1_GREATER = 1;
@@ -74,8 +75,10 @@ public class SortApplication implements Sort {
 			loadFromStdIn(stdin);
 		}else if((args == null || args.length == 0) && stdin !=null){
 			loadFromStdIn(stdin);
-		}else if(args.length == 2){
+		}else if(args.length == 2 && args[0].equals("-n")){
 			load(args[1]);
+		}else{
+			throw new SortException(INVALID_ARGS);
 		}
 	}
 	
