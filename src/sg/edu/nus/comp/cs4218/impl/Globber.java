@@ -9,7 +9,6 @@ import java.util.regex.PatternSyntaxException;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.Utility;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 

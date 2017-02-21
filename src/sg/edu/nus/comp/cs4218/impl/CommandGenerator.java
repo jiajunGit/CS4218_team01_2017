@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sg.edu.nus.comp.cs4218.Symbol;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 
