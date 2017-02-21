@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.Globber;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
@@ -310,6 +311,12 @@ public class GlobberTest {
         assertEquals( out[0], expected );
     }
     
+    /**
+     * Tests if the developer have sanitized the glob string before using it to construct the regex pattern used to 
+     * match file/directory names. Relative path is used.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testRelativePathWithSpecialCharacters() throws ShellException {
         
@@ -323,6 +330,12 @@ public class GlobberTest {
         assertTrue( out.length == 0 );
     }
     
+    /**
+     * Tests if the developer have sanitized the glob string before using it to construct the regex pattern used to 
+     * match file/directory names. Absolute path is used.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testAbsolutePathWithSpecialCharacters() throws ShellException {
         
@@ -336,11 +349,17 @@ public class GlobberTest {
         assertTrue( out.length == 0 );
     }
     
+    /**
+     * Tests if the developer have sanitized characters used to sanitize the glob string before using it to 
+     * construct the regex pattern used to match file/directory names. Relative path is used.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testRelativePathWithEscapeCharacters() throws ShellException {
         
         String input = relativeDirPath + Symbol.PATH_SEPARATOR_S 
-                       + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "\\Q2712\\E*";
+                       + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*'\\E2712\\Q'*";
         
         String inputSymbols = ShellImpl.generateSymbolString(input);
         
@@ -349,11 +368,17 @@ public class GlobberTest {
         assertTrue( out.length == 0 );
     }
     
+    /**
+     * Tests if the developer have sanitized characters used to sanitize the glob string before using it to 
+     * construct the regex pattern used to match file/directory names. Absolute path is used.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testAbsolutePathWithEscapeCharacters() throws ShellException {
         
         String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" 
-                       + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "\\Q2712\\E*";
+                       + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*'\\E2712\\Q'*";
         
         String inputSymbols = ShellImpl.generateSymbolString(input);
         
