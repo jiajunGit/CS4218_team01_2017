@@ -1,3 +1,1 @@
-# CS4218-Shell
-
-## **WARNING: Template files pushed contain bugs, use them with caution**
+# CS4218-Java-Shell-Interpreter
