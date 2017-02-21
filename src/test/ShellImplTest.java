@@ -180,7 +180,7 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "catOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "catOut";
 			shell.parseAndEvaluate("cat < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
@@ -202,7 +202,7 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "headOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "headOut";
 			shell.parseAndEvaluate("head < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
@@ -224,7 +224,7 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "tailOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "tailOut";
 			shell.parseAndEvaluate("tail < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
@@ -246,7 +246,7 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "sortOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut";
 			shell.parseAndEvaluate("sort -n < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
@@ -268,7 +268,7 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "grepOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "IOinput";
+			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "grepOut";
 			shell.parseAndEvaluate("grep Please < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
