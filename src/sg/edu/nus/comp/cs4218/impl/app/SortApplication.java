@@ -34,6 +34,8 @@ public class SortApplication implements Sort {
 	private static final String ERR_WRITE_OUT = "IO ERROR WHEN WRITING TO OUTSTREAM";
 	private static final String ERR_NOTALL_NUM = "contents of file must start with numbers";
 	private static final String INVALID_ARGS = "Invalid arguments";
+	final static String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	
 	public static final int STR_2_GREATER = 2;
 	public static final int STR_1_GREATER = 1;
@@ -502,7 +504,7 @@ public class SortApplication implements Sort {
 	 */
 	private void loadFromStdIn(InputStream stdin) throws SortException{
 		String wholeText = convertStreamToString(stdin);
-		lines = wholeText.split("[" + System.getProperty("line.separator") + "]");
+		lines = wholeText.split(LINE_SEPARATOR);
 	}
 	
 	/**
