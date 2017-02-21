@@ -9,8 +9,13 @@ import java.util.regex.PatternSyntaxException;
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.Utility;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
+
+/**
+ * A class used to expand glob paths
+ */
 
 public class Globber {
 
@@ -24,6 +29,20 @@ public class Globber {
         }
     }
     
+    /**
+     * Expands the glob path if the path can be expanded or else it returns the input unchanged
+     * 
+     * @param input
+     *      String containing the glob path
+     * @param inputSymbols
+     *      String containing the symbols generated from input by generateSymbols method in shellImpl
+     * 
+     * @return
+     *      An string array containing all the paths expanded from the glob path provided
+     * 
+     * @throws ShellException
+     *      If an exception happens while expanding the glob path
+     */
     public String[] processGlob( String input, String inputSymbols ) throws ShellException {
         
         if( input == null || inputSymbols == null ){
