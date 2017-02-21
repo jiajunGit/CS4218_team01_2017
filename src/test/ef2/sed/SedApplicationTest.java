@@ -239,7 +239,7 @@ public class SedApplicationTest {
     public void testRunForAllReplacementInStdin() throws IOException, AbstractApplicationException {
         
         String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
+        String replacementString = "s/night/morning/g";
         String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
         
         String[] args = { replacementString };
@@ -295,7 +295,7 @@ public class SedApplicationTest {
     public void testRunForAllReplacementInFile() throws IOException, AbstractApplicationException {
         
         String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
+        String replacementString = "s/night/morning/g";
         String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
         
         String[] args = { replacementString, filePath };
@@ -546,7 +546,7 @@ public class SedApplicationTest {
         outStream.close();
         
         String out = sed.replaceAllSubstringsInStdin(command);
-        String expected = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String expected = ""; // TODO replace with exception class string
         
         assertEquals( out, expected );
     }
@@ -681,7 +681,7 @@ public class SedApplicationTest {
         outStream.close();
         
         String out = sed.replaceAllSubstringsInFile(command);
-        String expected = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String expected = ""; // TODO replace with exception class string
         
         assertEquals( out, expected );
     }
@@ -721,7 +721,7 @@ public class SedApplicationTest {
         tempFileOne.deleteOnExit();
         
         String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "";
+        String expected = "" + NEW_LINE;
         
         assertEquals( out, expected );
     }
@@ -753,7 +753,7 @@ public class SedApplicationTest {
         tempFileOne.deleteOnExit();
         
         String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "";
+        String expected = "" + NEW_LINE;
         
         assertEquals( out, expected );
     }
@@ -957,6 +957,28 @@ public class SedApplicationTest {
         
         String out = sed.replaceFirstSubStringInFile(command);
         String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testReplaceFirstSubStringInFileWithReplacementStringContainingSpaces() throws IOException {
+        
+        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
+        String replacementString = "s/'all night'/morning/";
+        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        
+        String command = "sed " + replacementString + " \"" + filePath + "\"";
+        
+        assertTrue(createNewFile(filePath));
+        tempFileOne = new File(filePath);
+        tempFileOne.deleteOnExit();
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String out = sed.replaceFirstSubStringInFile(command);
+        String expected = "good night at night" + NEW_LINE + "morning" + NEW_LINE;
         
         assertEquals( out, expected );
     }
