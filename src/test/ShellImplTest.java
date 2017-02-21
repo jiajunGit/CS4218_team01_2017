@@ -600,6 +600,12 @@ public class ShellImplTest {
         assertEquals(output, expected);
     }
     
+    /**
+     * Tests if the developer have sanitized characters used to sanitize the glob string before using it to 
+     * construct the regex pattern used to match file/directory names.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testGlobWithGlobWithEscapeCharacters() {
         String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*\"\\E-.-\\Q\"*";
@@ -608,6 +614,12 @@ public class ShellImplTest {
         assertEquals(output, expected);
     }
     
+    /**
+     * Tests if the developer have sanitized the glob string before using it to construct the regex pattern used to 
+     * match file/directory names.
+     * 
+     * Should not match any file or directories
+     */
     @Test
     public void testGlobWithGlobWithSpecialCharacters() {
         String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"-..*\"";
@@ -623,14 +635,6 @@ public class ShellImplTest {
         String output = shell.globNoPaths(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "-.-" 
                           + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR + "*" + LINE_SEPARATOR;
-        assertEquals(output, expected);
-    }
-    
-    @Test
-    public void testGlobNoMatchingPaths() {
-        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "t*";
-        String output = shell.globNoPaths(command);
-        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "t*" + LINE_SEPARATOR;
         assertEquals(output, expected);
     }
     
