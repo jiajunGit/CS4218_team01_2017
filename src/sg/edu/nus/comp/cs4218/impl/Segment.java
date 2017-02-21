@@ -3,6 +3,10 @@ package sg.edu.nus.comp.cs4218.impl;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 
+/**
+ * A class used to store strings containing sub-commands split from commands
+ */
+
 public class Segment {
 
     private String m_Segment;
