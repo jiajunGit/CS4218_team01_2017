@@ -5,6 +5,14 @@ import java.util.LinkedList;
 
 import sg.edu.nus.comp.cs4218.Symbol;
 
+/**
+ * A class used to store different call command components, namely the application name, 
+ * the arguments (if any), the input redirection file path (if any) and output redirection file path (if
+ * any), link type to next command (if any), reference to next command (if any), input stream provided by
+ * previous command (if any).
+ * 
+ */
+
 public class Command {
 
     private String appName;
