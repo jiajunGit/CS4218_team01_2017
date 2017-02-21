@@ -5,6 +5,11 @@ import java.io.FilenameFilter;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * A class used for filtering file/directory names matched by the regex provided when iterating
+ * through a directory
+ */
+
 public class FileRegexFilter implements FilenameFilter {
 
     private String m_Regex;
