@@ -1,8 +1,6 @@
 package test.ef2.commandsubstitution;
 
 import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
@@ -39,12 +37,45 @@ public class CommandSubstitutionTest {
 		System.setOut(System.out);
 	}
 
-
-	//Test Section for backquote
 	@Test
 	public void testBackquoteEcho() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `echo hi`");
 		String expectedOut = "hi"+LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteEchoWithSemiColon() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitution("echo `echo hello;echo world`");
+		String expectedOut = "hello world"+LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteEchoWithDoubleQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitution("echo `echo hello;echo \"echo world*&^%;#@|\"`");
+		String expectedOut = "hello echo world*&^%;#@|"+LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteEchoWithSingleQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitution("echo `echo hello;echo 'echo world *&^%;#@|'`");
+		String expectedOut = "hello echo world *&^%;#@|"+LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testInvalidSubCmd() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitutionWithException("echo `hi`");
+		String expectedOut = "shell: hi: Invalid app.";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testInvalidSubCmdSyntax() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitutionWithException("echo `hi");
+		String expectedOut = "shell: Invalid syntax encountered.";
 		assertEquals(expectedOut, output);
 	}
 
@@ -68,6 +99,14 @@ public class CommandSubstitutionTest {
 		String file = RELATIVE_TEST_DIRECTORY+"test11Lines";
 		String output = shell.performCommandSubstitution("echo `head "+file+"`");
 		String expectedOut = "1 2 3 4 5 6 7 8 9 10"+ LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteTail() throws AbstractApplicationException, ShellException {
+		String file = RELATIVE_TEST_DIRECTORY+"test11Lines";
+		String output = shell.performCommandSubstitution("echo `tail "+file+"`");
+		String expectedOut = "2 3 4 5 6 7 8 9 10 11"+ LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 
