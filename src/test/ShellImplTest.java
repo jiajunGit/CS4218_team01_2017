@@ -672,7 +672,7 @@ public class ShellImplTest {
     
     @Test
     public void testGlobMultipleFilesAndDirectoriesInSingleDirectory() {
-        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"" + PATH_SEPARATOR + "*";
+        String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*\".cab.car\"" + PATH_SEPARATOR + "*";
         String output = shell.globFilesDirectories(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-.- "
                           + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-carr "
@@ -686,7 +686,7 @@ public class ShellImplTest {
     
     @Test
     public void testGlobMultipleFilesAndDirectoriesInMultipleDirectories() {
-        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "ca*" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712*";
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "ca*" + PATH_SEPARATOR + "c*t" + PATH_SEPARATOR + "2712*";
         String output = shell.globFilesDirectories(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 "
                           + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712.txt "
