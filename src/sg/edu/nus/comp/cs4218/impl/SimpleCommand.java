@@ -1,5 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl;
 
+/**
+ * A class used to store different call command components, namely the application name, 
+ * the arguments (if any), the input redirection file path (if any) and output redirection file path (if
+ * any).
+ * 
+ */
+
 public class SimpleCommand {
 
     private String appName;
