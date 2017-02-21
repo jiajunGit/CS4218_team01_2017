@@ -4,8 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
+
+/**
+ * A class used to generate command objects to be used later by shellImpl for evaluation of commands
+ */
 
 public class CommandGenerator {
 
@@ -23,6 +28,17 @@ public class CommandGenerator {
         globber = cmdGlobber;
     }
     
+    /**
+     * Generate command objects using the list of segments provided when initializing this
+     * class's constructor
+     *      
+     * @return 
+     *      List of command objects
+     * 
+     * @throws ShellException
+     *      If an exception happens while generating command objects from the list of segments provided.
+     * 
+     */ 
     public List<Command> generateCommands() throws ShellException {
         
         if(globber == null || segments == null){
