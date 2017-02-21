@@ -664,7 +664,7 @@ public class ShellImplTest {
     
     @Test
     public void testGlobAfterFullDirectoryName() {
-        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"*";
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"**";
         String output = shell.globOneFile(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + LINE_SEPARATOR;
         assertEquals(output, expected);
