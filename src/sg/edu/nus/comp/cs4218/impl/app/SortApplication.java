@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -503,8 +504,13 @@ public class SortApplication implements Sort {
 	 * @throws SortException
 	 */
 	private void loadFromStdIn(InputStream stdin) throws SortException{
-		String wholeText = convertStreamToString(stdin);
-		lines = wholeText.split(LINE_SEPARATOR);
+		Vector<String> linesVector;		
+		try {
+			linesVector = importFile(stdin);
+		} catch (IOException e) {
+			throw new SortException(ERR_READ);
+		}
+		lines = linesVector.toArray(new String[linesVector.size()]);
 	}
 	
 	/**
@@ -556,6 +562,23 @@ public class SortApplication implements Sort {
 		}
 	}	
 
+	private Vector<String> importFile(InputStream stdin) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stdin));
+		Vector<String> linesVector = new Vector<String>();
+		
+		try {
+			String line = bufferedReader.readLine();
+
+			while (line != null) {
+				linesVector.add(line);
+				line = bufferedReader.readLine();
+			}
+			
+			return linesVector;
+		} finally {
+			bufferedReader.close();
+		}
+	}
 	
 	/**
 	 * Reads entire contents of stdin into a string
