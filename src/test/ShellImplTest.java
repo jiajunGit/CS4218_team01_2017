@@ -416,7 +416,11 @@ public class ShellImplTest {
 	/**
 	 * Calls Command
 	 */
-
+	@Test(expected=ShellException.class)
+    public void testCallInvalidCaseSensitiveAppName() throws AbstractApplicationException, ShellException{
+        shell.parseAndEvaluate("Echo", System.out);
+    }
+	
 	@Test(expected=ShellException.class)
 	public void testCallInvalidArgument() throws AbstractApplicationException, ShellException{
 		shell.parseAndEvaluate("\"echo\"", System.out);
@@ -598,9 +602,9 @@ public class ShellImplTest {
     
     @Test
     public void testGlobWithGlobWithEscapeCharacters() {
-        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"\\Q-.-\\E\"*";
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*\"\\E-.-\\Q\"*";
         String output = shell.globNoPaths(command);
-        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "\\Q-.-\\E*" + LINE_SEPARATOR;
+        String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "*\\E-.-\\Q*" + LINE_SEPARATOR;
         assertEquals(output, expected);
     }
     
@@ -651,6 +655,14 @@ public class ShellImplTest {
         String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"FiLe WiTh SpAcEs\"" + PATH_SEPARATOR + "*\"ile with spac\"*\"s.\"*";
         String output = shell.globOneFile(command);
         String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "FiLe WiTh SpAcEs" + PATH_SEPARATOR + "file with spaces.txt" + LINE_SEPARATOR;
+        assertEquals(output, expected);
+    }
+    
+    @Test
+    public void testGlobAfterFullDirectoryName() {
+        String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"*";
+        String output = shell.globOneFile(command);
+        String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + LINE_SEPARATOR;
         assertEquals(output, expected);
     }
     

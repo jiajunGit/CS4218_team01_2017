@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.Globber;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
@@ -151,24 +150,6 @@ public class GlobberTest {
         
         String input = relativeDirPath + Symbol.PATH_SEPARATOR_S 
                         + ".cab.car" + Symbol.PATH_SEPARATOR_S +"2712" + Symbol.PATH_SEPARATOR_S + "*12" + Symbol.PATH_SEPARATOR_S;
-        
-        String inputSymbols = ShellImpl.generateSymbolString(input);
-        
-        String[] out = globber.processGlob(input, inputSymbols);
-        
-        assertTrue( out.length == 1 );
-        
-        String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" 
-                          + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "2712";
-        
-        assertEquals( out[0], expected );
-    }
-    
-    @Test
-    public void testRelativePathWithStartingPathSeparator() throws ShellException {
-        
-        String input = Symbol.PATH_SEPARATOR_S + relativeDirPath 
-                       + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S +"2712" + Symbol.PATH_SEPARATOR_S + "*12";
         
         String inputSymbols = ShellImpl.generateSymbolString(input);
         
