@@ -45,7 +45,24 @@ import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
  */
 
 public class ShellImpl implements Shell {
-	
+    
+    /**
+     * Parses and evaluates two commands separated by the pipe operator 
+     * 
+     * 
+     * @param args
+     *      String containing the two commands separated by the pipe operator 
+     *      to be evaluated
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String pipeTwoCommands(String args) {
         String out = new String();
@@ -57,6 +74,23 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates multiple commands separated by the pipe operator 
+     * 
+     * 
+     * @param args
+     *      String containing the multiple commands separated by the pipe operator 
+     *      to be evaluated
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String pipeMultipleCommands(String args) {
         String out = new String();
@@ -68,6 +102,23 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands separated by the pipe operator that will result
+     * in an exception
+     * 
+     * @param args
+     *      String containing commands separated by the pipe operator that will result
+     *      in an exception
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String pipeWithException(String args) {
         String out = new String();
@@ -79,6 +130,21 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing glob path(s) that cannot be expanded
+     * 
+     * @param args
+     *      String containing commands containing glob path(s) that cannot be expanded
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String globNoPaths(String args) {
         String out = new String();
@@ -90,6 +156,21 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing glob path(s) that be expanded to only one file path
+     * 
+     * @param args
+     *      String containing commands containing glob path(s) that be expanded to only one file path
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String globOneFile(String args) {
         String out = new String();
@@ -101,6 +182,21 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing glob path(s) that be expanded to at least one file path
+     * 
+     * @param args
+     *      String containing commands containing glob path(s) that be expanded to at least one file path
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String globFilesDirectories(String args) {
         String out = new String();
@@ -112,6 +208,21 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing glob path(s) that will result in an exception
+     * 
+     * @param args
+     *      String containing commands containing glob path(s) that will result in an exception
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String globWithException(String args) {
         String out = new String();
@@ -123,6 +234,21 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing input redirect symbol
+     * 
+     * @param args
+     *      String containing commands containing containing input redirect symbol
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectInput(String args) {
         String out = new String();
@@ -134,6 +260,21 @@ public class ShellImpl implements Shell {
 		return out;
     }
 
+    /**
+     * Parses and evaluates commands containing output redirect symbol
+     * 
+     * @param args
+     *      String containing commands containing containing output redirect symbol
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectOutput(String args) {
         String out = new String();
@@ -145,6 +286,21 @@ public class ShellImpl implements Shell {
 		return out; 
     }
 
+    /**
+     * Parses and evaluates commands containing input redirect symbol with no files specified
+     * 
+     * @param args
+     *      String containing commands containing containing input redirect symbol with no files specified
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectInputWithNoFile(String args) {
         String out = new String();
@@ -156,6 +312,21 @@ public class ShellImpl implements Shell {
 		return out; 
     }
 
+    /**
+     * Parses and evaluates commands containing output redirect symbol with no files specified
+     * 
+     * @param args
+     *      String containing commands containing containing output redirect symbol with no files specified
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectOutputWithNoFile(String args) {
         String out = new String();
@@ -167,6 +338,21 @@ public class ShellImpl implements Shell {
 		return out; 
     }
 
+    /**
+     * Parses and evaluates commands containing input redirect symbol that will result in exception
+     * 
+     * @param args
+     *      String containing commands containing containing input redirect symbol that will result in exception
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectInputWithException(String args) {
         String out = new String();
@@ -178,6 +364,21 @@ public class ShellImpl implements Shell {
 		return out; 
     }
 
+    /**
+     * Parses and evaluates commands containing output redirect symbol that will result in exception
+     * 
+     * @param args
+     *      String containing commands containing containing output redirect symbol that will result in exception
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String redirectOutputWithException(String args) {
 		String out = new String();
@@ -189,6 +390,21 @@ public class ShellImpl implements Shell {
 		return out;
     }
 
+    /**
+     * Parses and evaluates commands containing command substitution
+     * 
+     * @param args
+     *      String containing commands containing containing command substitution
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String performCommandSubstitution(String args) {
         String out = new String();
@@ -200,6 +416,23 @@ public class ShellImpl implements Shell {
         return out;
     }
 
+    /**
+     * Parses and evaluates commands containing command substitution
+     * 
+     * @param args
+     *      String containing commands containing containing command substitution that will
+     *      result in exception
+     *      
+     * @return 
+     *      String containing the output after evaluating the commands given that will
+     *      result in exception
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the commands given.
+     * @throws ShellException
+     *      If an exception happens while processing the commands given.
+     * 
+     */ 
     @Override
     public String performCommandSubstitutionWithException(String args) {
         String out = new String();
@@ -1118,7 +1351,16 @@ public class ShellImpl implements Shell {
        executeCommands(commands, stdout);
     }
     
-    // TODO Need to check with prof about the validity of a command that ends with a consecutive sequence of new lines at the end
+    /**
+     * Checks if input has new line characters found within the input given. 
+     * 
+     * @param input
+     *         String containing the command
+     * 
+     * @return
+     *      A boolean value indicating if new line characters are found within the input \
+     *      given.
+     */
     public boolean hasNewLineViolation(String input) {
         
         int fromIndex = 0;
@@ -1144,7 +1386,24 @@ public class ShellImpl implements Shell {
         return (lastNewLineIndex >= 0 && ((input.length() - newLineLength) != lastNewLineIndex));
     }
     
-    // This method is in call command. It is NOT used internally.
+    /**
+     * Evaluates sub-command using data provided through stdin stream. Writes
+     * result to stdout stream.
+     * 
+     * @param input
+     *         StringBuilder containing the sub-command to be evaluated
+     * @param inputSymbols
+     *         Symbols for input generated by generateSymbolsForInput
+     * @param stdin
+     *         InputStream for command to get data from.
+     * @param stdout
+     *         OutputStream to write resultant data to.
+     * 
+     * @throws AbstractApplicationException
+     *             If an exception happens while evaluating the sub-command.
+     * @throws ShellException
+     *             If an exception happens while evaluating the sub-command.
+     */
     public void evaluateOneCommand( StringBuilder input, StringBuilder inputSymbols, InputStream stdin, OutputStream stdout ) 
             throws ShellException, AbstractApplicationException {
         
@@ -1184,47 +1443,20 @@ public class ShellImpl implements Shell {
         closeOutputStream(stdout);
     }
     
-    // This method is in call command. It is NOT used internally.
-    public void evaluateAllCommands( StringBuilder input, StringBuilder inputSymbols, InputStream stdin, OutputStream stdout ) 
-            throws ShellException, AbstractApplicationException {
-        
-        if( input == null || inputSymbols == null || input.length() != inputSymbols.length() ){
-            throw new ShellException(Shell.EXP_INTERNAL);
-        }
-        
-        if( stdin == null ){
-            throw new ShellException(Shell.EXP_STDIN);
-        }
-        
-        if( stdout == null ){
-            throw new ShellException(Shell.EXP_STDOUT);
-        }
-        
-        processBQ(input, inputSymbols, false);
-        processSQ(input, inputSymbols, false);
-        processDQ(input, inputSymbols, false);
-        processEmptyOutputs(input, inputSymbols);
-        
-        List<Segment> segments = split(input, inputSymbols);
-        
-        List<Command> commands = generateCommands(segments);
-        
-        if( commands.size() >= 1 ){
-            Command firstCmd = commands.get(0);
-            if(!firstCmd.hasStdin()){
-                firstCmd.setStdin(stdin);
-            }
-        } else {
-            throw new ShellException(Shell.EXP_SYNTAX);
-        }
-        
-        executeCommands(commands, stdout);
-        
-        closeInputStream(stdin);
-        closeOutputStream(stdout);
-    }
-    
-    // This method is in call command. It is NOT used internally.
+    /**
+     * Parses and generates symbols for the input. Symbols generated by this
+     * function will be later used by evaluateOneCommand function to split and evaluate
+     * commands.
+     * 
+     * @param input
+     *      String containing the command
+     *      
+     * @return
+     *      StringBuilder object containing the symbols generated for input
+     * 
+     * @throws ShellException
+     *      If a syntax error is detected while generating symbols for input
+     */
     public StringBuilder generateSymbolsForInput( String input ) throws ShellException {
         if(input == null){
             return null;
@@ -1232,7 +1464,20 @@ public class ShellImpl implements Shell {
         return generateSymbols(input);
     }
     
-    // This method is in the testing of globbing. It is NOT used internally.
+    /**
+     * Parses and generates symbols for the input. Symbols generated by this
+     * function will be later used by evaluateOneCommand function to split and evaluate
+     * commands.
+     * 
+     * @param input
+     *      String containing the command
+     *      
+     * @return
+     *      String containing the symbols generated for input
+     * 
+     * @throws ShellException
+     *      If a syntax error is detected while generating symbols for input
+     */
     public static String generateSymbolString( String input ) throws ShellException {
         if(input == null){
             return new String();
@@ -1241,7 +1486,24 @@ public class ShellImpl implements Shell {
         return out.toString();
     }
     
-    // This method is for the static method processBQ()
+    /**
+     * Searches for and processes the commands enclosed by non-nested back quotes for
+     * command substitution. If no back quotes are found, the input is returned unchanged. 
+     * If back quotes are found, the back quotes and its enclosed commands substituted with 
+     * the output from processing the commands enclosed in the back quotes.
+     * 
+     * @param input
+     *            String containing the commands.
+     * 
+     * @return String with the back quotes command processed.
+     * 
+     * @throws AbstractApplicationException
+     *             If an exception happens while processing the content in the
+     *             back quotes.
+     * @throws ShellException
+     *             If an exception happens while processing the content in the
+     *             back quotes.
+     */
     public String processBQ( String input ) throws ShellException, AbstractApplicationException{
         
         if(input == null){
@@ -1254,7 +1516,24 @@ public class ShellImpl implements Shell {
         return cmd.toString();
     }
     
-    // This method is for the static method processSQ()
+    /**
+     * Searches for and processes the commands enclosed by non-nested single quotes. If no single 
+     * quotes are found, the input is returned unchanged. If single quotes are found, the single quotes 
+     * and its enclosed contents substituted with the output from processing the contents enclosed in 
+     * the single quotes.
+     * 
+     * @param input
+     *            String containing the commands.
+     * 
+     * @return String with the single quotes command processed.
+     * 
+     * @throws AbstractApplicationException
+     *             If an exception happens while processing the content in the
+     *             single quotes.
+     * @throws ShellException
+     *             If an exception happens while processing the content in the
+     *             single quotes.
+     */
     public String processSQ( String input ) throws ShellException, AbstractApplicationException{
         
         if(input == null){
@@ -1267,7 +1546,24 @@ public class ShellImpl implements Shell {
         return cmd.toString();
     }
     
-    // This method is for the static method processDQ()
+    /**
+     * Searches for and processes the commands enclosed by non-nested double quotes. If no double 
+     * quotes are found, the input is returned unchanged. If double quotes are found, the double quotes 
+     * and its enclosed contents substituted with the output from processing the contents enclosed in 
+     * the double quotes.
+     * 
+     * @param input
+     *         String containing the commands.
+     * 
+     * @return String with the double quotes command processed.
+     * 
+     * @throws AbstractApplicationException
+     *             If an exception happens while processing the content in the
+     *             double quotes.
+     * @throws ShellException
+     *             If an exception happens while processing the content in the
+     *             double quotes.
+     */
     public String processDQ( String input ) throws ShellException, AbstractApplicationException{
         
         if(input == null){
@@ -1280,7 +1576,20 @@ public class ShellImpl implements Shell {
         return cmd.toString();
     }
     
-    // For use in application interface methods
+    /**
+     * Parses and splits the sub-command to the call command into its different
+     * components, namely the application name, the arguments (if any), the
+     * input redirection file path (if any) and output redirection file path (if
+     * any).
+     * 
+     * @throws ShellException
+     *             If an exception happens while parsing the sub-command, or if
+     *             the input redirection file path is same as that of the output
+     *             redirection file path.
+     *
+     * @throws AbstractApplicationException
+     *            If an exception happens when evaluating any commands in backquotes
+     */
     public SimpleCommand parse( String cmdline ) throws ShellException, AbstractApplicationException {
         
         if(cmdline == null){
@@ -1321,7 +1630,21 @@ public class ShellImpl implements Shell {
         return cmdObj;
     }
     
-    // Used for testing
+    /**
+     * Parses and evaluates user's command line.
+     * 
+     * @param input
+     *      String containing the command to be evaluated
+     *      
+     * @return 
+     *      String containing the output after evaluating the command given
+     * 
+     * @throws AbstractApplicationException
+     *      If an exception happens while processing the command given.
+     * @throws ShellException
+     *      If an exception happens while processing the command given.
+     * 
+     */ 
     public String parseAndEvaluate( String input ) throws AbstractApplicationException, ShellException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         parseAndEvaluate(input, out);
@@ -1330,6 +1653,20 @@ public class ShellImpl implements Shell {
         return outString;
     }
     
+    /**
+     * Parses and evaluates user's command line.
+     * 
+     * @param cmdline
+     *      String containing the command to be evaluated
+     * @param stdout
+     *      Default stdout to write results obtained after evaluating the command
+     *      found in cmdline
+     *      
+     * @throws AbstractApplicationException
+     *             If an exception happens while processing the command given.
+     * @throws ShellException
+     *             If an exception happens while processing the command given.
+     */ 
     @Override
     public void parseAndEvaluate(String cmdline, OutputStream stdout)
             throws AbstractApplicationException, ShellException {
