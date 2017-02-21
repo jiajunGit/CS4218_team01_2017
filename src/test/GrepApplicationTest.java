@@ -104,27 +104,21 @@ public class GrepApplicationTest {
 	}
 
 	@Test(expected=GrepException.class)
-    public void testRunNullStdin() throws GrepException {
+    public void testRunNullStdin() throws GrepException, IOException {
         
 	    String pattern = "some";
-        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
-                        + Symbol.TAB + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S 
-                        + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
-	    
-	    String[] args = { pattern, content };
+        
+	    String[] args = { pattern };
 	    
 	    grep.run( args, null, System.out );
     }
 	
 	@Test(expected=GrepException.class)
-    public void testRunNullStdout() throws GrepException {
+    public void testRunNullStdout() throws GrepException, IOException {
         
         String pattern = "some";
-        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
-                        + Symbol.TAB + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S 
-                        + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
-        String[] args = { pattern, content };
+        String[] args = { pattern };
         
         grep.run( args, System.in, null );
     }
@@ -157,6 +151,31 @@ public class GrepApplicationTest {
         stdout.close();
         
         grep.run( args, stdin, stdout );
+    }
+	
+	@Test(expected=GrepException.class)
+    public void testRunClosedStdin() throws GrepException, IOException {
+        
+        String pattern = "some";
+        String content = "some day" + Symbol.NEW_LINE_S + "    somsome some" + Symbol.TAB 
+                         + Symbol.NEW_LINE_S + "      somme" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S 
+                         + "seom  some" + Symbol.NEW_LINE_S;
+        
+        String filePathOne = absTestDirPath + Symbol.PATH_SEPARATOR_S + "1.txt";
+        assertTrue(Environment.createNewFile(filePathOne));
+        tempFileOne = new File(filePathOne);
+        tempFileOne.deleteOnExit();
+        
+        FileOutputStream outStream = new FileOutputStream(tempFileOne);
+        outStream.write(content.getBytes());
+        outStream.close();
+        
+        String[] args = { pattern };
+        
+        InputStream stdin = new FileInputStream(tempFileOne);
+        stdin.close();
+        
+        grep.run( args, stdin, System.out );
     }
 	
 	@Test
