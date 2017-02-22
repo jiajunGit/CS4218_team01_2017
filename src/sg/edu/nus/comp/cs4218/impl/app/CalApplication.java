@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.util.Calendar;
 
-import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.app.Cal;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.CalException;
-import sg.edu.nus.comp.cs4218.exception.EchoException;
 
 /**
  * The cal command prints the calendar of the month or year if it is specified, else
@@ -45,8 +41,8 @@ public class CalApplication implements Cal{
 	
 	private static final String CAL_COMMAND = "cal";
 	private static final int ROW_LENGTH = 20;
-	private static final int MAXIMUM_SUPPORTED_YEAR = 9999;
-	private static final int MINIMUM_SUPPORTED_YEAR = 1;
+	private static final int MAX_YEAR = 9999;
+	private static final int MIN_YEAR = 1;
 	private static final String[] MONTH_NAME = {"January","February","March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	private static final String EMPTY_SPACE = " ";
 	private static final String EMPTY_BORDER = "  ";
@@ -55,7 +51,7 @@ public class CalApplication implements Cal{
 	private static final String MONDAY_OPT = "-m";
 	private static final int MONTH_OFFSET = 1;
 	private static final int YEAR_WIDTH = 64;
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final String LINE_SEPARATOR = File.separator;
 	
 	public CalApplication() {
 	}
@@ -187,8 +183,8 @@ public class CalApplication implements Cal{
 		}catch (NumberFormatException ex){
 			throw new CalException(INVALID_ARG);
 		}
-		if (year <= MAXIMUM_SUPPORTED_YEAR){
-			if (year >= MINIMUM_SUPPORTED_YEAR){
+		if (year <= MAX_YEAR){
+			if (year >= MIN_YEAR){
 				return true;
 			}
 		}
@@ -205,12 +201,7 @@ public class CalApplication implements Cal{
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysHeader(false));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysOfMonth(currMonth, false));
-		calOutput.append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false)).append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -225,12 +216,7 @@ public class CalApplication implements Cal{
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysHeader(true));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysOfMonth(currMonth, true));
-		calOutput.append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(System.lineSeparator()).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true)).append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 		
@@ -247,12 +233,7 @@ public class CalApplication implements Cal{
 		
 		currMonth = LocalDate.of(Integer.parseInt(argsArr[2]), Integer.parseInt(argsArr[1]), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysHeader(false));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysOfMonth(currMonth, false));
-		calOutput.append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false)).append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -268,8 +249,7 @@ public class CalApplication implements Cal{
 		LocalDate[] monthDates = new LocalDate[3];
 		int year = Integer.parseInt(argArr[1]);
 		
-		calOutput.append(printYear(year));
-		calOutput.append(System.lineSeparator());
+		calOutput.append(printYear(year)).append(System.lineSeparator());
 		for (int i = 0 ; i < 4; i++){
 			months = new int[3];
 			for (int j = 0 ; j < months.length; j++){
@@ -303,12 +283,7 @@ public class CalApplication implements Cal{
 		String[] argsArr = parseArgs(args);
 		currMonth = LocalDate.of(Integer.parseInt(argsArr[3]), Integer.parseInt(argsArr[2]), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear()));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysHeader(true));
-		calOutput.append(System.lineSeparator());
-		calOutput.append(printDaysOfMonth(currMonth, true));
-		calOutput.append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true)).append(LINE_SEPARATOR);
 		
 		return calOutput.toString();
 	}
@@ -421,8 +396,7 @@ public class CalApplication implements Cal{
 		LocalDate[] monthDates = new LocalDate[3];
 		int year = Integer.parseInt(argArr[2]);
 		
-		calOutput.append(printYear(year));
-		calOutput.append(System.lineSeparator());
+		calOutput.append(printYear(year)).append(System.lineSeparator());
 		for (int i = 0 ; i < 4; i++){
 			months = new int[3];
 			for (int j = 0 ; j < months.length; j++){
@@ -645,9 +619,7 @@ public class CalApplication implements Cal{
 	 */
 	private String printMonthYear(int month, int year){
 		StringBuilder monthYear = new StringBuilder();
-		monthYear.append(MONTH_NAME[(month - MONTH_OFFSET)]);
-		monthYear.append(EMPTY_SPACE);
-		monthYear.append(year);
+		monthYear.append(MONTH_NAME[(month - MONTH_OFFSET)]).append(EMPTY_SPACE).append(year);
 		
 		int excessLength = (ROW_LENGTH - monthYear.length()) / 2;
 		

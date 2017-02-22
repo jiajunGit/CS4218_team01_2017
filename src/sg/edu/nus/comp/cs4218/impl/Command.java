@@ -21,7 +21,7 @@ public class Command {
     
     private LinkedList<String> arguments;
     
-    private Link linkTypeToNextCommand;
+    private Link link;
     private Command nextCommand;
     
     private InputStream stdin;
@@ -32,7 +32,7 @@ public class Command {
         stdinName = "";
         stdoutName = "";
         arguments = new LinkedList<String>();
-        linkTypeToNextCommand = Link.NONE;
+        link = Link.NONE;
         nextCommand = null;
         stdin = null;
     }
@@ -42,15 +42,15 @@ public class Command {
         switch(symbol){
         
             case Symbol.SEQ_OP:
-                linkTypeToNextCommand = Link.SEQUENCE;
+                link = Link.SEQUENCE;
                 break;
                 
             case Symbol.PIPE_OP:
-                linkTypeToNextCommand = Link.PIPE;
+                link = Link.PIPE;
                 break;
                 
             default:
-                linkTypeToNextCommand = Link.NONE;
+                link = Link.NONE;
                 break;
         }
     }
@@ -61,22 +61,22 @@ public class Command {
             switch(stage){
             
                 case PIPE:
-                    linkTypeToNextCommand = Link.PIPE;
+                    link = Link.PIPE;
                     return;
                     
                 case SEQUENCE:
-                    linkTypeToNextCommand = Link.SEQUENCE;
+                    link = Link.SEQUENCE;
                     return;
                     
                 default:
                     break;
             }
         }
-        linkTypeToNextCommand = Link.NONE;
+        link = Link.NONE;
     }
     
     public Link getLinkTypeToNextCommand() {
-        return linkTypeToNextCommand;
+        return link;
     }
     
     public void setNextCommand( Command next ) {

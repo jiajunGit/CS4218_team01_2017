@@ -65,7 +65,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String pipeTwoCommands(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -93,7 +93,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String pipeMultipleCommands(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -121,7 +121,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String pipeWithException(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -147,7 +147,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String globNoPaths(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -173,7 +173,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String globOneFile(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -199,7 +199,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String globFilesDirectories(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -225,7 +225,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String globWithException(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -251,7 +251,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectInput(String args) {
-        String out = new String();
+        String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -277,7 +277,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectOutput(String args) {
-        String out = new String();
+        String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -303,7 +303,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectInputWithNoFile(String args) {
-        String out = new String();
+        String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -329,7 +329,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectOutputWithNoFile(String args) {
-        String out = new String();
+        String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -355,7 +355,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectInputWithException(String args) {
-        String out = new String();
+        String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -381,7 +381,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectOutputWithException(String args) {
-		String out = new String();
+		String out = "";
 		try {
 			out = parseAndEvaluate(args);
 		} catch (AbstractApplicationException | ShellException e) {
@@ -407,7 +407,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String performCommandSubstitution(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -435,7 +435,7 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String performCommandSubstitutionWithException(String args) {
-        String out = new String();
+        String out = "";
         try {
             out = parseAndEvaluate(args);
         } catch (AbstractApplicationException | ShellException e) {
@@ -1480,7 +1480,7 @@ public class ShellImpl implements Shell {
      */
     public static String generateSymbolString( String input ) throws ShellException {
         if(input == null){
-            return new String();
+            return "";
         }
         StringBuilder out = generateSymbols(input);
         return out.toString();

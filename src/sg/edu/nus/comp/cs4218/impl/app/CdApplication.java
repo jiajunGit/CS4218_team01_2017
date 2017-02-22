@@ -24,8 +24,8 @@ import sg.edu.nus.comp.cs4218.exception.CdException;
 
 public class CdApplication implements Application {
 	
-	private static final String ERROR_EXP_NULL_ARGS = "Null argument detected";
-	private static final String ERROR_EXP_UNKNOWN_DIR = "Unknown current directory";
+	private static final String ERR_NULL_ARGS = "Null argument detected";
+	private static final String ERR_UNKNOWN_DIR = "Unknown current directory";
 	private static final String ERROR_EXP_DIRECTORY_UNSPECIFIED = "No relative directory specified";
 	private static final String ERROR_EXP_ONE_ARG = "Only 1 argument is expected";
 	private static final String ERROR_EXP_DIRECTORY_DOES_NOT_EXIST = "Directory does not exist";
@@ -48,10 +48,10 @@ public class CdApplication implements Application {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws CdException {
 		if (args == null){
-			throw new CdException(ERROR_EXP_NULL_ARGS);
+			throw new CdException(ERR_NULL_ARGS);
 		}
 		if( Environment.currentDirectory == null || !isCurrentDirectoryValid() ) {
-			throw new CdException(ERROR_EXP_UNKNOWN_DIR);
+			throw new CdException(ERR_UNKNOWN_DIR);
 		}
 		if (args.length == 0){
 			throw new CdException(ERROR_EXP_DIRECTORY_UNSPECIFIED);

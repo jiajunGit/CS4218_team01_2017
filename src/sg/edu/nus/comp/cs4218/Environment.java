@@ -68,10 +68,10 @@ public final class Environment {
     public static String getAbsPath(String path) {
 
         if (path == null || path.isEmpty()) {
-            return new String();
+            return "";
         }
 
-        String absPath = new String();
+        String absPath = "";
         try{
             if (!isAbsPath(path)) {
                 String oldPath = path;
@@ -82,7 +82,7 @@ public final class Environment {
             Path filePath = Paths.get(path);
             absPath = filePath.normalize().toString();
         } catch( InvalidPathException e ) {
-            return new String();
+            return "";
         }
         return absPath;
     }
@@ -97,11 +97,11 @@ public final class Environment {
     public static String getParentPathFrom(String path) {
 
         if (path == null) {
-            return new String();
+            return "";
         }
         File file = new File(path);
         path = file.getParent();
-        return (path != null ? path : new String());
+        return (path != null ? path : "");
     }
 
     public static boolean createNewFile(String absPath) {
