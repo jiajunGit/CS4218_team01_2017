@@ -24,7 +24,7 @@ public class CatApplicationTest {
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "cat"
 			+ PATH_SEPARATOR;
-	private final static String testInput01 = "1" +  LINE_SEPARATOR +
+	private final static String TESTINPUT1 = "1" +  LINE_SEPARATOR +
 			"2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
 			"" + LINE_SEPARATOR +
@@ -35,14 +35,14 @@ public class CatApplicationTest {
 			"9" + LINE_SEPARATOR +
 			"10" + LINE_SEPARATOR +
 			"1%" + LINE_SEPARATOR;
-	private final static String testInput02 = "alice" + LINE_SEPARATOR +
+	private final static String TESTINPUT2 = "alice" + LINE_SEPARATOR +
 			"bob" + LINE_SEPARATOR +
 			"eve" + LINE_SEPARATOR +
 			"mallory" + LINE_SEPARATOR +
 			"" + LINE_SEPARATOR +
 			"" + LINE_SEPARATOR +
 			"end of file" + LINE_SEPARATOR;
-	private final static String testInput03 = "this" + LINE_SEPARATOR +
+	private final static String TESTINPUT3 = "this" + LINE_SEPARATOR +
 			"is" + LINE_SEPARATOR +
 			"the" + LINE_SEPARATOR +
 			"3rd" + LINE_SEPARATOR +
@@ -87,19 +87,19 @@ public class CatApplicationTest {
 
 	@Test
 	public void testPrintFromStdinWithNullArg() throws CatException {
-		ByteArrayInputStream in = new ByteArrayInputStream(testInput01.getBytes());
+		ByteArrayInputStream in = new ByteArrayInputStream(TESTINPUT1.getBytes());
 		System.setIn(in);
 		cat.run(null, System.in, System.out);
-		assertEquals(testInput01,outContent.toString());
+		assertEquals(TESTINPUT1,outContent.toString());
 	}
 	
 	@Test
 	public void testPrintFromStdinWithEmptyArg() throws CatException {
-		ByteArrayInputStream in = new ByteArrayInputStream(testInput01.getBytes());
+		ByteArrayInputStream in = new ByteArrayInputStream(TESTINPUT1.getBytes());
 		String[] arg = {};
 		System.setIn(in);
 		cat.run(arg, System.in, System.out);
-		assertEquals(testInput01,outContent.toString());
+		assertEquals(TESTINPUT1,outContent.toString());
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class CatApplicationTest {
 	public void testSingleFileRead () throws CatException {
 		String[] input ={RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input01"};
 		cat.run(input, System.in, System.out);
-		assertEquals(testInput01, outContent.toString());
+		assertEquals(TESTINPUT1, outContent.toString());
 	}
 	
 	@Test
@@ -135,7 +135,7 @@ public class CatApplicationTest {
 				RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input02",
 				RELATIVE_TEST_DIRECTORY+"input"+ PATH_SEPARATOR + "input03"};
 		cat.run(input, System.in, System.out);
-		assertEquals(testInput01+testInput02+testInput03, outContent.toString());
+		assertEquals(TESTINPUT1+TESTINPUT2+TESTINPUT3, outContent.toString());
 	}
 	
 	

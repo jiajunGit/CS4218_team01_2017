@@ -18,13 +18,13 @@ import sg.edu.nus.comp.cs4218.Shell;
 
 public class Globber {
 
-    private String PATH_REGEX;
+    private String pathRegex;
     
     public Globber() {
         if(Utility.isWindows()){
-            PATH_REGEX = Symbol.REGEX_WINDOWS_PATH_SEPARATOR;
+            pathRegex = Symbol.REGEX_WINDOWS_PATH_SEPARATOR;
         } else {
-            PATH_REGEX = Symbol.REGEX_NON_WINDOWS_PATH_SEPARATOR;
+            pathRegex = Symbol.REGEX_NON_WINDOWS_PATH_SEPARATOR;
         }
     }
     
@@ -75,8 +75,8 @@ public class Globber {
         String pathToSplit = input.substring(start, input.length());
         String pathSymbolToSplit = inputSymbols.substring(start, inputSymbols.length());
         
-        String[] segments = pathToSplit.split(PATH_REGEX);        
-        String[] symbolSegments = splitSegmentSymbols(pathToSplit, pathSymbolToSplit, PATH_REGEX, segments.length);
+        String[] segments = pathToSplit.split(pathRegex);        
+        String[] symbolSegments = splitSegmentSymbols(pathToSplit, pathSymbolToSplit, pathRegex, segments.length);
         
         LinkedList<String> dirPaths = new LinkedList<String>();
         LinkedList<String> listReference = dirPaths;

@@ -9,15 +9,15 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 public class Segment {
 
-    private String m_Segment;
-    private String m_SegmentSymbol;
-    private boolean m_hasGlob;
+    private String mSegment;
+    private String mSegmentSymbol;
+    private boolean mHasGlob;
     
     public Segment( String segment, String segmentSymbol, boolean hasGlob ) throws ShellException {
-        m_Segment = segment != null ? segment : "";
-        m_SegmentSymbol = segmentSymbol != null ? segmentSymbol : "";
-        m_hasGlob = hasGlob;
-        if(m_Segment.length() != m_SegmentSymbol.length()){
+        mSegment = segment != null ? segment : "";
+        mSegmentSymbol = segmentSymbol != null ? segmentSymbol : "";
+        mHasGlob = hasGlob;
+        if(mSegment.length() != mSegmentSymbol.length()){
             throw new ShellException(Shell.EXP_INTERNAL);
         }
     }
@@ -27,14 +27,14 @@ public class Segment {
     }
     
     public boolean hasGlob() {
-        return m_hasGlob;
+        return mHasGlob;
     }
     
     public String getSegment() {
-        return m_Segment;
+        return mSegment;
     }
     
     public String getSegmentSymbol() {
-        return m_SegmentSymbol;
+        return mSegmentSymbol;
     }
 }

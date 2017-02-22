@@ -32,7 +32,7 @@ public class ShellImplTest {
 	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "IOredirect"+ PATH_SEPARATOR;
 	final static String RELATIVE_TEST_SHELL_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR;
 	private final static String RELATIVE_TEST_GLOB_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "glob";
-    private static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_GLOB_DIRECTORY;
+    private final static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_GLOB_DIRECTORY;
     
 	private ShellImpl shell = new ShellImpl();
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

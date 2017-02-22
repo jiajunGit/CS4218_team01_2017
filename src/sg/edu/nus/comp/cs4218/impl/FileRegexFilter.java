@@ -12,7 +12,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class FileRegexFilter implements FilenameFilter {
 
-    private String m_Regex;
+    private final String m_Regex;
     
     public static final String EXP_REGEX = "Invalid regex pattern";
     

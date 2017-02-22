@@ -22,7 +22,7 @@ public class TailApplicationTest {
 	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "tail"
 			+ PATH_SEPARATOR;
 	private final static String ABSOLUTE_TEST_DIRECTORY = new File(RELATIVE_TEST_DIRECTORY).getAbsolutePath() + PATH_SEPARATOR;
-	private final static String testString11lines = "1" +  LINE_SEPARATOR +
+	private final static String TESTSTRING11LINES = "1" +  LINE_SEPARATOR +
 			"2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
 			"4" + LINE_SEPARATOR +
@@ -34,7 +34,7 @@ public class TailApplicationTest {
 			"10" + LINE_SEPARATOR +
 			"11" + LINE_SEPARATOR;
 
-	private final static String testString10lines= "2" + LINE_SEPARATOR +
+	private final static String TESTSTRING10LINES= "2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
 			"4" + LINE_SEPARATOR +
 			"5" + LINE_SEPARATOR +
@@ -213,8 +213,8 @@ public class TailApplicationTest {
 		//Test application print from stdin behaviour
 		@Test
 		public void testPrintFromStdinWithNullArg() throws TailException {
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
 			tail.run(null, System.in, System.out);
@@ -224,8 +224,8 @@ public class TailApplicationTest {
 		@Test
 		public void testPrintFromStdinWithEmptyArg() throws TailException{
 			String[] arg = {};
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
 			tail.run(arg, System.in, System.out);
@@ -235,8 +235,8 @@ public class TailApplicationTest {
 		@Test
 		public void testPrintFromStdinWith1EmptyArg() throws TailException{
 			String[] arg = {""};
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
 			tail.run(arg, System.in, System.out);
@@ -246,8 +246,8 @@ public class TailApplicationTest {
 		@Test
 		public void testPrintFromStdinWith2EmptyArg() throws TailException{
 			String[] arg = {"",""};
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
 			tail.run(arg, System.in, System.out);
@@ -257,8 +257,8 @@ public class TailApplicationTest {
 		@Test
 		public void testPrintFrom3EmptyArgException() throws TailException{
 			String[] arg = {"","",""};
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
 			tail.run(arg, System.in, System.out);
@@ -267,8 +267,8 @@ public class TailApplicationTest {
 
 		@Test
 		public void testPrintFromStdinWithOptions2Args() throws TailException {
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			String[] arg = {"-n", "10"};
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
@@ -278,8 +278,8 @@ public class TailApplicationTest {
 
 		@Test
 		public void testPrintFromStdinMoreThanMaxLines2Args() throws TailException {
-			String testStdinInput = testString10lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING10LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			String[] arg = {"-n", "99"};
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
@@ -289,8 +289,8 @@ public class TailApplicationTest {
 		
 		@Test
 		public void testPrintFromStdinWithOptions3Args() throws TailException {
-			String testStdinInput = testString11lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING11LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			String[] arg = {"-n", "10", ""};
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
@@ -300,8 +300,8 @@ public class TailApplicationTest {
 
 		@Test
 		public void testPrintFromStdinMoreThanMaxLines3Args() throws TailException {
-			String testStdinInput = testString10lines;
-			String expectedOutput = testString10lines;
+			String testStdinInput = TESTSTRING10LINES;
+			String expectedOutput = TESTSTRING10LINES;
 			String[] arg = {"-n", "99", ""};
 			ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 			System.setIn(in);
@@ -315,7 +315,7 @@ public class TailApplicationTest {
 		public void testPrintFromFile1Arg() throws TailException{
 			String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 			String[] arg = {file};
-			String expectedOutput = testString10lines;
+			String expectedOutput = TESTSTRING10LINES;
 			tail.run(arg, System.in, System.out);
 			assertEquals(expectedOutput,outContent.toString());
 		}
@@ -324,7 +324,7 @@ public class TailApplicationTest {
 		public void testPrintFromFile2Arg() throws TailException{
 			String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 			String[] arg = {"",file};
-			String expectedOutput = testString10lines;
+			String expectedOutput = TESTSTRING10LINES;
 			tail.run(arg, System.in, System.out);
 			assertEquals(expectedOutput,outContent.toString());
 		}
@@ -333,7 +333,7 @@ public class TailApplicationTest {
 		public void testPrintFromFile3Arg() throws TailException{
 			String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 			String[] arg = {"","",file};
-			String expectedOutput = testString10lines;
+			String expectedOutput = TESTSTRING10LINES;
 			tail.run(arg, System.in, System.out);
 			assertEquals(expectedOutput,outContent.toString());
 		}
@@ -342,7 +342,7 @@ public class TailApplicationTest {
 		public void testPrintFromFileNLines() throws TailException{
 			String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 			String[] arg = {"-n", "10", file};
-			String expectedOutput = testString10lines;
+			String expectedOutput = TESTSTRING10LINES;
 			tail.run(arg, System.in, System.out);
 			assertEquals(expectedOutput,outContent.toString());
 		}
@@ -351,7 +351,7 @@ public class TailApplicationTest {
 		public void testPrintFromFileMoreThanMaxLines() throws TailException{
 			String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
 			String[] arg = {"-n", "99", file};
-			String expectedOutput = testString11lines;
+			String expectedOutput = TESTSTRING11LINES;
 			tail.run(arg, System.in, System.out);
 			assertEquals(expectedOutput,outContent.toString());
 		}

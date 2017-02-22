@@ -23,7 +23,7 @@ public class HeadApplicationTest {
 	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "head"
 			+ PATH_SEPARATOR;
 	private final static String ABSOLUTE_TEST_DIRECTORY = new File(RELATIVE_TEST_DIRECTORY).getAbsolutePath() + PATH_SEPARATOR;
-	private final static String testString11lines = "1" +  LINE_SEPARATOR +
+	private final static String TEST_STRING_11_LINES = "1" +  LINE_SEPARATOR +
 			"2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
 			"4" + LINE_SEPARATOR +
@@ -35,7 +35,7 @@ public class HeadApplicationTest {
 			"10" + LINE_SEPARATOR +
 			"11" + LINE_SEPARATOR;
 
-	private final static String testString10lines= "1" +  LINE_SEPARATOR +
+	private final static String TEST_STRING_10_LINES= "1" +  LINE_SEPARATOR +
 			"2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
 			"4" + LINE_SEPARATOR +
@@ -213,8 +213,8 @@ public class HeadApplicationTest {
 	//Test application print from stdin behaviour
 	@Test
 	public void testPrintFromStdinWithNullArg() throws HeadException {
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(null, System.in, System.out);
@@ -224,8 +224,8 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromStdinWithEmptyArg() throws HeadException{
 		String[] arg = {};
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -235,8 +235,8 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromStdinWith1EmptyArg() throws HeadException{
 		String[] arg = {""};
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -246,8 +246,8 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFromStdinWith2EmptyArg() throws HeadException{
 		String[] arg = {"",""};
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -257,8 +257,8 @@ public class HeadApplicationTest {
 	@Test
 	public void testPrintFrom3EmptyArgException() throws HeadException{
 		String[] arg = {"","",""};
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
 		head.run(arg, System.in, System.out);
@@ -267,8 +267,8 @@ public class HeadApplicationTest {
 
 	@Test
 	public void testPrintFromStdinWithOptions2Args() throws HeadException {
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		String[] arg = {"-n", "10"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
@@ -278,8 +278,8 @@ public class HeadApplicationTest {
 
 	@Test
 	public void testPrintFromStdinMoreThanMaxLines2Args() throws HeadException {
-		String testStdinInput = testString10lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_10_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		String[] arg = {"-n", "99"};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
@@ -289,8 +289,8 @@ public class HeadApplicationTest {
 	
 	@Test
 	public void testPrintFromStdinWithOptions3Args() throws HeadException {
-		String testStdinInput = testString11lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_11_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		String[] arg = {"-n", "10", ""};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
@@ -300,8 +300,8 @@ public class HeadApplicationTest {
 
 	@Test
 	public void testPrintFromStdinMoreThanMaxLines3Args() throws HeadException {
-		String testStdinInput = testString10lines;
-		String expectedOutput = testString10lines;
+		String testStdinInput = TEST_STRING_10_LINES;
+		String expectedOutput = TEST_STRING_10_LINES;
 		String[] arg = {"-n", "99", ""};
 		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
 		System.setIn(in);
@@ -315,7 +315,7 @@ public class HeadApplicationTest {
 	public void testPrintFromFile1Arg() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 		String[] arg = {file};
-		String expectedOutput = testString10lines;
+		String expectedOutput = TEST_STRING_10_LINES;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
 	}
@@ -324,7 +324,7 @@ public class HeadApplicationTest {
 	public void testPrintFromFile2Arg() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 		String[] arg = {"",file};
-		String expectedOutput = testString10lines;
+		String expectedOutput = TEST_STRING_10_LINES;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
 	}
@@ -333,7 +333,7 @@ public class HeadApplicationTest {
 	public void testPrintFromFile3Arg() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 		String[] arg = {"","",file};
-		String expectedOutput = testString10lines;
+		String expectedOutput = TEST_STRING_10_LINES;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
 	}
@@ -342,7 +342,7 @@ public class HeadApplicationTest {
 	public void testPrintFromFileNLines() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 		String[] arg = {"-n", "10", file};
-		String expectedOutput = testString10lines;
+		String expectedOutput = TEST_STRING_10_LINES;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
 	}
@@ -351,7 +351,7 @@ public class HeadApplicationTest {
 	public void testPrintFromFileMoreThanMaxLines() throws HeadException{
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
 		String[] arg = {"-n", "99", file};
-		String expectedOutput = testString11lines;
+		String expectedOutput = TEST_STRING_11_LINES;
 		head.run(arg, System.in, System.out);
 		assertEquals(expectedOutput,outContent.toString());
 	}
