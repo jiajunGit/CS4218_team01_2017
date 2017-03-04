@@ -6,11 +6,12 @@ import java.time.ZonedDateTime;
 
 import sg.edu.nus.comp.cs4218.app.Date;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.DateException;
 
 public class DateApplication implements Date {
 
     @Override
-    public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
+    public void run(String[] args, InputStream stdin, OutputStream stdout) throws DateException {
         // TODO Auto-generated method stub
         
     }

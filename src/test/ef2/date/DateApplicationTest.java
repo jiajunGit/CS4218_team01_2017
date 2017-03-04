@@ -3,9 +3,13 @@ package test.ef2.date;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,22 +17,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.DateException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 
 public class DateApplicationTest {
+	
+	private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+	private static DateApplication app;
 	static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	DateApplication dateApp;
 	
 	@Before
 	public void setUpBeforeTest() throws Exception {
-		dateApp = new DateApplication();
 		outContent = new ByteArrayOutputStream();
 	}
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		System.setOut(new PrintStream(outContent));
+		app = new DateApplication();
 	}
 
 	@AfterClass
@@ -37,46 +44,50 @@ public class DateApplicationTest {
 	}
 	
 
-	@Test(expected=AbstractApplicationException.class)
-	public void testRunNonNullStdinException() throws AbstractApplicationException{
-		String[] args = {};
-		
-		dateApp.run(args, System.in, null);
+	@Test(expected = DateException.class)
+	public void testDateWithNullStdout() throws DateException {
+		app.run(null, System.in, null);
+	}
+
+	@Test(expected = DateException.class)
+	public void testDateWithNullStdinAndStdout() throws DateException {
+		app.run(null, null, null);
 	}
 	
-	@Test(expected=AbstractApplicationException.class)
-	public void testRunNullStdoutException() throws AbstractApplicationException{
-		String[] args = {};
-		
-		dateApp.run(args, null, null);
-	}
-	
-	@Test(expected=AbstractApplicationException.class)
-	public void testRunException() throws AbstractApplicationException{
-		String[] args = {"randomString"};
-		
-		dateApp.run(args, null, System.out);
-	}
-	
-	public void testRun() throws AbstractApplicationException{
-		String[] args ={};
-		
-		ZonedDateTime exactTime = dateApp.getZonedDateTime();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
-		dateApp.run(args, null, outContent);
-		
-		assertEquals(exactTime.format(formatter), outContent.toString());
-	}
-	
-	/**
-	 * Assume that dateApp exposes another additional API that returns a ZonedDateTime object used in date command for testing the exact time and date
-	 */
 	@Test
-	public void testPrintCurrentDate() {
-		ZonedDateTime exactTime = dateApp.getZonedDateTime();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
+	public void testDateWithNullStdin() throws DateException{
+		String message = "date - test with null stdin";
+		String[] args = null;
 		
-		assertEquals(exactTime.format(formatter), dateApp.printCurrentDate("date"));
+		ZonedDateTime exactTime = app.getZonedDateTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
+		app.run(args, null, outContent);
+		
+		assertEquals(message, exactTime.format(formatter), outContent.toString());
 	}
 	
+	@Test
+	public void testDateWithCurrentTimeDateWithNullStdin() throws DateException {
+		String message = "date - test with current time and date with null stdin";
+		app.run(null, null, outContent);
+		Calendar cal = Calendar.getInstance();
+		assertEquals(message, DEFAULT_DATE_FORMAT.format(cal.getTime()), outContent.toString());
+	}
+	
+	@Test
+	public void testDateWithCurrentTimeDate() throws DateException {
+		String message = "date - test with current time and date";
+		app.run(null, System.in, outContent);
+		Calendar cal = Calendar.getInstance();
+		assertEquals(message, DEFAULT_DATE_FORMAT.format(cal.getTime()), outContent.toString());
+	}
+	
+	@Test
+	public void testDateWithWaitOneSecond() throws DateException, InterruptedException {
+		String message = "date - test with current time and wait seconds";
+		app.run(null, System.in, outContent);
+		Thread.sleep(1000);
+		Calendar cal = Calendar.getInstance();
+		assertNotSame(message, DEFAULT_DATE_FORMAT.format(cal.getTime()), outContent.toString());
+	}
 }
