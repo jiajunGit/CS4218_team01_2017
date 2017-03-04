@@ -51,7 +51,7 @@ public class CalApplication implements Cal{
 	private static final String MONDAY_OPT = "-m";
 	private static final int MONTH_OFFSET = 1;
 	private static final int YEAR_WIDTH = 64;
-	private static final String LINE_SEPARATOR = File.separator;
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
 	public CalApplication() {
 	}
