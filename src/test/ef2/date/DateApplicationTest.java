@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -58,8 +59,7 @@ public class DateApplicationTest {
 	public void testDateWithNullStdin() throws DateException{
 		String message = "date - test with null stdin";
 		String[] args = null;
-		
-		ZonedDateTime exactTime = app.getZonedDateTime();
+		ZonedDateTime exactTime = ZonedDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
 		app.run(args, null, outContent);
 		
