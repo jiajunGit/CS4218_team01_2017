@@ -11,6 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.Utility;
 import sg.edu.nus.comp.cs4218.app.Grep;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
@@ -99,8 +100,8 @@ public class GrepApplication implements Grep {
             }
             stdout.flush();
         } catch (IOException e) {
-            closeStdin(stdin);
-            closeStdout(stdout);
+            Utility.closeStdin(stdin);
+            Utility.closeStdout(stdout);
             throw new GrepException(ERROR_EXP_INVALID_OUTSTREAM);
         }
     }
@@ -228,7 +229,7 @@ public class GrepApplication implements Grep {
         try {
             regxPattern = Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            closeStdin(stdin);
+            Utility.closeStdin(stdin);
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
         }
 
@@ -267,6 +268,7 @@ public class GrepApplication implements Grep {
         }
 
         BufferedInputStream bis = null;
+        String outputStr;
         try {
 
             fileName = Environment.getAbsPath(fileName);
@@ -278,17 +280,17 @@ public class GrepApplication implements Grep {
             FileInputStream fs = new FileInputStream(fileName);
             bis = new BufferedInputStream(fs);
 
-            String outputStr = grepFromStdin(pattern, bis);
+            outputStr = grepFromStdin(pattern, bis);
 
             bis.close();
             fs.close();
 
-            return outputStr;
         } catch (IOException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         } catch (SecurityException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         }
+        return outputStr;
     }
 
     /**
@@ -369,20 +371,6 @@ public class GrepApplication implements Grep {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         } catch (PatternSyntaxException e) {
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
-        }
-    }
-
-    private void closeStdin( InputStream stdin ) {
-        if(stdin != null && stdin != System.in){
-            try{ stdin.close(); }
-            catch( IOException e ) {}
-        }
-    }
-    
-    private void closeStdout( OutputStream stdout ) {
-        if(stdout != null && stdout != System.out){
-            try{ stdout.close(); }
-            catch( IOException e ) {}
         }
     }
     
