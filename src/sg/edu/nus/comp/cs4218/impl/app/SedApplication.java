@@ -98,9 +98,7 @@ public class SedApplication implements Sed {
         
         try {
             stdout.write(outputStr.getBytes());
-            if (outputStr.isEmpty()) {
-                stdout.write(Symbol.NEW_LINE_S.getBytes());
-            }
+            stdout.write(Symbol.NEW_LINE_S.getBytes());
             stdout.flush();
         } catch (IOException e) {
             Utility.closeStdin(stdin);
