@@ -26,10 +26,12 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.app.CalApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CatApplication;
 import sg.edu.nus.comp.cs4218.impl.app.CdApplication;
+import sg.edu.nus.comp.cs4218.impl.app.DateApplication;
 import sg.edu.nus.comp.cs4218.impl.app.EchoApplication;
 import sg.edu.nus.comp.cs4218.impl.app.GrepApplication;
 import sg.edu.nus.comp.cs4218.impl.app.HeadApplication;
 import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
+import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
 import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 
@@ -522,9 +524,9 @@ public class ShellImpl implements Shell {
         } else if (("wc").equals(app)) {
             throw new ShellException(app + ": " + EXP_NOT_SUPPORTED);
         } else if (("sed").equals(app)) {
-            throw new ShellException(app + ": " + EXP_NOT_SUPPORTED);
+            absApp = new SedApplication();
         } else if (("date").equals(app)) {
-            throw new ShellException(app + ": " + EXP_NOT_SUPPORTED);
+            absApp = new DateApplication();
         } else { // invalid command
             throw new ShellException(app + ": " + EXP_INVALID_APP);
         }
