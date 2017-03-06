@@ -8,7 +8,6 @@ import java.util.regex.PatternSyntaxException;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
-import sg.edu.nus.comp.cs4218.Utility;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 
@@ -21,11 +20,7 @@ public class Globber {
     private String pathRegex;
     
     public Globber() {
-        if(Utility.isWindows()){
-            pathRegex = Symbol.REGEX_WINDOWS_PATH_SEPARATOR;
-        } else {
-            pathRegex = Symbol.REGEX_NON_WINDOWS_PATH_SEPARATOR;
-        }
+        pathRegex = Pattern.quote(Symbol.PATH_SEPARATOR_S);
     }
     
     /**
