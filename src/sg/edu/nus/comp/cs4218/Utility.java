@@ -2,6 +2,7 @@ package sg.edu.nus.comp.cs4218;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -26,6 +27,20 @@ public final class Utility {
     public static boolean isWindows() {
         String osName = System.getProperty("os.name");
         return osName.startsWith("Windows");
+    }
+    
+    public static void closeStdin( InputStream stdin ) {
+        if(stdin != null && stdin != System.in){
+            try{ stdin.close(); }
+            catch( IOException e ) {}
+        }
+    }
+    
+    public static void closeStdout( OutputStream stdout ) {
+        if(stdout != null && stdout != System.out){
+            try{ stdout.close(); }
+            catch( IOException e ) {}
+        }
     }
     
     private Utility() {}
