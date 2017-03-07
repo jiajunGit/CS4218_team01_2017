@@ -34,6 +34,7 @@ import sg.edu.nus.comp.cs4218.impl.app.PwdApplication;
 import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
 import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
+import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 
 /**
  * A Shell is a command interpreter and forms the backbone of the entire
@@ -522,7 +523,7 @@ public class ShellImpl implements Shell {
         } else if (("tail").equals(app)) {
             absApp = new TailApplication();
         } else if (("wc").equals(app)) {
-            throw new ShellException(app + ": " + EXP_NOT_SUPPORTED);
+            absApp = new WcApplication();
         } else if (("sed").equals(app)) {
             absApp = new SedApplication();
         } else if (("date").equals(app)) {
