@@ -107,5 +107,37 @@ public class DateIntegrationTest {
 		}
 		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+expectedCalendar, output);
 	}
-
+	
+	@Test
+	public void testWithGrep() throws AbstractApplicationException, ShellException { //todo: test with globbing
+		String output = shell.parseAndEvaluate("date>input/test; grep : input/test");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithSort() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("date>input/test; sort input/test");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString(),output);
+	}
+	
+	@Test
+	public void testWithSed() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("date>input/test; sed s/2017/2017abc input/test");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+"abc"+LINE_SEPARATOR+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithWc() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("date;date>input/test; wc -l input/test");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+"       1"+LINE_SEPARATOR,output);
+	}
+	
 }
