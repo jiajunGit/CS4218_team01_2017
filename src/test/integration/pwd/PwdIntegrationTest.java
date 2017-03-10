@@ -18,7 +18,7 @@ import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class PwdIntegrationTest {
 	private ShellImpl shell = new ShellImpl();
-	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
 	
 	@Before
@@ -52,6 +52,13 @@ public class PwdIntegrationTest {
 		String output= shell.parseAndEvaluate("pwd;cd ../;pwd");
 		String CURRENT_DIRECTORY_2 = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY_1+LINE_SEPARATOR+CURRENT_DIRECTORY_2+LINE_SEPARATOR, output);
+	}
+	
+	@Test
+	public void testWithCat() throws AbstractApplicationException, ShellException {
+		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
+		String output= shell.parseAndEvaluate("pwd>input/test ; cat input/*");
+		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+ "a", output);
 	}
 	@Test
 	public void testWithHead() throws AbstractApplicationException, ShellException {
@@ -97,14 +104,14 @@ public class PwdIntegrationTest {
 	
 	@Test
 	public void testWithGrep() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("pwd;pwd>test; grep / test");
+		String output= shell.parseAndEvaluate("pwd;pwd>input/test; grep / input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR, output);
 	}
 	
 	@Test
 	public void testWithSort() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("pwd;pwd>test; sort test");
+		String output= shell.parseAndEvaluate("pwd;pwd>input/test; sort input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY, output);
 	}
@@ -120,14 +127,14 @@ public class PwdIntegrationTest {
 	
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("pwd;pwd>test;sed s/2017/2017abc test");
+		String output= shell.parseAndEvaluate("pwd;pwd>input/test;sed s/2017/2017abc input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY+"abc"+LINE_SEPARATOR+LINE_SEPARATOR, output);
 	}
 	
 	@Test
 	public void testWithWc() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("pwd;pwd>test;wc -l test");
+		String output= shell.parseAndEvaluate("pwd;pwd>input/test;wc -l input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+"       1"+LINE_SEPARATOR, output);
 	}

@@ -88,8 +88,8 @@ public class CatApplication implements Application {
 								stdout.write(LINE_SEPARATOR.getBytes());
 							}
 						} catch (IOException e) {
-							throw new CatException(
-									"Could not write to output stream");
+							
+									e.printStackTrace();
 						}
 					}
 
