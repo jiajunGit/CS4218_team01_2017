@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
@@ -47,8 +48,8 @@ public class PwdApplication implements Application {
 		}
 		
 		try {
-			stdout.write(Environment.currentDirectory.getBytes());
-			stdout.write(Symbol.NEW_LINE_S.getBytes());
+			stdout.write(Environment.currentDirectory.getBytes(Charset.forName("UTF-8")));
+			stdout.write(Symbol.NEW_LINE_S.getBytes(Charset.forName("UTF-8")));
 			stdout.flush();
 		} 
 		catch (IOException e) {

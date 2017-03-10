@@ -13,7 +13,7 @@ import sg.edu.nus.comp.cs4218.exception.CalException;
 import sg.edu.nus.comp.cs4218.exception.DateException;
 
 public class DateApplication implements Date {
-
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     @Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws DateException {
         String outputStr;
@@ -40,7 +40,7 @@ public class DateApplication implements Date {
     public String printCurrentDate(String args) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
     	
-        return ZonedDateTime.now().format(formatter);
+        return ZonedDateTime.now().format(formatter)+LINE_SEPARATOR;
     }
 
 }

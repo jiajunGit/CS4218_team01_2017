@@ -79,6 +79,9 @@ public class CatApplication implements Application {
 
 				// file could be read. perform cat command
 				if (filePathArray.length != 0) {
+//					for(int i=0;i<filePathArray.length;i++){
+//						System.out.println(filePathArray[i].toString());
+//					}
 					for (int j = 0; j < filePathArray.length; j++) {
 						try {
 							List<String> stringListArray = Files

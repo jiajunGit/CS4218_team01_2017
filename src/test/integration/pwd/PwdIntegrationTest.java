@@ -55,10 +55,10 @@ public class PwdIntegrationTest {
 	}
 	
 	@Test
-	public void testWithCat() throws AbstractApplicationException, ShellException {
+	public void testWithCat() throws AbstractApplicationException, ShellException {  //todo: globbing cat input/*
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
-		String output= shell.parseAndEvaluate("pwd>input/test ; cat input/*");
-		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+ "a", output);
+		String output= shell.parseAndEvaluate("pwd>input/test ; cat input/test");
+		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR, output);
 	}
 	@Test
 	public void testWithHead() throws AbstractApplicationException, ShellException {
