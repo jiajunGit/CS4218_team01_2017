@@ -251,7 +251,7 @@ public class ShellImplTest {
 			shell.parseAndEvaluate("sort -n < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
-			Assert.assertEquals(expectedOutput, actualOutput);
+			Assert.assertEquals(expectedOutput+LINE_SEPARATOR, actualOutput);
 			
 			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut");
 
