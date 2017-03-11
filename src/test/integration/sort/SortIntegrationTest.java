@@ -69,7 +69,7 @@ public class SortIntegrationTest {
 			"3"+LINE_SEPARATOR+
 			"4"+LINE_SEPARATOR+
 			"5"+LINE_SEPARATOR+
-			"11"+LINE_SEPARATOR+
+			"new1"+LINE_SEPARATOR+
 			"22"+LINE_SEPARATOR+
 			"33"+LINE_SEPARATOR+
 			"44"+LINE_SEPARATOR+
