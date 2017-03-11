@@ -100,8 +100,6 @@ public class GrepApplication implements Grep {
             }
             stdout.flush();
         } catch (IOException e) {
-            Utility.closeStdin(stdin);
-            Utility.closeStdout(stdout);
             throw new GrepException(ERROR_EXP_INVALID_OUTSTREAM);
         }
     }
