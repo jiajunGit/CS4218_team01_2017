@@ -104,16 +104,18 @@ public class CommandGenerator {
     
     private void setStdin( String stdin ) throws ShellException {
         
-        String stdout = currentCmd.getStdoutName();
-        if(!stdout.isEmpty() && stdout.compareToIgnoreCase(stdin) == 0){
-            throw new ShellException(Shell.EXP_SAME_REDIR);
+        if( currentCmd.getStdoutType() == IOStreamType.WITH_NAME ){
+            String stdout = currentCmd.getStdoutName();
+            if(stdout.compareToIgnoreCase(stdin) == 0){
+                throw new ShellException(Shell.EXP_SAME_REDIR);
+            }
         }
         
         if(prevCmd != null && prevCmd.getLinkTypeToNextCommand() == Link.PIPE){
             throw new ShellException(Shell.EXP_MULTI_STDIN);
         }
         
-        currentCmd.setStdinName(stdin != null ? stdin : "");
+        currentCmd.setStdinName(stdin);
     }
     
     private Stage populateCommandForInputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 
@@ -123,30 +125,30 @@ public class CommandGenerator {
             
             case Symbol.PIPE_OP:
                 
-                if(currentCmd.hasStdin()){
-                    return Stage.PIPE;
-                } else{
-                    throw new ShellException(Shell.EXP_SYNTAX);
+                if(!currentCmd.hasStdin()){
+                    currentCmd.setStdinName("");
                 }
+                return Stage.PIPE;
                 
             case Symbol.SEQ_OP:
                 
-                if(currentCmd.hasStdin()){
-                    return Stage.SEQUENCE;
-                } else{
-                    throw new ShellException(Shell.EXP_SYNTAX);
+                if(!currentCmd.hasStdin()){
+                    currentCmd.setStdinName("");
                 }
+                return Stage.SEQUENCE;
                 
             case Symbol.INPUT_OP:
                 throw new ShellException(Shell.EXP_SYNTAX);
                 
             case Symbol.OUTPUT_OP:
                 
-                if(currentCmd.hasStdin()){
-                    return Stage.OUTPUT_REDIR;
-                } else{
+                if(currentCmd.hasStdout()){
                     throw new ShellException(Shell.EXP_SYNTAX);
                 }
+                if(!currentCmd.hasStdin()){
+                    currentCmd.setStdinName("");
+                }
+                return Stage.OUTPUT_REDIR;
                 
             default:
 
@@ -167,12 +169,13 @@ public class CommandGenerator {
     }
     
     private void setStdout( String stdout ) throws ShellException {
-        
-        String stdin = currentCmd.getStdinName();
-        if(!stdin.isEmpty() && stdin.compareToIgnoreCase(stdout) == 0){
-            throw new ShellException(Shell.EXP_SAME_REDIR);
+        if( currentCmd.getStdinType() == IOStreamType.WITH_NAME ){
+            String stdin = currentCmd.getStdinName();
+            if( stdin.compareToIgnoreCase(stdout) == 0 ) {
+                throw new ShellException(Shell.EXP_SAME_REDIR);
+            }
         }
-        currentCmd.setStdoutName(stdout != null ? stdout : "");
+        currentCmd.setStdoutName(stdout);
     }
     
     private Stage populateCommandForOutputRedir( String segment, String segmentSymbols, char symbol, boolean isGlobbedArgs ) 
@@ -185,19 +188,20 @@ public class CommandGenerator {
                 
             case Symbol.SEQ_OP:
                 
-                if(currentCmd.hasStdout()){
-                    return Stage.SEQUENCE;
-                } else{
-                    throw new ShellException(Shell.EXP_SYNTAX);
+                if(!currentCmd.hasStdout()){
+                    currentCmd.setStdoutName("");
                 }
+                return Stage.SEQUENCE;
                 
             case Symbol.INPUT_OP:
                 
-                if(currentCmd.hasStdout()){
-                    return Stage.INPUT_REDIR;
-                } else{
+                if(currentCmd.hasStdin()){
                     throw new ShellException(Shell.EXP_SYNTAX);
                 }
+                if(!currentCmd.hasStdout()){
+                    currentCmd.setStdoutName("");
+                }
+                return Stage.INPUT_REDIR;
                 
             case Symbol.OUTPUT_OP:
                 throw new ShellException(Shell.EXP_SYNTAX);
@@ -307,9 +311,16 @@ public class CommandGenerator {
     private void processPostCommand( Stage stage ) throws ShellException {
         
         switch(stage){
-        
             case INPUT_REDIR:
+                if( !currentCmd.hasStdin() ){
+                    currentCmd.setStdinName("");
+                }
+                break;
             case OUTPUT_REDIR:
+                if( !currentCmd.hasStdout() ){
+                    currentCmd.setStdoutName("");
+                }
+                break;
             case PIPE:
             case SEQUENCE:
                 throw new ShellException(Shell.EXP_SYNTAX);   

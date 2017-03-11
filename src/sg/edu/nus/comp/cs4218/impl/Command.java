@@ -1,9 +1,11 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
 
 import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 
 /**
  * A class used to store different call command components, namely the application name, 
@@ -16,25 +18,26 @@ import sg.edu.nus.comp.cs4218.Symbol;
 public class Command {
 
     private String appName;
-    private String stdinName;
-    private String stdoutName;
+    
+    private OutStream stdout;
+    private InStream stdin;
     
     private LinkedList<String> arguments;
     
     private Link link;
     private Command nextCommand;
     
-    private InputStream stdin;
-    
     public Command() {
         
         appName = "";
-        stdinName = "";
-        stdoutName = "";
+        
+        stdin = new InStream();
+        stdout = new OutStream();
+        
         arguments = new LinkedList<String>();
+        
         link = Link.NONE;
         nextCommand = null;
-        stdin = null;
     }
     
     public void setLinkToNextCommand( char symbol ) {
@@ -87,36 +90,48 @@ public class Command {
         return nextCommand;
     }
     
-    public InputStream getStdin() {
-        return stdin;
+    public InputStream getStdin( InputStream defaultStream ) throws ShellException {
+        return stdin.getStream(defaultStream);
     }
     
     public void setStdin( InputStream inputStream ) {
-        stdin = inputStream;
+        stdin.setStdin(inputStream);
     }
     
-    public String getStdinName() {
-        return stdinName;
+    public String getStdinName() throws ShellException {
+        return stdin.getName();
     }
     
     public boolean hasStdin() {
-        return ( stdin != null || (stdinName != null && !stdinName.isEmpty()) );
+        return stdin.hasStdin();
+    }
+    
+    public IOStreamType getStdinType() {
+        return stdin.getType();
     }
     
     public void setStdinName( String inputStreamName ) {
-        stdinName = inputStreamName;
+        stdin.setName(inputStreamName);
     }
     
-    public String getStdoutName() {
-        return stdoutName;
+    public String getStdoutName() throws ShellException {
+        return stdout.getName();
     }
     
     public boolean hasStdout() {
-        return (stdoutName != null && !stdoutName.isEmpty());
+        return stdout.hasStdout();
     }
     
-    public void setStdoutName( String outputStreamName ) {
-        stdoutName = outputStreamName;
+    public IOStreamType getStdoutType() {
+        return stdout.getType();
+    }
+    
+    public void setStdoutName(String outputStreamName) {
+        stdout.setName(outputStreamName);
+    }
+    
+    public OutputStream getStdout( OutputStream defaultStream ) throws ShellException {
+        return stdout.getStream(defaultStream);
     }
     
     public String[] getArguments() {

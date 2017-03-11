@@ -255,12 +255,12 @@ public class ShellImpl implements Shell {
     @Override
     public String redirectInput(String args) {
         String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out;
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     /**
@@ -281,12 +281,12 @@ public class ShellImpl implements Shell {
     @Override
     public String redirectOutput(String args) {
         String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out; 
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     /**
@@ -307,12 +307,12 @@ public class ShellImpl implements Shell {
     @Override
     public String redirectInputWithNoFile(String args) {
         String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out; 
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     /**
@@ -333,12 +333,12 @@ public class ShellImpl implements Shell {
     @Override
     public String redirectOutputWithNoFile(String args) {
         String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out; 
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     /**
@@ -359,12 +359,12 @@ public class ShellImpl implements Shell {
     @Override
     public String redirectInputWithException(String args) {
         String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out; 
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out; 
     }
 
     /**
@@ -384,13 +384,13 @@ public class ShellImpl implements Shell {
      */ 
     @Override
     public String redirectOutputWithException(String args) {
-		String out = "";
-		try {
-			out = parseAndEvaluate(args);
-		} catch (AbstractApplicationException | ShellException e) {
-		    out = e.getMessage();
-		}
-		return out;
+        String out = "";
+        try {
+            out = parseAndEvaluate(args);
+        } catch (AbstractApplicationException | ShellException e) {
+            out = e.getMessage();
+        }
+        return out;
     }
 
     /**
@@ -594,11 +594,8 @@ public class ShellImpl implements Shell {
     public static void closeInputStream(InputStream inputStream)
             throws ShellException {
         if (inputStream != null && inputStream != System.in) {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                throw new ShellException(e.getMessage());
-            }
+            try { inputStream.close(); } 
+            catch (IOException e) {}
         }
     }
 
@@ -615,11 +612,8 @@ public class ShellImpl implements Shell {
     public static void closeOutputStream(OutputStream outputStream)
             throws ShellException {
         if (outputStream != null && outputStream != System.out) {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                throw new ShellException(e.getMessage());
-            }
+            try { outputStream.close(); } 
+            catch (IOException e) {}
         }
     }
 
@@ -1225,85 +1219,24 @@ public class ShellImpl implements Shell {
         return cmdGen.generateCommands();
     }
     
-    private OutputStream generateOutputStream( Command cmd, OutputStream defaultStream ) throws ShellException {
-        
-        OutputStream outStream = defaultStream;
-        
-        if( cmd.hasStdout() ){
-            
-            try {
-                
-                String stdoutName = cmd.getStdoutName();
-                
-                String absPath = Environment.getAbsPath(stdoutName);
-                if(absPath.isEmpty()){
-                    throw new ShellException(EXP_STDOUT);
-                }
-                
-                if( Environment.isDirectory(absPath) ){
-                    throw new ShellException(EXP_STDOUT);
-                }
-                
-                if( !Environment.isExists(absPath) && !Environment.createNewFile(absPath) ){
-                    throw new ShellException(EXP_STDOUT);
-                }
-                
-                outStream = new FileOutputStream(absPath);
-                
-            } catch (SecurityException | IOException e) {
-                throw new ShellException(EXP_STDOUT);
-            }
-        }
-        
-        return outStream;
-    }
-    
-    private InputStream generateInputStream( Command cmd, InputStream defaultStream ) throws ShellException {
-        
-        InputStream inStream = defaultStream;
-        
-        if( cmd.hasStdin() ){
-            
-            inStream = cmd.getStdin();
-            
-            if(inStream != null){
-                return inStream;
-            }
-            
-            inStream = defaultStream;
-            try {
-                
-                String stdinName = cmd.getStdinName();
-                
-                String absPath = Environment.getAbsPath(stdinName);
-                if(absPath.isEmpty()){
-                    throw new ShellException(EXP_STDIN);
-                }
-                
-                if( !Environment.isFile(absPath) ){
-                    throw new ShellException(EXP_STDIN);
-                }
-                
-                inStream = new FileInputStream(absPath);
-                
-            } catch (SecurityException | IOException e) {
-                throw new ShellException(EXP_STDIN);
-            }
-        }
-        
-        return inStream;
-    }
-    
     private void executeCommandToPipe( Command cmd ) throws ShellException, AbstractApplicationException {
         
-        String appName = cmd.getAppName();
-        String []args = cmd.getArguments();
-        InputStream inStream = generateInputStream(cmd, null);
+        InputStream defaultInputStream = null;
+        InputStream inStream = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        runApp(appName, args, inStream, outStream);
         
-        if(inStream != null){
-            closeInputStream(inStream);
+        try{
+            
+            String appName = cmd.getAppName();
+            String []args = cmd.getArguments();
+            inStream = cmd.getStdin(defaultInputStream);
+            runApp(appName, args, inStream, outStream);
+            
+        } finally {
+            
+            if(inStream != defaultInputStream){
+                closeInputStream(inStream);
+            }
         }
         
         Command nextCmd = cmd.getNextCommand();
@@ -1322,18 +1255,28 @@ public class ShellImpl implements Shell {
         
         if( cmd.getLinkTypeToNextCommand() != Link.PIPE ){
             
-            String appName = cmd.getAppName();
-            String []args = cmd.getArguments();
-            InputStream inStream = generateInputStream(cmd, null);
-            OutputStream outStream = generateOutputStream(cmd, stdout);
-            runApp(appName, args, inStream, outStream);
+            InputStream defaultInputStream = null;
+            InputStream inStream = null;
+            OutputStream outStream = null;
             
-            if(inStream != null){
-                closeInputStream(inStream);
+            try{
+                
+                String appName = cmd.getAppName();
+                String []args = cmd.getArguments();
+                inStream = cmd.getStdin(defaultInputStream);
+                outStream = cmd.getStdout(stdout);
+                runApp(appName, args, inStream, outStream);
+                
+            } finally {
+                
+                if(inStream != defaultInputStream){
+                    closeInputStream(inStream);
+                }
+                if(outStream != stdout){
+                    closeOutputStream(outStream);
+                }
             }
-            if(outStream != stdout){
-                closeOutputStream(outStream);
-            }
+            
         } else{
             executeCommandToPipe(cmd);
         }
@@ -1410,40 +1353,44 @@ public class ShellImpl implements Shell {
     public void evaluateOneCommand( StringBuilder input, StringBuilder inputSymbols, InputStream stdin, OutputStream stdout ) 
             throws ShellException, AbstractApplicationException {
         
-        if( input == null || inputSymbols == null || input.length() != inputSymbols.length() ){
-            throw new ShellException(Shell.EXP_INTERNAL);
-        }
-        
-        if( stdin == null ){
-            throw new ShellException(Shell.EXP_STDIN);
-        }
-        
-        if( stdout == null ){
-            throw new ShellException(Shell.EXP_STDOUT);
-        }
-        
-        processBQ(input, inputSymbols, false);
-        processSQ(input, inputSymbols, false);
-        processDQ(input, inputSymbols, false);
-        processEmptyOutputs(input, inputSymbols);
-        
-        List<Segment> segments = split(input, inputSymbols);
-        
-        List<Command> commands = generateCommands(segments);
-        
-        if( commands.size() == 1 ){
-            Command firstCmd = commands.get(0);
-            if(!firstCmd.hasStdin()){
-                firstCmd.setStdin(stdin);
+        try{
+            
+            if( input == null || inputSymbols == null || input.length() != inputSymbols.length() ){
+                throw new ShellException(Shell.EXP_INTERNAL);
             }
-        } else {
-            throw new ShellException(Shell.EXP_SYNTAX);
+            
+            if( stdin == null ){
+                throw new ShellException(Shell.EXP_STDIN);
+            }
+            
+            if( stdout == null ){
+                throw new ShellException(Shell.EXP_STDOUT);
+            }
+            
+            processBQ(input, inputSymbols, false);
+            processSQ(input, inputSymbols, false);
+            processDQ(input, inputSymbols, false);
+            processEmptyOutputs(input, inputSymbols);
+            
+            List<Segment> segments = split(input, inputSymbols);
+            
+            List<Command> commands = generateCommands(segments);
+            
+            if( commands.size() == 1 ){
+                Command firstCmd = commands.get(0);
+                if(!firstCmd.hasStdin()){
+                    firstCmd.setStdin(stdin);
+                }
+            } else {
+                throw new ShellException(Shell.EXP_SYNTAX);
+            }
+            
+            executeCommands(commands, stdout);
+            
+        } finally {
+            closeInputStream(stdin);
+            closeOutputStream(stdout);
         }
-        
-        executeCommands(commands, stdout);
-        
-        closeInputStream(stdin);
-        closeOutputStream(stdout);
     }
     
     /**
@@ -1626,7 +1573,9 @@ public class ShellImpl implements Shell {
         SimpleCommand cmdObj = null;
         if( commands.size() == 1 ){
             Command command = commands.get(0);
-            cmdObj = new SimpleCommand( command.getAppName(), command.getArguments(), command.getStdinName(), command.getStdoutName() );
+            String stdinName = command.getStdinType() == IOStreamType.WITH_NAME ? command.getStdinName() : "";
+            String stdoutName = command.getStdoutType() == IOStreamType.WITH_NAME ? command.getStdoutName() : "";
+            cmdObj = new SimpleCommand( command.getAppName(), command.getArguments(), stdinName, stdoutName );
         } else {
             cmdObj = new SimpleCommand();
         }
@@ -1674,37 +1623,41 @@ public class ShellImpl implements Shell {
     public void parseAndEvaluate(String cmdline, OutputStream stdout)
             throws AbstractApplicationException, ShellException {
         
-        if(cmdline == null){
-            throw new ShellException(EXP_SYNTAX);
+        try{
+            
+            if(cmdline == null){
+                throw new ShellException(EXP_SYNTAX);
+            }
+            if(stdout == null){
+                throw new ShellException(EXP_STDOUT);
+            }
+            
+            cmdline = cmdline.trim();
+            
+            if( cmdline.length() <= 0 || hasNewLineViolation(cmdline) ) {
+                throw new ShellException(EXP_SYNTAX);
+            }
+            
+            cmdline = cmdline.replace(Symbol.NEW_LINE_S, Symbol.EMPTY_S);
+            
+            if( cmdline.length() <= 0) {
+                throw new ShellException(EXP_SYNTAX);
+            }
+            
+            StringBuilder cmdSymbols = generateSymbols(cmdline);
+            StringBuilder cmd = new StringBuilder(cmdline);
+            
+            processBQ(cmd, cmdSymbols, false);
+            processSQ(cmd, cmdSymbols, false);
+            processDQ(cmd, cmdSymbols, false);
+            processEmptyOutputs(cmd, cmdSymbols);
+            
+            List<Segment> segments = split(cmd, cmdSymbols);
+            
+            evaluate(segments, stdout);
+            
+        } finally{
+            closeOutputStream(stdout);
         }
-        if(stdout == null){
-            throw new ShellException(EXP_STDOUT);
-        }
-        
-        cmdline = cmdline.trim();
-        
-        if( cmdline.length() <= 0 || hasNewLineViolation(cmdline) ) {
-            throw new ShellException(EXP_SYNTAX);
-        }
-        
-        cmdline = cmdline.replace(Symbol.NEW_LINE_S, Symbol.EMPTY_S);
-        
-        if( cmdline.length() <= 0) {
-            throw new ShellException(EXP_SYNTAX);
-        }
-        
-        StringBuilder cmdSymbols = generateSymbols(cmdline);
-        StringBuilder cmd = new StringBuilder(cmdline);
-        
-        processBQ(cmd, cmdSymbols, false);
-        processSQ(cmd, cmdSymbols, false);
-        processDQ(cmd, cmdSymbols, false);
-        processEmptyOutputs(cmd, cmdSymbols);
-        
-        List<Segment> segments = split(cmd, cmdSymbols);
-        
-        evaluate(segments, stdout);
-        
-        closeOutputStream(stdout);
     }
 }
