@@ -113,7 +113,7 @@ public class PwdIntegrationTest {
 	public void testWithSort() throws AbstractApplicationException, ShellException {
 		String output= shell.parseAndEvaluate("pwd;pwd>input/test; sort input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
-		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY, output);
+		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR, output);
 	}
 	
 	@Test
@@ -122,7 +122,7 @@ public class PwdIntegrationTest {
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+DEFAULT_DATE_FORMAT.format(cal.getTime()).toString(), output);
+		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR, output);
 	}
 	
 	@Test

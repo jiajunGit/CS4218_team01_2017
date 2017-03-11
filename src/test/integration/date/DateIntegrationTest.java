@@ -121,7 +121,7 @@ public class DateIntegrationTest {
 		String output = shell.parseAndEvaluate("date>input/test; sort input/test");
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString(),output);
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
 	}
 	
 	@Test
