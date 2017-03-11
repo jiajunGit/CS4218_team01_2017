@@ -2,10 +2,6 @@ package sg.edu.nus.comp.cs4218.impl.cmd;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import sg.edu.nus.comp.cs4218.Command;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
@@ -13,7 +9,6 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
-import sg.edu.nus.comp.cs4218.impl.SimpleCommand;
 
 /**
  * A Call Command is a sub-command consisting of at least one non-keyword and
