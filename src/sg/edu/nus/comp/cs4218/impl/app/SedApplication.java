@@ -168,19 +168,19 @@ public class SedApplication implements Sed {
             return content.toString();
         }
         
+        String out;
+        
         try {
             
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(content);
+            Pattern.compile(regex);
             
-            while( matcher.find() ){
-                content.replace(matcher.start(), matcher.end(), replacement);
-            }
+            out = content.toString();
+            out = out.replaceAll(regex, replacement);
             
         } catch( PatternSyntaxException e ) {
             throw new SedException(ERROR_EXP_INVALID_REGEX);
         }
-        return content.toString();
+        return out;
     }
     
     /**
