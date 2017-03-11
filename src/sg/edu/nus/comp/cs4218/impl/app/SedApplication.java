@@ -225,7 +225,7 @@ public class SedApplication implements Sed {
         String separator = Pattern.quote(originalSeparator);
         
         String modifiedReplacement;
-        if( replacement.endsWith(REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
+        if( replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
             modifiedReplacement = replacement.substring(2, replacement.length() - 1);
         } else {
             modifiedReplacement = replacement.substring(2, replacement.length());
@@ -235,12 +235,12 @@ public class SedApplication implements Sed {
         
         String output;
         
-        if( args.length == 2 && replacement.endsWith(originalSeparator) ){
-            StringBuilder content = readContentFromStdin(stdin);
-            output = replaceFirstSubString( args[0], args[1], content );
-        } else if( args.length == 2 && replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ) {
+        if( args.length == 2 && replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ) {
             StringBuilder content = readContentFromStdin(stdin);
             output = replaceAllSubString( args[0], args[1], content );
+        } else if( args.length == 2 && replacement.endsWith(originalSeparator) ){
+            StringBuilder content = readContentFromStdin(stdin);
+            output = replaceFirstSubString( args[0], args[1], content );
         } else {
             throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
         }
