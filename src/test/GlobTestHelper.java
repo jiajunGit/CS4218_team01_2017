@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
 
@@ -13,10 +15,10 @@ public final class GlobTestHelper {
         String[] filesToCreate = getFilesToCreate(absTestDirPath);
         
         for( String filePath : filesToCreate ) {
-            Environment.deleteFile(filePath);
+            deleteFile(filePath);
         }
         for( int i = dirsToCreate.length - 1; i >= 0; --i ){
-            Environment.deleteFile(dirsToCreate[i]);
+            deleteFile(dirsToCreate[i]);
         }
         
         for( String dirPath : dirsToCreate ) {
@@ -33,11 +35,30 @@ public final class GlobTestHelper {
         String[] filesToCreate = getFilesToCreate(absTestDirPath);
         
         for( String filePath : filesToCreate ) {
-            assertTrue( Environment.deleteFile(filePath) );
+            assertTrue( deleteFile(filePath) );
         }
         for( int i = dirsToCreate.length - 1; i >= 0; --i ){
-            assertTrue( Environment.deleteFile(dirsToCreate[i]) );
+            assertTrue( deleteFile(dirsToCreate[i]) );
         }
+    }
+    
+    private static boolean deleteFile(String absPath) {
+
+        if (absPath == null) {
+            return false;
+        }
+
+        if( !Environment.isExists(absPath) ){
+            return true;
+        }
+        
+        boolean isDeleted = false;
+        File file = new File(absPath);
+        try {
+            isDeleted = file.delete();
+        } catch (SecurityException e) {}
+
+        return isDeleted;
     }
     
     private static String[] getDirectoriesToCreate( String absTestDirPath ) {
