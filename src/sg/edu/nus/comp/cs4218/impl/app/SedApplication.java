@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -183,6 +185,35 @@ public class SedApplication implements Sed {
         return out;
     }
     
+    private String[] split( String expression, String separator, int validSeparatorCount ) 
+            throws SedException {
+        
+        int count = 0;
+        int start = 0;
+        
+        List<String> args = new LinkedList<String>();
+        while( start < expression.length() ){
+            
+            int end = expression.indexOf(separator, start);
+            
+            if( end < 0 ){
+                break;
+            }
+            
+            ++count;
+            
+            if(count > validSeparatorCount){
+                throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
+            }
+            
+            String arg = expression.substring(start, end);
+            args.add(arg);
+            
+            start = end + separator.length();
+        }
+        return args.toArray(new String[args.size()]);
+    }
+    
     /**
      * Returns a string which has first substring matched by the regex specified
      * replaced by the replacement string specified if no g suffix is specified
@@ -221,26 +252,28 @@ public class SedApplication implements Sed {
             throw new SedException(ERROR_EXP_INVALID_INSTREAM);
         }
         
-        String originalSeparator = Character.toString(replacement.charAt(1));
-        String separator = Pattern.quote(originalSeparator);
+        String separator = Character.toString(replacement.charAt(1));
         
+        boolean isReplaceAll = false;
         String modifiedReplacement;
-        if( replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
+        if( replacement.endsWith(separator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
             modifiedReplacement = replacement.substring(2, replacement.length() - 1);
+            isReplaceAll = true;
         } else {
             modifiedReplacement = replacement.substring(2, replacement.length());
         }
         
-        String[] args = modifiedReplacement.split(separator);
+        String[] args = split(modifiedReplacement, separator, 2);
         
         String output;
-        
-        if( args.length == 2 && replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ) {
-            StringBuilder content = readContentFromStdin(stdin);
-            output = replaceAllSubString( args[0], args[1], content );
-        } else if( args.length == 2 && replacement.endsWith(originalSeparator) ){
-            StringBuilder content = readContentFromStdin(stdin);
-            output = replaceFirstSubString( args[0], args[1], content );
+        if( args.length == 2 ){
+            if( isReplaceAll ){
+                StringBuilder content = readContentFromStdin(stdin);
+                output = replaceAllSubString( args[0], args[1], content );
+            } else {
+                StringBuilder content = readContentFromStdin(stdin);
+                output = replaceFirstSubString( args[0], args[1], content );
+            }
         } else {
             throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
         }
