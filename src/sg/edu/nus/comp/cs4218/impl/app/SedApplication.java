@@ -228,7 +228,7 @@ public class SedApplication implements Sed {
         
         String output;
         
-        if( args.length == 3 ){
+        if( args.length == 3 && replacement.endsWith(separator) ){
             StringBuilder content = readContentFromStdin(stdin);
             output = replaceFirstSubString( args[1], args[2], content );
         } else if( args.length == 4 && REPLACEMENT_ALL_SUBSTRING_SUFFIX.equals(args[3]) ) {
