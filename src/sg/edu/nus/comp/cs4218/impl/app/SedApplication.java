@@ -221,20 +221,26 @@ public class SedApplication implements Sed {
             throw new SedException(ERROR_EXP_INVALID_INSTREAM);
         }
         
-        String separator = Character.toString(replacement.charAt(1));
-        separator = Pattern.quote(separator);
+        String originalSeparator = Character.toString(replacement.charAt(1));
+        String separator = Pattern.quote(originalSeparator);
         
-        String[] args = replacement.split(separator);
+        String modifiedReplacement;
+        if( replacement.endsWith(REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
+            modifiedReplacement = replacement.substring(2, replacement.length() - 1);
+        } else {
+            modifiedReplacement = replacement.substring(2, replacement.length());
+        }
+        
+        String[] args = modifiedReplacement.split(separator);
         
         String output;
         
-        if( args.length == 3 && replacement.endsWith(separator) ){
+        if( args.length == 2 && replacement.endsWith(originalSeparator) ){
             StringBuilder content = readContentFromStdin(stdin);
-            output = replaceFirstSubString( args[1], args[2], content );
-        } else if( args.length == 4 && replacement.endsWith(REPLACEMENT_ALL_SUBSTRING_SUFFIX) 
-                   && REPLACEMENT_ALL_SUBSTRING_SUFFIX.equals(args[3]) ) {
+            output = replaceFirstSubString( args[0], args[1], content );
+        } else if( args.length == 2 && replacement.endsWith(originalSeparator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ) {
             StringBuilder content = readContentFromStdin(stdin);
-            output = replaceAllSubString( args[1], args[2], content );
+            output = replaceAllSubString( args[0], args[1], content );
         } else {
             throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
         }
