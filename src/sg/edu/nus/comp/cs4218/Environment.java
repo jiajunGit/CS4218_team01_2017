@@ -46,6 +46,15 @@ public final class Environment {
         File file = new File(absPath);
         return file.isDirectory();
     }
+    
+    public static boolean isHidden(String absPath) {
+        
+        if (absPath == null) {
+            return false;
+        }
+        File file = new File(absPath);
+        return file.isHidden();
+    }
 
     public static boolean isAbsPath(String path) {
 

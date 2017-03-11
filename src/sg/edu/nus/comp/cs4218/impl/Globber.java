@@ -12,7 +12,7 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 
 /**
- * A class used to expand glob paths
+ * A class used to expand glob paths. Hidden files are ignored by glob.
  */
 
 public class Globber {
@@ -24,7 +24,8 @@ public class Globber {
     }
     
     /**
-     * Expands the glob path if the path can be expanded or else it returns the input unchanged
+     * Expands the glob path if the path can be expanded or else it returns the input unchanged.
+     * Hidden files are ignored by glob.
      * 
      * @param input
      *      String containing the glob path
@@ -75,7 +76,10 @@ public class Globber {
         
         LinkedList<String> dirPaths = new LinkedList<String>();
         LinkedList<String> listReference = dirPaths;
-        dirPaths.add(dirPathStr);
+        
+        if( !Environment.isHidden(dirPathStr) ){
+            dirPaths.add(dirPathStr);
+        }
         
         try{
             
@@ -104,7 +108,9 @@ public class Globber {
                         newPath += Symbol.PATH_SEPARATOR;
                         newPath += fileName;
                         
-                        newDirPaths.add(newPath);
+                        if( !Environment.isHidden(newPath) ){
+                            newDirPaths.add(newPath);
+                        }
                     }
                 }
                 dirPaths = newDirPaths;
