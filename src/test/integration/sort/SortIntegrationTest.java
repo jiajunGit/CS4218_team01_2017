@@ -91,16 +91,21 @@ public class SortIntegrationTest {
 		String output=shell.parseAndEvaluate("sort input/input01; echo hi");
 		assertEquals(expectedOutput01+"hi"+LINE_SEPARATOR,output);
 	}
-	
 	@Test
-	public void testWithEchoWithCmdSub() throws AbstractApplicationException, ShellException {
-		String output=shell.parseAndEvaluate("sort input/input01; echo `sort -n input/input02`");
-		assertEquals(expectedOutput01+"1 2 3 4 5 11 22 33 44 55"+LINE_SEPARATOR,output);
+	public void testWithEchoCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort `echo input/input01`");
+		assertEquals(expectedOutput01,output);
 	}
 	
 	@Test
 	public void testWithCat() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort input/input01>input/test; cat<input/test");
+		assertEquals(expectedOutput01,output);
+	}
+	
+	@Test
+	public void testWithCatCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort `cat<input/file`");
 		assertEquals(expectedOutput01,output);
 	}
 	
