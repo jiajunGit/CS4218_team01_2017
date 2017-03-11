@@ -126,7 +126,7 @@ public class DateIntegrationTest {
 	
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("date>input/test; sed s/2017/2017abc input/test");
+		String output = shell.parseAndEvaluate("date>input/test; sed s/2017/2017abc/ input/test");
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+"abc"+LINE_SEPARATOR+LINE_SEPARATOR,output);

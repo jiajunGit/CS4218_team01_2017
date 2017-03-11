@@ -127,7 +127,7 @@ public class PwdIntegrationTest {
 	
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("pwd;pwd>input/test;sed s/2017/2017abc input/test");
+		String output= shell.parseAndEvaluate("pwd;pwd>input/test;sed s/2017/2017abc/ input/test");
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+CURRENT_DIRECTORY+"abc"+LINE_SEPARATOR+LINE_SEPARATOR, output);
 	}

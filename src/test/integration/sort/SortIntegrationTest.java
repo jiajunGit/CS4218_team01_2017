@@ -183,7 +183,7 @@ public class SortIntegrationTest {
 	
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
-		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; sed s/1/new input/test");
+		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; sed s/1/new/ input/test");
 		assertEquals(expectedOutput05+LINE_SEPARATOR,output);
 	}
 	
