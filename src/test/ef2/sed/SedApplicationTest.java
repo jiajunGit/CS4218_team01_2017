@@ -1,1057 +1,1185 @@
 package test.ef2.sed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.exception.SedException;
 import sg.edu.nus.comp.cs4218.impl.app.SedApplication;
 
 public class SedApplicationTest {
 
-    private static final String PATH_SEPARATOR = File.separator;
-    private static final String NEW_LINE = System.lineSeparator();
-    
-    private static String absTestDirPath = "";
-    private static String relativeDirPath = "";
-    
     private static SedApplication sed;
     
-    private static File tempFileOne;
-    private static File tempFileTwo;
-    
-    private static InputStream stdin;
-    private static OutputStream stdout;
+    public static final String PATH_SEPARATOR = File.separator;
+    public static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" 
+                                                         + PATH_SEPARATOR + "sed" + PATH_SEPARATOR + "sed";
+    public static final String ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + "src" 
+                                                         + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR 
+                                                         + "sed" + PATH_SEPARATOR + "sed";
     
     @BeforeClass
     public static void setup() {
-        
         sed = new SedApplication();
-        absTestDirPath = Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" 
-                         + PATH_SEPARATOR + "sed" + PATH_SEPARATOR + "sed" ;
-        relativeDirPath = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR + "sed" + PATH_SEPARATOR + "sed" ;
-        
-        stdin = null;
-        stdout = null;
-        tempFileOne = null;
-        tempFileTwo = null;
-    }
-    
-    @AfterClass
-    public static void tearDown() {
-        
-        assertTrue( closeStdin(stdin) );
-        assertTrue( closeStdout(stdout) );
-        assertTrue( deleteFile(tempFileOne) );
-        assertTrue( deleteFile(tempFileTwo) );
-        
-        sed = null;
-        absTestDirPath = "";
-        relativeDirPath = "";
-        stdin = null;
-        stdout = null;
-        tempFileOne = null;
-        tempFileTwo = null;
     }
     
     @Before
-    public void preTest() {
-        
-        assertTrue( closeStdin(stdin) );
-        assertTrue( closeStdout(stdout) );
-        assertTrue( deleteFile(tempFileOne) );
-        assertTrue( deleteFile(tempFileTwo) );
-        
-        stdin = null;
-        stdout = null;
-        tempFileOne = null;
-        tempFileTwo = null;
+    public void setupBeforeTest() {
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in"));
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in2"));
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out"));
     }
     
     @After
-    public void postTest() {
-        
-        assertTrue( closeStdin(stdin) );
-        assertTrue( closeStdout(stdout) );
-        assertTrue( deleteFile(tempFileOne) );
-        assertTrue( deleteFile(tempFileTwo) );
-        
-        stdin = null;
-        stdout = null;
-        tempFileOne = null;
-        tempFileTwo = null;
+    public void tearDownAfterTest() {
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in"));
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in2"));
+        assertTrue(deleteFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out"));
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunNullInputStream() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedWithSpaceRegex() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String[] arg = { "s/ /tail/g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  head heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahead head" + Symbol.NEW_LINE_S
+                         + "head who are u?" + Symbol.NEW_LINE_S; 
         
-        String[] args = { replacementString, filePath };
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        sed.run(arg, stdin, stdout);
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String out = new String(stdout.toByteArray());
         
-        stdout = new ByteArrayOutputStream();
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "tailtailheadtailheattailoftailthetailmomenttailhi" + Symbol.NEW_LINE_S
+                + "piehihaheadtailhead" + Symbol.NEW_LINE_S
+                + "headtailwhotailaretailu?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
         
-        sed.run(args, null, stdout);
+        assertEquals( out, expected );
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunClosedOutputStream() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedWithEmptyRegex() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String[] arg = { "s//tail/g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  head heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahead head" + Symbol.NEW_LINE_S
+                         + "head who are u?" + Symbol.NEW_LINE_S; 
         
-        String[] args = { replacementString, filePath };
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        sed.run(arg, stdin, stdout);
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String out = new String(stdout.toByteArray());
         
-        String outFilepath = absTestDirPath + PATH_SEPARATOR + "out.txt";
-        assertTrue(createNewFile(outFilepath));
-        tempFileTwo = new File(outFilepath);
-        tempFileTwo.deleteOnExit();
-        stdout = new FileOutputStream(tempFileTwo);
-        stdout.close();
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  head heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahead head" + Symbol.NEW_LINE_S
+                + "head who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
         
-        stdin = new FileInputStream(tempFileOne);
-        
-        sed.run(args, stdin, stdout);
+        assertEquals( out, expected );
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunNullOutputStream() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedWithSpaceReplacement() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String[] arg = { "s/head/ /g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  head heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahead head" + Symbol.NEW_LINE_S
+                         + "head who are u?" + Symbol.NEW_LINE_S; 
         
-        String[] args = { replacementString, filePath };
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        sed.run(arg, stdin, stdout);
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String out = new String(stdout.toByteArray());
         
-        stdin = new FileInputStream(tempFileOne);
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "    heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha   " + Symbol.NEW_LINE_S
+                + "  who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
         
-        sed.run(args, stdin, null);
+        assertEquals( out, expected );
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunClosedInputStream() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedWithEmptyReplacement() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String[] arg = { "s/head//g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  head heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahead head" + Symbol.NEW_LINE_S
+                         + "head who are u?" + Symbol.NEW_LINE_S; 
         
-        String[] args = { replacementString, filePath };
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        sed.run(arg, stdin, stdout);
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String out = new String(stdout.toByteArray());
         
-        stdout = new ByteArrayOutputStream();
-        stdin = new FileInputStream(tempFileOne);
-        stdin.close();
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "   heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha " + Symbol.NEW_LINE_S
+                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
         
-        sed.run(args, stdin, stdout);
+        assertEquals( out, expected );
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunInvalidArgsCount() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedReplaceAllWithGSeparator() throws SedException {
+
+        String[] arg = { "sghihihigagg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        String[] args = new String[0];
+        sed.run(arg, stdin, stdout);
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        String out = new String(stdout.toByteArray());
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String expected = Symbol.NEW_LINE_S 
+                          + Symbol.NEW_LINE_S 
+                          + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                          + "piehihaa a" + Symbol.NEW_LINE_S
+                          + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
         
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
-        
-        sed.run(args, stdin, stdout);
+        assertEquals( out, expected );
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunNullArgs() throws IOException, AbstractApplicationException {
+    @Test
+    public void testSedReplaceAllWithGSeparatorAndEmptyReplacement() throws SedException {
+
+        String[] arg = { "sghihihiggg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        sed.run(arg, stdin, stdout);
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String out = new String(stdout.toByteArray());
         
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
+        String expected = Symbol.NEW_LINE_S 
+                        + Symbol.NEW_LINE_S 
+                        + "   heat of the moment hi" + Symbol.NEW_LINE_S
+                        + "piehiha " + Symbol.NEW_LINE_S
+                        + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithGSeparatorAndEmptyRegex() throws SedException {
+
+        String[] arg = { "sggagg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithGSeparatorAndEmptyRegexAndReplacement() throws SedException {
+
+        String[] arg = { "sgggg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithTwoGSeparatorAtTheBack() throws SedException {
+
+        String[] arg = { "sghihihigaggg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithTwoGSeparatorInTheMiddle() throws SedException {
+
+        String[] arg = { "sghihihiggagg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithTwoGSeparatorAtTheFront() throws SedException {
+
+        String[] arg = { "sgghihihigagg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithGSeparator() throws SedException {
+        
+        String[] arg = { "sghihihigag" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihaa hihihi" + Symbol.NEW_LINE_S
+                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithGSeparatorAndEmptyReplacement() throws SedException {
+        
+        String[] arg = { "sghihihigg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "   heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha hihihi" + Symbol.NEW_LINE_S
+                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithGSeparatorAndEmptyRegex() throws SedException {
+        
+        String[] arg = { "sggag" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithGSeparatorAndEmptyRegexAndReplacement() throws SedException {
+        
+        String[] arg = { "sggg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithTwoGSeparatorInTheMiddle() throws SedException {
+        
+        String[] arg = { "sghihihiggag" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihaa hihihi" + Symbol.NEW_LINE_S
+                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithTwoGSeparatorAtTheFront() throws SedException {
+        
+        String[] arg = { "sgghihihigag" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihaa hihihi" + Symbol.NEW_LINE_S
+                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithSSeparator() throws SedException {
+        
+        String[] arg = { "sshihihisasg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihaa a" + Symbol.NEW_LINE_S
+                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithSSeparatorAndEmptyReplacement() throws SedException {
+        
+        String[] arg = { "sshihihissg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "   heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha " + Symbol.NEW_LINE_S
+                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithSSeparatorAndEmptyRegex() throws SedException {
+        
+        String[] arg = { "sssasg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceAllWithSSeparatorAndEmptyRegexAndReplacement() throws SedException {
+        
+        String[] arg = { "ssssg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithSSeparatorWithTwoSSeparatorsAtTheBack() throws SedException {
+        
+        String[] arg = { "sshihihisassg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithSSeparatorWithTwoSSeparatorsInTheMiddle() throws SedException {
+        
+        String[] arg = { "sshihihissasg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithSSeparatorWithTwoSSeparatorsAtTheFront() throws SedException {
+        
+        String[] arg = { "ssshihihisasg" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithSSeparator() throws SedException {
+        
+        String[] arg = { "sshihihisas" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihaa hihihi" + Symbol.NEW_LINE_S
+                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithSSeparatorAndEmptyReplacement() throws SedException {
+        
+        String[] arg = { "sshihihiss" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "   heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha hihihi" + Symbol.NEW_LINE_S
+                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithSSeparatorAndEmptyRegex() throws SedException {
+        
+        String[] arg = { "sssas" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithSSeparatorAndEmptyRegexAndReplacement() throws SedException {
+        
+        String[] arg = { "ssss" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+        
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithTwoSSeparatorAtTheBack() throws SedException {
+        
+        String[] arg = { "sshihihisass" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithTwoSSeparatorsInTheMiddle() throws SedException {
+        
+        String[] arg = { "sshihihissas" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithTwoSSeparatorsAtTheFront() throws SedException {
+        
+        String[] arg = { "ssshihihisas" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S ; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test
+    public void testSedWithBackSlashAsSeparator() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\a\\g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihaa a" + Symbol.NEW_LINE_S
+                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithInvalidRegex() throws SedException {
+        
+        String[] arg = { "s\\*?hihihi\\a\\g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceAllWithExtraSeparatorAtTheBack() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\a\\g\\" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithMissingSeparatorAtTheBack() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\a" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout); 
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithGSuffixAtTheBack() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\g" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithInvalidSuffixAtTheBack() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\k" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout); 
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedReplaceFirstWithNoReplacementStringAndSeparatorAtTheBack() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout); 
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithNoReplacementStringAndNoRegex() throws SedException {
+        
+        String[] arg = { "s\\\\\\" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                         + "hihihi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout); 
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+        
+        assertEquals(out, expected);
+    }
+    
+    @Test
+    public void testSedReplaceFirstWithOverlappingMatchedSubString() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\%\\" };
+        String content = Symbol.NEW_LINE_S 
+                         + Symbol.NEW_LINE_S 
+                         + "  hihihihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                         + "piehihahihihi hihihihihi" + Symbol.NEW_LINE_S
+                         + "hihihihhi who are u?" + Symbol.NEW_LINE_S; 
+        
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, stdin, stdout); 
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  %hihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehiha% hihihihihi" + Symbol.NEW_LINE_S
+                + "%hhi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+        
+        assertEquals(out, expected);
+    }
+    
+    @Test
+    public void testSedWithRelativeFilePath() throws SedException {
+        
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
+        
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        
+        assertTrue( createFile(fileName, content) );
+        
+        String relativePath = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        String[] arg = { "s\\hihihi\\a\\g", relativePath };
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, null, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihaa a" + Symbol.NEW_LINE_S
+                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+
+        assertEquals( out, expected );
+    }
+    
+    @Test
+    public void testSedWithAbsoluteFilePath() throws SedException {
+        
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
+        
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        
+        assertTrue( createFile(fileName, content) );
+        
+        String[] arg = { "s\\hihihi\\a\\g", fileName };
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, null, stdout);
+        
+        String out = new String(stdout.toByteArray());
+        
+        String expected = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  a heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihaa a" + Symbol.NEW_LINE_S
+                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+
+        assertEquals( out, expected );
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithInvalidFilePath() throws SedException {
+        
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in2";
+        
+        String[] arg = { "s\\hihihi\\a\\g", fileName };
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, null, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithNullOutput() throws SedException {
+        
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
+        
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        
+        assertTrue( createFile(fileName, content) );
+        
+        String[] arg = { "s\\hihihi\\a\\g", fileName };
+        
+        sed.run(arg, null, null);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithNullInputAndNoFileSpecified() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\a\\g" };
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, null, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithNullArgs() throws SedException {
+        
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
         
         sed.run(null, stdin, stdout);
     }
     
-    @Test
-    public void testRunForAllReplacementInStdin() throws IOException, AbstractApplicationException {
+    @Test(expected=SedException.class)
+    public void testSedWithZeroArgCount() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String[] arg = {};
         
-        String[] args = { replacementString };
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        ByteArrayInputStream stdin = new ByteArrayInputStream(content.getBytes());
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
-        
-        sed.run(args, stdin, stdout);
-        
-        String out = stdout.toString();
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;;
-        
-        assertEquals( out, expected );
+        sed.run(arg, stdin, stdout);
     }
     
-    @Test
-    public void testRunForFirstReplacementInStdin() throws IOException, AbstractApplicationException {
+    @Test(expected=SedException.class)
+    public void testSedWithThreeArgCount() throws SedException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
-        String[] args = { replacementString };
+        String fileOneName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        String fileTwoName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in2";
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        assertTrue( createFile(fileOneName, content) );
+        assertTrue( createFile(fileTwoName, content) );
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String[] arg = { "s\\hihihi\\a\\g", fileOneName, fileTwoName };
         
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
         
-        sed.run(args, stdin, stdout);
-        
-        String out = stdout.toString();
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;;
-        
-        assertEquals( out, expected );
+        sed.run(arg, null, stdout);
     }
     
-    @Test
-    public void testRunForAllReplacementInFile() throws IOException, AbstractApplicationException {
+    @Test(expected=SedException.class)
+    public void testSedWithClosedOutput() throws SedException, IOException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
-        String[] args = { replacementString, filePath };
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
+        String outFileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out";
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        assertTrue( createFile(fileName, content) );
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String[] arg = { "s\\hihihi\\a\\g", fileName };
         
-        stdout = new ByteArrayOutputStream();
+        FileOutputStream stdout = new FileOutputStream(outFileName);
+        stdout.close();
         
-        sed.run(args, null, stdout);
-        
-        String out = stdout.toString();
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;;
-        
-        assertEquals( out, expected );
+        sed.run(arg, null, stdout);
     }
     
-    @Test
-    public void testRunForFirstReplacementInFile() throws IOException, AbstractApplicationException {
+    @Test(expected=SedException.class)
+    public void testSedWithClosedInput() throws SedException, IOException {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
+        String content = Symbol.NEW_LINE_S 
+                + Symbol.NEW_LINE_S 
+                + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
+                + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
-        String[] args = { replacementString, filePath };
+        String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
         
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
+        assertTrue( createFile(fileName, content) );
         
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
+        String[] arg = { "s\\hihihi\\a\\g" };
         
-        stdout = new ByteArrayOutputStream();
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        FileInputStream stdin = new FileInputStream(fileName);
+        stdin.close();
         
-        sed.run(args, null, stdout);
-        
-        String out = stdout.toString();
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;;
-        
-        assertEquals( out, expected );
+        sed.run(arg, stdin, stdout);
     }
     
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunNullFileNameArg() throws IOException, AbstractApplicationException {
+    private static boolean createFile( String fileName, String content ) {
         
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String[] args = { replacementString, null };
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
-        
-        sed.run(args, stdin, stdout);
-    }
-    
-    @Test(expected=AbstractApplicationException.class)
-    public void testRunNullReplacementStringArg() throws IOException, AbstractApplicationException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String[] args = { null, filePath };
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        stdin = new FileInputStream(tempFileOne);
-        stdout = new ByteArrayOutputStream();
-        
-        sed.run(args, stdin, stdout);
-    }
-    
-    @Test
-    public void testInvalidRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/*?night?/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceSubstringWithInvalidReplacement(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testInvalidReplacement() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morn/ing/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceSubstringWithInvalidReplacement(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplacementWithInvalidStart() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "ss/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceSubstringWithInvalidReplacement(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplacementWithInvalidEnd() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/gg";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceSubstringWithInvalidReplacement(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplacementWithOnlyRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/nightmorning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceSubstringWithInvalidReplacement(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringFromStdinWithEmptyReplacementString() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night//g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInStdin(command);
-        String expected = "good  at " + NEW_LINE + "all " + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringFromStdinWithEmptyRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s//morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInStdin(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringFromStdinUsingOtherReplacementSeparator() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s@night@morning@g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInStdin(command);
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringFromStdin() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInStdin(command);
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFileRelativePath() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String relativeFilePath = relativeDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + relativeFilePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFileUsingOtherReplacementSeparator() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s@night@morning@g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFileWithEmptyReplacementString() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night//g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = "good  at " + NEW_LINE + "all " + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFileWithEmptyRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s//morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFile() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = "good morning at morning" + NEW_LINE + "all morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInEmptyFile() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/g";
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceAllSubStringInFileInvalidFilePath() {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + ":test";
-        String replacementString = "s/hi/there/g";
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        String out = sed.replaceAllSubstringsInFile(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInEmptyFile() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringFromStdinUsingOtherReplacementSeparator() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s@night@morning@";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringFromStdin(command);
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringFromStdinWithEmptyReplacmentString() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night//";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringFromStdin(command);
-        String expected = "good  at " + NEW_LINE + "all " + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringFromStdinWithEmptyRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s//morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringFromStdin(command);
-        String expected = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringFromStdin() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " <\"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringFromStdin(command);
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileRelativePath() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String relativeFilePath = relativeDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + relativeFilePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileUsingOtherReplacementSeparator() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s@night@morning@";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileUsingEmptyReplacementString() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night//";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good  at " + NEW_LINE + "all " + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileUsingEmptyRegex() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s//morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFile() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/night/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good morning at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileWithReplacementStringContainingSpaces() throws IOException {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + "1.txt";
-        String replacementString = "s/'all night'/morning/";
-        String content = "good night at night" + NEW_LINE + "all night" + NEW_LINE;
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        assertTrue(createNewFile(filePath));
-        tempFileOne = new File(filePath);
-        tempFileOne.deleteOnExit();
-        FileOutputStream outStream = new FileOutputStream(tempFileOne);
-        outStream.write(content.getBytes());
-        outStream.close();
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = "good night at night" + NEW_LINE + "morning" + NEW_LINE;
-        
-        assertEquals( out, expected );
-    }
-    
-    @Test
-    public void testReplaceFirstSubStringInFileInvalidFilePath() {
-        
-        String filePath = absTestDirPath + PATH_SEPARATOR + ":test";
-        String replacementString = "s/hi/there/";
-        
-        String command = "sed " + replacementString + " \"" + filePath + "\"";
-        
-        String out = sed.replaceFirstSubStringInFile(command);
-        String expected = ""; // TODO replace with exception class string
-        
-        assertEquals( out, expected );
-    }
-    
-    private static boolean deleteFile( File file ) {
-        
-        boolean isDeleted = false;
-        
-        if(file != null && file.exists()){
-            try { 
-                isDeleted = file.delete(); 
-            }
-            catch( SecurityException e ){}
-        } else {
-            isDeleted = true;
+        if( fileName == null || content == null ){
+            return false;
         }
-        return isDeleted;
-    }
-    
-    private static boolean closeStdin( InputStream inputStream ) {
         
-        boolean isClosed = true;
+        fileName = Environment.getAbsPath(fileName);
         
-        if(inputStream != null && inputStream != System.in){
-            try { 
-                inputStream.close();
-            } catch( IOException e ){
-                isClosed = false;
+        if(!Environment.isExists(fileName)){
+            if( !Environment.createNewFile(fileName)){
+                return false;
             }
+        } else if( Environment.isDirectory(fileName) ){
+            return false;
         }
-        return isClosed;
+        
+        try {
+            FileOutputStream os = new FileOutputStream(fileName);
+            os.write(content.getBytes());
+            os.close();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
     
-    private static boolean closeStdout( OutputStream outputStream ) {
-        
-        boolean isClosed = true;
-        
-        if(outputStream != null && outputStream != System.out){
-            try { 
-                outputStream.close();
-            } catch( IOException e ){
-                isClosed = false;
-            }
-        }
-        return isClosed;
-    }
-    
-    private static boolean createNewFile(String absPath) {
+    private static boolean deleteFile(String absPath) {
 
         if (absPath == null) {
             return false;
         }
 
-        boolean isCreated = false;
+        if( !Environment.isExists(absPath) ){
+            return true;
+        }
+        
+        boolean isDeleted = false;
         File file = new File(absPath);
         try {
-            isCreated = file.createNewFile();
-        } catch (IOException | SecurityException e) {}
+            isDeleted = file.delete();
+        } catch (SecurityException e) {}
 
-        return isCreated;
+        return isDeleted;
     }
 }
