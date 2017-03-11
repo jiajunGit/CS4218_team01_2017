@@ -101,6 +101,7 @@ public class SortApplication implements Sort {
 		
 		try {
 			stdout.write(arrayToString().getBytes());
+			stdout.write(LINE_SEPARATOR.getBytes());
 			stdout.flush();
 		} catch (IOException e) {
 			throw new SortException(ERR_WRITE_OUT);

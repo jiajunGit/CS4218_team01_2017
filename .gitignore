@@ -91,3 +91,9 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+input/test
+
+src/test/IOredirect/output/headOut
+
+src/test/IOredirect/output/tailOut
