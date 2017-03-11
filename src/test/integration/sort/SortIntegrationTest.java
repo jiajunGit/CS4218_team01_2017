@@ -117,15 +117,34 @@ public class SortIntegrationTest {
 	}
 	
 	@Test
+	public void testWithCdCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort input/input01; cd `echo ../`; pwd");
+		String CURRENT_DIRECTORY= Environment.currentDirectory;
+		assertEquals(expectedOutput01+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+	}
+	
+	@Test
 	public void testWithHead() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort input/input01 | head -n 10");
 		assertEquals(expectedOutput02,output);
 	}
 	
 	@Test
+	public void testWithHeadCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort `head -n 10 input/file`");
+		assertEquals(expectedOutput01,output);
+	}
+	
+	@Test
 	public void testWithTail() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort -n input/input02 | tail -n 5");
 		assertEquals(expectedOutput03,output);
+	}
+	
+	@Test
+	public void testWithTailCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort `tail -n 5 input/file`");
+		assertEquals(expectedOutput01,output);
 	}
 	
 	@Test
@@ -146,6 +165,12 @@ public class SortIntegrationTest {
 	public void testWithGrep() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; grep 1 input/test");
 		assertEquals("1"+LINE_SEPARATOR+"11"+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithGrepCmdSub() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort `grep / input/file`");
+		assertEquals(expectedOutput01,output);
 	}
 	
 	@Test
