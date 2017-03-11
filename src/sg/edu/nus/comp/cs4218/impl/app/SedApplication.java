@@ -11,7 +11,6 @@ import java.util.regex.PatternSyntaxException;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
-import sg.edu.nus.comp.cs4218.Utility;
 import sg.edu.nus.comp.cs4218.app.Sed;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.SedException;
@@ -101,8 +100,6 @@ public class SedApplication implements Sed {
             stdout.write(Symbol.NEW_LINE_S.getBytes());
             stdout.flush();
         } catch (IOException e) {
-            Utility.closeStdin(stdin);
-            Utility.closeStdout(stdout);
             throw new SedException(ERROR_EXP_INVALID_OUTSTREAM);
         }
     }
@@ -138,9 +135,24 @@ public class SedApplication implements Sed {
             
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(content);
+            int findStart = 0;
             
-            if( matcher.find() ){
-                content.replace(matcher.start(), matcher.end(), replacement);
+            while( findStart < content.length() && matcher.find(findStart) ){
+                
+                int start = matcher.start();
+                int end = matcher.end();
+                
+                content.replace(start, end, replacement);
+                
+                findStart = start + replacement.length();
+                
+                findStart = content.indexOf(Symbol.NEW_LINE_S, findStart);
+                
+                if( findStart < 0 ){
+                    break;
+                }
+                
+                findStart += Symbol.NEW_LINE_S.length();
             }
             
         } catch( PatternSyntaxException e ) {
