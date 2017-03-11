@@ -185,16 +185,30 @@ public class SedApplication implements Sed {
         return out;
     }
     
+    private List<String> processSuffix( List<String> args, String suffix ) throws SedException {
+        if( suffix.isEmpty() ){
+            return args;
+        } else if( suffix.equals(REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
+            args.add(REPLACEMENT_ALL_SUBSTRING_SUFFIX);
+        } else {
+            throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
+        }
+        return args;
+    }
+    
     private String[] split( String expression, String separator, int validSeparatorCount ) 
             throws SedException {
         
+        expression = expression.substring(2);
+        
         int count = 0;
         int start = 0;
+        int end = -1;
         
         List<String> args = new LinkedList<String>();
         while( start < expression.length() ){
             
-            int end = expression.indexOf(separator, start);
+            end = expression.indexOf(separator, start);
             
             if( end < 0 ){
                 break;
@@ -202,12 +216,13 @@ public class SedApplication implements Sed {
             
             ++count;
             
-            if(count > validSeparatorCount){
-                throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
-            }
-            
             String arg = expression.substring(start, end);
             args.add(arg);
+            
+            if(count == validSeparatorCount){
+                args = processSuffix( args, expression.substring(end+1) );
+                break;
+            }
             
             start = end + separator.length();
         }
@@ -254,26 +269,15 @@ public class SedApplication implements Sed {
         
         String separator = Character.toString(replacement.charAt(1));
         
-        boolean isReplaceAll = false;
-        String modifiedReplacement;
-        if( replacement.endsWith(separator+REPLACEMENT_ALL_SUBSTRING_SUFFIX) ){
-            modifiedReplacement = replacement.substring(2, replacement.length() - 1);
-            isReplaceAll = true;
-        } else {
-            modifiedReplacement = replacement.substring(2, replacement.length());
-        }
-        
-        String[] args = split(modifiedReplacement, separator, 2);
+        String[] args = split(replacement, separator, 2);
         
         String output;
         if( args.length == 2 ){
-            if( isReplaceAll ){
-                StringBuilder content = readContentFromStdin(stdin);
-                output = replaceAllSubString( args[0], args[1], content );
-            } else {
-                StringBuilder content = readContentFromStdin(stdin);
-                output = replaceFirstSubString( args[0], args[1], content );
-            }
+            StringBuilder content = readContentFromStdin(stdin);
+            output = replaceFirstSubString( args[0], args[1], content );
+        } else if( args.length == 3 ){
+            StringBuilder content = readContentFromStdin(stdin);
+            output = replaceAllSubString( args[0], args[1], content );
         } else {
             throw new SedException(ERROR_EXP_INVALID_REPLACEMENT);
         }
