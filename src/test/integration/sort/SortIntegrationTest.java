@@ -3,6 +3,11 @@ package test.integration.sort;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,6 +52,28 @@ public class SortIntegrationTest {
 												"33"+LINE_SEPARATOR+
 												"44"+LINE_SEPARATOR+
 												"55"+LINE_SEPARATOR;
+	
+	private static final String expectedOutput04="1"+LINE_SEPARATOR+
+			"2"+LINE_SEPARATOR+
+			"3"+LINE_SEPARATOR+
+			"4"+LINE_SEPARATOR+
+			"5"+LINE_SEPARATOR+
+			"11"+LINE_SEPARATOR+
+			"22"+LINE_SEPARATOR+
+			"33"+LINE_SEPARATOR+
+			"44"+LINE_SEPARATOR+
+			"55"+LINE_SEPARATOR;
+	
+	private static final String expectedOutput05="new"+LINE_SEPARATOR+
+			"2"+LINE_SEPARATOR+
+			"3"+LINE_SEPARATOR+
+			"4"+LINE_SEPARATOR+
+			"5"+LINE_SEPARATOR+
+			"11"+LINE_SEPARATOR+
+			"22"+LINE_SEPARATOR+
+			"33"+LINE_SEPARATOR+
+			"44"+LINE_SEPARATOR+
+			"55"+LINE_SEPARATOR;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -94,6 +121,46 @@ public class SortIntegrationTest {
 	public void testWithTail() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort -n input/input02 | tail -n 5");
 		assertEquals(expectedOutput03,output);
+	}
+	
+	@Test
+	public void testWithCal() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort -n input/input02 ; cal");
+		String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar"
+				+ PATH_SEPARATOR;
+		String expectedCalendar = "";
+		try {
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonth")));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+		assertEquals(expectedOutput04+expectedCalendar, output);
+	}
+	
+	@Test
+	public void testWithGrep() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; grep 1 input/test");
+		assertEquals("1"+LINE_SEPARATOR+"11"+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithDate() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort -n input/input02 ; date");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(expectedOutput04+DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithSed() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; sed s/1/new input/test");
+		assertEquals(expectedOutput05+LINE_SEPARATOR,output);
+	}
+	
+	@Test
+	public void testWithWc() throws AbstractApplicationException, ShellException {
+		String output=shell.parseAndEvaluate("sort -n input/input02 >input/test; wc -l input/test");
+		assertEquals("      10"+LINE_SEPARATOR,output);
 	}
 
 }
