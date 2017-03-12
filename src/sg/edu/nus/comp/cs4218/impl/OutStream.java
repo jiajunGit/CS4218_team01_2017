@@ -25,6 +25,7 @@ public class OutStream {
         if( stdoutName != null && !stdoutName.isEmpty() ){
             type = IOStreamType.WITH_NAME;
             name = stdoutName;
+            generateFile(name);
         } else {
             type = IOStreamType.NULL;
         }
@@ -43,6 +44,24 @@ public class OutStream {
             throw new ShellException(ERROR_EXP_NAME_UNDEFINED);
         }
         return name;
+    }
+    
+    private boolean generateFile( String stdoutName ) {
+        
+        String absPath = Environment.getAbsPath(stdoutName);
+        if(absPath.isEmpty()){
+            return false;
+        }
+        
+        if( Environment.isDirectory(absPath) ){
+            return false;
+        }
+        
+        if( !Environment.isExists(absPath) && !Environment.createNewFile(absPath) ){
+            return false;
+        }
+        
+        return true;
     }
     
     private OutputStream generateStreamFromName( String stdoutName ) 
