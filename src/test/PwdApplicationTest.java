@@ -52,7 +52,7 @@ public class PwdApplicationTest {
 	@Test
 	public void testDirectoryReporting() throws PwdException{
 		pwd.run(null, System.in, System.out);
-		String file = CURRENT_DIRECTORY + LINE_SEPARATOR;
+		String file = CURRENT_DIRECTORY;
 		assertEquals(file, outContent.toString());
 	}
 	

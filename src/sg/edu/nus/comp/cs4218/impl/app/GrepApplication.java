@@ -95,9 +95,6 @@ public class GrepApplication implements Grep {
 
         try {
             stdout.write(outputStr.getBytes());
-            if (outputStr.isEmpty()) {
-                stdout.write(Symbol.NEW_LINE_S.getBytes());
-            }
             stdout.flush();
         } catch (IOException e) {
             throw new GrepException(ERROR_EXP_INVALID_OUTSTREAM);
@@ -136,6 +133,25 @@ public class GrepApplication implements Grep {
             }
         }
         return content;
+    }
+    
+    private boolean endsWith( StringBuilder content, String suffix ) {
+        
+        if( content == null || suffix == null ){
+            return false;
+        }
+        
+        int suffixStart = content.length() - suffix.length();
+        if(suffixStart < 0){
+            return false;
+        }
+        
+        for( int i = suffixStart, j = 0, length = content.length(); i < length; ++i ){
+            if(content.charAt(i) != suffix.charAt(j++)){
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
@@ -194,6 +210,29 @@ public class GrepApplication implements Grep {
             prevEnd = endOfLine;
         }
     }
+    
+    private void findAllLines(StringBuilder str, String prefixStr, StringBuilder output) {
+        
+        int findStart = 0;
+        
+        while( findStart < str.length() ){
+            
+            int newLineStart = str.indexOf(Symbol.NEW_LINE_S, findStart);
+            
+            if(newLineStart < 0){
+                output.append(prefixStr);
+                output.append(str.substring(findStart));
+                output.append(Symbol.NEW_LINE_S);
+                break;
+            }
+            
+            output.append(prefixStr);
+            output.append(str.substring(findStart, newLineStart));
+            output.append(Symbol.NEW_LINE_S);
+            
+            findStart = newLineStart + Symbol.NEW_LINE_S.length();
+        }
+    }
 
     /**
      * Returns string containing lines which match the specified pattern in
@@ -214,7 +253,7 @@ public class GrepApplication implements Grep {
      */
     public String grepFromStdin(String pattern, InputStream stdin) throws GrepException {
 
-        if (pattern == null || pattern.length() <= 0) {
+        if (pattern == null) {
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
         }
         if (stdin == null) {
@@ -223,18 +262,28 @@ public class GrepApplication implements Grep {
 
         StringBuilder content = readContentFromStdin(stdin);
 
+        StringBuilder output = new StringBuilder();
+        if(pattern.isEmpty()){
+            findAllLines(content, Symbol.EMPTY_S, output);
+            if( output.length() > 0 && endsWith(output, Symbol.NEW_LINE_S) ){
+                output.setLength(output.length() - Symbol.NEW_LINE_S.length());
+            }
+            return output.toString();
+        }
+        
         Pattern regxPattern = null;
         try {
             regxPattern = Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            Utility.closeStdin(stdin);
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
         }
 
         Matcher regxMatcher = regxPattern.matcher(content);
-        StringBuilder output = new StringBuilder();
+        
         findAllRegex(content, regxMatcher, Symbol.EMPTY_S, output);
-
+        if( output.length() > 0 && endsWith(output, Symbol.NEW_LINE_S) ){
+            output.setLength(output.length() - Symbol.NEW_LINE_S.length());
+        }
         return output.toString();
     }
 
@@ -258,14 +307,12 @@ public class GrepApplication implements Grep {
      */
     public String grepFromOneFile(String pattern, String fileName) throws GrepException {
 
-        if (pattern == null || pattern.length() <= 0) {
-            throw new GrepException(ERROR_EXP_INVALID_PATTERN);
-        }
         if (fileName == null || fileName.length() <= 0) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         }
 
         BufferedInputStream bis = null;
+        FileInputStream fs = null;
         String outputStr;
         try {
 
@@ -275,18 +322,18 @@ public class GrepApplication implements Grep {
                 throw new GrepException(ERROR_EXP_INVALID_FILE);
             }
 
-            FileInputStream fs = new FileInputStream(fileName);
+            fs = new FileInputStream(fileName);
             bis = new BufferedInputStream(fs);
 
             outputStr = grepFromStdin(pattern, bis);
-
-            bis.close();
-            fs.close();
 
         } catch (IOException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         } catch (SecurityException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
+        } finally{
+            Utility.closeStdin(fs);
+            Utility.closeStdin(bis);
         }
         return outputStr;
     }
@@ -324,15 +371,20 @@ public class GrepApplication implements Grep {
 
         String pattern = args[0];
 
-        if (pattern == null || pattern.length() <= 0) {
+        if (pattern == null) {
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
         }
 
         BufferedInputStream bis = null;
-
+        FileInputStream fs = null;
+        String out;
+        
         try {
 
-            Pattern regxPattern = Pattern.compile(pattern);
+            Pattern regxPattern = null;
+            if(!pattern.isEmpty()){
+                regxPattern = Pattern.compile(pattern);
+            }
 
             StringBuilder output = new StringBuilder();
 
@@ -350,26 +402,42 @@ public class GrepApplication implements Grep {
                     throw new GrepException(ERROR_EXP_INVALID_FILE);
                 }
                 
-                FileInputStream fs = new FileInputStream(fileName);
+                fs = new FileInputStream(fileName);
                 bis = new BufferedInputStream(fs);
 
                 StringBuilder content = readContentFromStdin(bis);
 
-                bis.close();
-                fs.close();
-
-                Matcher regxMatcher = regxPattern.matcher(content);
-                findAllRegex(content, regxMatcher, fileName + ": ", output);
+                Utility.closeStdin(fs);
+                fs = null;
+                
+                Utility.closeStdin(bis);
+                bis = null;
+                
+                if(!pattern.isEmpty()){
+                    Matcher regxMatcher = regxPattern.matcher(content);
+                    findAllRegex(content, regxMatcher, fileName + ": ", output);
+                } else {
+                    findAllLines(content, fileName + ": ", output);
+                } 
             }
-
-            return output.toString();
+            
+            if( output.length() > 0 && endsWith(output, Symbol.NEW_LINE_S) ){
+                output.setLength(output.length() - Symbol.NEW_LINE_S.length());
+            }
+            
+            out = output.toString();
+            
         } catch (IOException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         } catch (SecurityException e) {
             throw new GrepException(ERROR_EXP_INVALID_FILE);
         } catch (PatternSyntaxException e) {
             throw new GrepException(ERROR_EXP_INVALID_PATTERN);
+        } finally {
+            Utility.closeStdin(fs);
+            Utility.closeStdin(bis);
         }
+        return out;
     }
     
     @Override

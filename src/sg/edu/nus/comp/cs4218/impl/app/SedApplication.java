@@ -13,6 +13,7 @@ import java.util.regex.PatternSyntaxException;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
+import sg.edu.nus.comp.cs4218.Utility;
 import sg.edu.nus.comp.cs4218.app.Sed;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.SedException;
@@ -99,7 +100,6 @@ public class SedApplication implements Sed {
         
         try {
             stdout.write(outputStr.getBytes());
-            stdout.write(Symbol.NEW_LINE_S.getBytes());
             stdout.flush();
         } catch (IOException e) {
             throw new SedException(ERROR_EXP_INVALID_OUTSTREAM);
@@ -318,6 +318,7 @@ public class SedApplication implements Sed {
         }
         
         BufferedInputStream bis = null;
+        FileInputStream fs = null;
         String outputStr;
         try {
 
@@ -327,18 +328,18 @@ public class SedApplication implements Sed {
                 throw new SedException(ERROR_EXP_INVALID_FILE);
             }
 
-            FileInputStream fs = new FileInputStream(fileName);
+            fs = new FileInputStream(fileName);
             bis = new BufferedInputStream(fs);
 
             outputStr = sedFromStdin(replacement, bis);
-
-            bis.close();
-            fs.close();
-
+            
         } catch (IOException e) {
             throw new SedException(ERROR_EXP_INVALID_FILE);
         } catch (SecurityException e) {
             throw new SedException(ERROR_EXP_INVALID_FILE);
+        } finally{
+            Utility.closeStdin(fs);
+            Utility.closeStdin(bis);
         }
         return outputStr;
     }

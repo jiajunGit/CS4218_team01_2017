@@ -70,7 +70,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "tailtailheadtailheattailoftailthetailmomenttailhi" + Symbol.NEW_LINE_S
                 + "piehihaheadtailhead" + Symbol.NEW_LINE_S
-                + "headtailwhotailaretailu?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "headtailwhotailaretailu?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -96,7 +96,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  head heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahead head" + Symbol.NEW_LINE_S
-                + "head who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "head who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -122,7 +122,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "    heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha   " + Symbol.NEW_LINE_S
-                + "  who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "  who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -148,7 +148,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "   heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha " + Symbol.NEW_LINE_S
-                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + " who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -174,7 +174,7 @@ public class SedApplicationTest {
                           + Symbol.NEW_LINE_S 
                           + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                           + "piehihaa a" + Symbol.NEW_LINE_S
-                          + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                          + "a who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -200,7 +200,7 @@ public class SedApplicationTest {
                         + Symbol.NEW_LINE_S 
                         + "   heat of the moment hi" + Symbol.NEW_LINE_S
                         + "piehiha " + Symbol.NEW_LINE_S
-                        + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                        + " who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -226,7 +226,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -252,7 +252,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals( out, expected );
     }
@@ -326,7 +326,7 @@ public class SedApplicationTest {
                          + Symbol.NEW_LINE_S 
                          + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                          + "piehihaa hihihi" + Symbol.NEW_LINE_S
-                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                         + "a who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -352,7 +352,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "   heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha hihihi" + Symbol.NEW_LINE_S
-                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + " who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -378,7 +378,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -404,7 +404,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -430,7 +430,7 @@ public class SedApplicationTest {
                          + Symbol.NEW_LINE_S 
                          + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                          + "piehihaa hihihi" + Symbol.NEW_LINE_S
-                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                         + "a who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -456,7 +456,7 @@ public class SedApplicationTest {
                          + Symbol.NEW_LINE_S 
                          + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                          + "piehihaa hihihi" + Symbol.NEW_LINE_S
-                         + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                         + "a who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -482,7 +482,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihaa a" + Symbol.NEW_LINE_S
-                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "a who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -508,7 +508,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "   heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha " + Symbol.NEW_LINE_S
-                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + " who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -534,7 +534,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -560,7 +560,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -634,7 +634,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihaa hihihi" + Symbol.NEW_LINE_S
-                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "a who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -660,7 +660,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "   heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha hihihi" + Symbol.NEW_LINE_S
-                + " who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + " who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -686,7 +686,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -712,7 +712,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "hihihi who are u?" + Symbol.NEW_LINE_S; 
         
         assertEquals( out, expected );
     }
@@ -786,7 +786,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihaa a" + Symbol.NEW_LINE_S
-                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "a who are u?" + Symbol.NEW_LINE_S; 
 
         assertEquals( out, expected );
     }
@@ -908,7 +908,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  hihihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihahihihi hihihi" + Symbol.NEW_LINE_S
-                + "hihihi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "hihihi who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals(out, expected);
     }
@@ -934,7 +934,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  %hihi heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehiha% hihihihihi" + Symbol.NEW_LINE_S
-                + "%hhi who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S;
+                + "%hhi who are u?" + Symbol.NEW_LINE_S;
         
         assertEquals(out, expected);
     }
@@ -965,7 +965,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihaa a" + Symbol.NEW_LINE_S
-                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "a who are u?" + Symbol.NEW_LINE_S; 
 
         assertEquals( out, expected );
     }
@@ -995,7 +995,7 @@ public class SedApplicationTest {
                 + Symbol.NEW_LINE_S 
                 + "  a heat of the moment hi" + Symbol.NEW_LINE_S
                 + "piehihaa a" + Symbol.NEW_LINE_S
-                + "a who are u?" + Symbol.NEW_LINE_S + Symbol.NEW_LINE_S; 
+                + "a who are u?" + Symbol.NEW_LINE_S; 
 
         assertEquals( out, expected );
     }
@@ -1136,6 +1136,16 @@ public class SedApplicationTest {
         stdin.close();
         
         sed.run(arg, stdin, stdout);
+    }
+    
+    @Test(expected=SedException.class)
+    public void testSedWithDirectoryAsFilePath() throws SedException {
+        
+        String[] arg = { "s\\hihihi\\a\\g", ABSOLUTE_TEST_DIRECTORY };
+        
+        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+        
+        sed.run(arg, null, stdout);
     }
     
     private static boolean createFile( String fileName, String content ) {

@@ -48,8 +48,8 @@ public class PwdApplication implements Application {
 		}
 		
 		try {
-			stdout.write(Environment.currentDirectory.getBytes(Charset.forName("UTF-8")));
-			stdout.write(Symbol.NEW_LINE_S.getBytes(Charset.forName("UTF-8")));
+			stdout.write(Environment.currentDirectory.getBytes());
+			//stdout.write(Symbol.NEW_LINE_S.getBytes());
 			stdout.flush();
 		} 
 		catch (IOException e) {
