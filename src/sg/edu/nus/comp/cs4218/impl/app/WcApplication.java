@@ -196,7 +196,7 @@ public class WcApplication implements Wc {
 			try {
 				tempChar = getNoCharsInFile(argsArr[startIndex]);
 				if(String.valueOf(tempChar).length() >= 8){
-					spaces = tempChar + 1;
+					spaces = String.valueOf(tempChar).length() + 1;
 				}
 				noChars.add(tempChar);
 				
@@ -211,7 +211,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
@@ -281,7 +283,7 @@ public class WcApplication implements Wc {
 			try {
 				tempWord = getNoWordsInFile(argsArr[startIndex]);
 				if(String.valueOf(tempWord).length() >= 8){
-					spaces = tempWord + 1;
+					spaces = String.valueOf(tempWord).length() + 1;
 				}
 				noWords.add(tempWord);
 				
@@ -296,7 +298,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
@@ -337,7 +341,7 @@ public class WcApplication implements Wc {
 			try {
 				tempNewLine = getNoNewlineInFile(argsArr[startIndex]);
 				if(String.valueOf(tempNewLine).length() >= 8){
-					spaces = tempNewLine + 1;
+					spaces = String.valueOf(tempNewLine).length() + 1;
 				}
 				noNewline.add(tempNewLine);
 				
@@ -352,7 +356,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
@@ -426,7 +432,7 @@ public class WcApplication implements Wc {
 
 		tempChar = getNoCharsInStdin(stdin);
 		if(String.valueOf(tempChar).length() >= 8){
-			spaces = tempChar + 1;
+			spaces = String.valueOf(tempChar).length() + 1;
 		}
 		noChars.add(tempChar);
 		
@@ -436,7 +442,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
@@ -500,7 +508,7 @@ public class WcApplication implements Wc {
 
 		tempWord = getNoWordsInStdin(stdin);
 		if(String.valueOf(tempWord).length() >= 8){
-			spaces = tempWord + 1;
+			spaces = String.valueOf(tempWord).length() + 1;
 		}
 		noWords.add(tempWord);
 		
@@ -510,7 +518,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
@@ -567,7 +577,7 @@ public class WcApplication implements Wc {
 
 		tempNewline = getNoNewlinesInStdin(stdin);
 		if(String.valueOf(tempNewline).length() >= 8){
-			spaces = tempNewline + 1;
+			spaces = String.valueOf(tempNewline).length() + 1;
 		}
 		noNewlines.add(tempNewline);
 		
@@ -577,7 +587,9 @@ public class WcApplication implements Wc {
 		
 		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
 			result.append(toDisplay.get(currDisp));
-			result.append(System.lineSeparator());
+			if(currDisp != toDisplay.size() -1){
+				result.append(System.lineSeparator());
+			}
 		}
 		
 		return result.toString();
