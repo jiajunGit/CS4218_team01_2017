@@ -1251,9 +1251,39 @@ public class ShellImpl implements Shell {
         }
     }
     
+    private void executeCommandToSeq( Command cmd, OutputStream stdout ) throws ShellException, AbstractApplicationException {
+        
+        InputStream defaultInputStream = null;
+        InputStream inStream = null;
+        OutputStream outStream = null;
+        
+        try{
+            
+            String appName = cmd.getAppName();
+            String []args = cmd.getArguments();
+            inStream = cmd.getStdin(defaultInputStream);
+            outStream = cmd.getStdout(stdout);
+            runApp(appName, args, inStream, outStream);
+            writeToStdout(outStream, Symbol.NEW_LINE_S);
+            
+        } finally {
+            
+            if(inStream != defaultInputStream){
+                closeInputStream(inStream);
+            }
+            if(outStream != stdout){
+                closeOutputStream(outStream);
+            }
+        }
+    }
+    
     private void executeCommand( Command cmd, OutputStream stdout ) throws ShellException, AbstractApplicationException {
         
-        if( cmd.getLinkTypeToNextCommand() != Link.PIPE ){
+        if( cmd.getLinkTypeToNextCommand() == Link.PIPE ){
+            executeCommandToPipe(cmd);
+        } else if( cmd.getLinkTypeToNextCommand() == Link.SEQUENCE ) {
+            executeCommandToSeq(cmd, stdout);
+        } else {
             
             InputStream defaultInputStream = null;
             InputStream inStream = null;
@@ -1276,9 +1306,6 @@ public class ShellImpl implements Shell {
                     closeOutputStream(outStream);
                 }
             }
-            
-        } else{
-            executeCommandToPipe(cmd);
         }
     }
     
@@ -1299,7 +1326,9 @@ public class ShellImpl implements Shell {
     
     private void writeToStdout( OutputStream stdout, String content ) {
         if( stdout != null && content != null && !content.isEmpty() ){
-            try { stdout.write(content.getBytes());
+            try { 
+                stdout.write(content.getBytes());
+                stdout.flush();
             } catch (IOException e) {}
         }
     }
