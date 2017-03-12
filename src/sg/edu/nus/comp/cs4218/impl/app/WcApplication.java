@@ -84,7 +84,7 @@ public class WcApplication implements Wc {
 	private String loadFromFiles(String combinedNames) {
 		String result = new String();
 		if(isAll){
-			String mCommand = "wc " + combinedNames;
+			String mCommand = "wc -mwl " + combinedNames;
 			result = printAllCountsInFile(mCommand);
 			isM = false;
 			isW = false;
@@ -112,7 +112,7 @@ public class WcApplication implements Wc {
 	private String loadFromStdIn(InputStream stdin) {
 		String result = new String();
 		if(isAll){
-			String mCommand = "wc";
+			String mCommand = "wc -mwl ";
 			result = printAllCountsInStdin(mCommand, stdin);
 			isM = false;
 			isW = false;
