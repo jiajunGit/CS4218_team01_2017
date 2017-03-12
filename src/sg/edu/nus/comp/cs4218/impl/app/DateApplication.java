@@ -14,7 +14,8 @@ import sg.edu.nus.comp.cs4218.exception.DateException;
 
 public class DateApplication implements Date {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    @Override
+   
+	@Override
     public void run(String[] args, InputStream stdin, OutputStream stdout) throws DateException {
         String outputStr;
         
@@ -23,6 +24,9 @@ public class DateApplication implements Date {
         }
     	else if(args == null){
     		outputStr = printCurrentDate("");
+    	}
+    	else if (stdin != null){
+    		throw new DateException("Date does not accept stdin");
     	}
         else{
         	outputStr = printCurrentDate(args.toString());
