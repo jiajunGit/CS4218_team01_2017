@@ -49,7 +49,7 @@ public class EchoApplication implements Application {
 				    	stdout.write(" ".getBytes());//elements gets separated by a spacing
 				    }
 				}
-				stdout.write(LINE_SEPARATOR.getBytes());
+				//stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		} catch (IOException e) {
 			throw new EchoException("IOException");

@@ -31,9 +31,9 @@ public class HeadApplication implements Head {
 	private static final String INVALID_FORMAT = "Invalid command format";
 	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
 	private static final String NUMBER_NOT_SPECIFIED = "Specify proper number with \"-n\" option";
-	
-    private static final int TEMP_BUF_SZ = 10000;
-    private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
+
+	private static final int TEMP_BUF_SZ = 10000;
+	private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
 
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws HeadException {
@@ -144,7 +144,9 @@ public class HeadApplication implements Head {
 			if(noLines == i)
 				break;
 			stdout.write(lines[i].getBytes());
-			stdout.write(LINE_SEPARATOR.getBytes());
+			if(i!=lines.length-1){
+				stdout.write(LINE_SEPARATOR.getBytes());
+			}
 		}
 
 	}
@@ -201,20 +203,20 @@ public class HeadApplication implements Head {
 
 	static String convertStreamToString(InputStream stdin) throws HeadException {
 
-        int bytesRead = 0;
-        StringBuilder content = new StringBuilder();
-        while (true) {
-            try {
-                bytesRead = stdin.read(tempBuf);
-                if (bytesRead <= -1) {
-                    break;
-                }
-                content.append(new String(tempBuf, 0, bytesRead));
-            } catch (IOException e) {
-                throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
-            }
-        }
-        return content.toString();
+		int bytesRead = 0;
+		StringBuilder content = new StringBuilder();
+		while (true) {
+			try {
+				bytesRead = stdin.read(tempBuf);
+				if (bytesRead <= -1) {
+					break;
+				}
+				content.append(new String(tempBuf, 0, bytesRead));
+			} catch (IOException e) {
+				throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
+			}
+		}
+		return content.toString();
 	}	
 
 }

@@ -15,17 +15,17 @@ import sg.edu.nus.comp.cs4218.exception.TailException;
 public class TailApplication implements Tail {
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	String[] lines;
-	
+
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
 	private static final String INVALID_FORMAT = "Invalid command format";
 	private static final String NUMBER_NOT_SPECIFIED = "Specify proper number with \"-n\" option";
 	private static final String ERROR_EXP_INVALID_OUTSTREAM = "OutputStream not provided";
 	private static final String ERROR_EXP_INVALID_INSTREAM = "InputStream not provided";
 	private static final String ERROR_IO_READING = "IO ERROR WHEN READING FILE";
-	
-    private static final int TEMP_BUF_SZ = 10000;
-    private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
-	
+
+	private static final int TEMP_BUF_SZ = 10000;
+	private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
+
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws TailException {
 		try {
@@ -55,7 +55,7 @@ public class TailApplication implements Tail {
 			throw new TailException(ERROR_IO_READING);
 		}
 	}
-	
+
 	private void logicFor1Argument(String[] args, InputStream stdin) throws TailException, IOException {
 		if(args[0].length()==0){
 			loadFromStdIn(stdin); //stdin 10 lines
@@ -63,9 +63,9 @@ public class TailApplication implements Tail {
 		else{
 			load(args[0]); //tail [file], tail [option]
 		}
-		
+
 	}
-	
+
 	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
 		if(args[0].length()==0){
 			if(args[1].length()==0){
@@ -92,7 +92,7 @@ public class TailApplication implements Tail {
 		}
 		return noLines;
 	}
-	
+
 	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
 		if(args[0].length()==0 && args[1].length()==0){
 			if(args[2].length()==0){ //tail "" "" ""
@@ -133,9 +133,11 @@ public class TailApplication implements Tail {
 			//if(noLines == i) <-- do this for head
 			//	break;
 			stdout.write(lines[i].getBytes());
-			stdout.write(LINE_SEPARATOR.getBytes());
+			if(i!= lines.length-1){
+				stdout.write(LINE_SEPARATOR.getBytes());
+			}
 		}
-		
+
 	}
 
 	private void loadFromStdIn(InputStream stdin) throws TailException{
@@ -147,7 +149,7 @@ public class TailApplication implements Tail {
 			lines = wholeText.split(LINE_SEPARATOR);
 		}
 	}
-	
+
 	private Boolean isNumeric(String s){
 		try{ 
 			int i = Integer.parseInt(s); return true;
@@ -156,25 +158,25 @@ public class TailApplication implements Tail {
 			return false; 
 		}
 	}
-	
+
 	private void load(String fileName) throws IOException, TailException {
 		File workingFile = new File(fileName);
 		Vector<String> linesVector; 
-		
+
 		if (workingFile.exists()) {
 			linesVector = importFile(fileName);
 			lines = linesVector.toArray(new String[linesVector.size()]);
-			
+
 		} else {
 			throw new TailException(FILE_NOT_FOUND);
 		}
 	}	
-	
+
 	private Vector<String> importFile(String fileName) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
 				fileName));
 		Vector<String> linesVector = new Vector<String>();
-		
+
 		try {
 			String line = bufferedReader.readLine();
 
@@ -182,28 +184,28 @@ public class TailApplication implements Tail {
 				linesVector.add(line);
 				line = bufferedReader.readLine();
 			}
-			
+
 			return linesVector;
 		} finally {
 			bufferedReader.close();
 		}
 	}	
-	
+
 	static String convertStreamToString(InputStream stdin) throws TailException {
-        int bytesRead = 0;
-        StringBuilder content = new StringBuilder();
-        while (true) {
-            try {
-                bytesRead = stdin.read(tempBuf);
-                if (bytesRead <= -1) {
-                    break;
-                }
-                content.append(new String(tempBuf, 0, bytesRead));
-            } catch (IOException e) {
-                throw new TailException(ERROR_EXP_INVALID_INSTREAM);
-            }
-        }
-        return content.toString();
+		int bytesRead = 0;
+		StringBuilder content = new StringBuilder();
+		while (true) {
+			try {
+				bytesRead = stdin.read(tempBuf);
+				if (bytesRead <= -1) {
+					break;
+				}
+				content.append(new String(tempBuf, 0, bytesRead));
+			} catch (IOException e) {
+				throw new TailException(ERROR_EXP_INVALID_INSTREAM);
+			}
+		}
+		return content.toString();
 	}
 
 
