@@ -1297,6 +1297,13 @@ public class ShellImpl implements Shell {
        executeCommands(commands, stdout);
     }
     
+    private void writeToStdout( OutputStream stdout, String content ) {
+        if( stdout != null && content != null && !content.isEmpty() ){
+            try { stdout.write(content.getBytes());
+            } catch (IOException e) {}
+        }
+    }
+    
     /**
      * Checks if input has new line characters found within the input given. 
      * 
@@ -1389,6 +1396,7 @@ public class ShellImpl implements Shell {
             
         } finally {
             closeInputStream(stdin);
+            writeToStdout(stdout, Symbol.NEW_LINE_S);
             closeOutputStream(stdout);
         }
     }
@@ -1657,6 +1665,7 @@ public class ShellImpl implements Shell {
             evaluate(segments, stdout);
             
         } finally{
+            writeToStdout(stdout, Symbol.NEW_LINE_S);
             closeOutputStream(stdout);
         }
     }
