@@ -35,8 +35,6 @@ public class GlobberTest {
     @AfterClass
     public static void tearDown() {
         
-        GlobTestHelper.cleanUpGlobFiles(absTestDirPath);
-        
         globber = null;
         absTestDirPath = "";
         relativeDirPath = "";

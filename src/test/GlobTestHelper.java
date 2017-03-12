@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Symbol;
@@ -22,24 +23,55 @@ public final class GlobTestHelper {
         }
         
         for( String dirPath : dirsToCreate ) {
-            assertTrue( Environment.createNewDirectory(dirPath) );
+            File dir = createNewDirectory(dirPath);
+            assertTrue(dir != null);
+            dir.deleteOnExit();
         }
         for( String filePath : filesToCreate ) {
-            assertTrue( Environment.createNewFile(filePath) );
+            File file = createNewDirectory(filePath);
+            assertTrue(file != null);
+            file.deleteOnExit();
         }
     }
     
-    public static void cleanUpGlobFiles( String absTestDirPath ) {
-        
-        String[] dirsToCreate = getDirectoriesToCreate(absTestDirPath);
-        String[] filesToCreate = getFilesToCreate(absTestDirPath);
-        
-        for( String filePath : filesToCreate ) {
-            assertTrue( deleteFile(filePath) );
+    private static File createNewDirectory(String absPath) {
+
+        if (absPath == null) {
+            return null;
         }
-        for( int i = dirsToCreate.length - 1; i >= 0; --i ){
-            assertTrue( deleteFile(dirsToCreate[i]) );
+        
+        boolean isCreated = false;
+        File file = new File(absPath);
+        
+        if(file.exists()){
+            return file;
         }
+        
+        try {
+            isCreated = file.mkdir();
+        } catch (SecurityException e) {}
+
+        return isCreated ? file : null;
+    }
+    
+    public static File createNewFile(String absPath) {
+
+        if (absPath == null) {
+            return null;
+        }
+
+        boolean isCreated = false;
+        File file = new File(absPath);
+        
+        if(file.exists()){
+            return file;
+        }
+        
+        try {
+            isCreated = file.createNewFile();
+        } catch (IOException | SecurityException e) {}
+
+        return isCreated ? file : null;
     }
     
     private static boolean deleteFile(String absPath) {

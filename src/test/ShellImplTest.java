@@ -41,11 +41,6 @@ public class ShellImplTest {
     public static void setup() {
         GlobTestHelper.setupGlobFiles(ABSOLUTE_TEST_GLOB_DIRECTORY);
     }
-    
-    @AfterClass
-    public static void tearDown() {
-        GlobTestHelper.cleanUpGlobFiles(ABSOLUTE_TEST_GLOB_DIRECTORY);
-    }
 	
 	@Before
 	public void setUpBeforeTest(){
