@@ -1423,9 +1423,10 @@ public class ShellImpl implements Shell {
             
             executeCommands(commands, stdout);
             
+            writeToStdout(stdout, Symbol.NEW_LINE_S);
+            
         } finally {
             closeInputStream(stdin);
-            writeToStdout(stdout, Symbol.NEW_LINE_S);
             closeOutputStream(stdout);
         }
     }
@@ -1693,8 +1694,9 @@ public class ShellImpl implements Shell {
             
             evaluate(segments, stdout);
             
-        } finally{
             writeToStdout(stdout, Symbol.NEW_LINE_S);
+            
+        } finally{
             closeOutputStream(stdout);
         }
     }
