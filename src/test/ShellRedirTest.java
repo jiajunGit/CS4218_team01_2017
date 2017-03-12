@@ -72,12 +72,12 @@ public class ShellRedirTest {
         String command = "echo >out* hi there";
         String out = shell.parseAndEvaluate(command);
         
-        assertTrue(out.isEmpty());
+        assertEquals(out, Symbol.NEW_LINE_S);
         
         String fileName = Environment.getAbsPath("out");
         String contents = getContents(fileName);
         
-        assertEquals(contents, "hi there" + Symbol.NEW_LINE_S);
+        assertEquals(contents, "hi there");
     }
     
     @Test(expected=AbstractApplicationException.class)
@@ -100,12 +100,12 @@ public class ShellRedirTest {
         String command = "echo >out <";
         String out = shell.parseAndEvaluate(command);
         
-        assertTrue(out.isEmpty());
+        assertEquals(out, Symbol.NEW_LINE_S);
         
         String fileName = Environment.getAbsPath("out");
         String contents = getContents(fileName);
         
-        assertEquals(contents, Symbol.NEW_LINE_S);
+        assertEquals(contents, "");
     }
     
     @Test
@@ -144,12 +144,12 @@ public class ShellRedirTest {
         String command = "echo < '' >out ";
         String out = shell.parseAndEvaluate(command);
         
-        assertTrue(out.isEmpty());
+        assertEquals(out, Symbol.NEW_LINE_S);
         
         String fileName = Environment.getAbsPath("out");
         String contents = getContents(fileName);
         
-        assertEquals(contents, Symbol.NEW_LINE_S);
+        assertEquals(contents, "");
     }
     
     @Test(expected=AbstractApplicationException.class)
@@ -201,7 +201,7 @@ public class ShellRedirTest {
         
         String out = shell.parseAndEvaluate(command);
         
-        assertTrue(out.isEmpty());
+        assertEquals(out, Symbol.NEW_LINE_S);
         
         String fileName = Environment.getAbsPath("out");
         String contents = getContents(fileName);
@@ -216,7 +216,7 @@ public class ShellRedirTest {
         
         String out = shell.parseAndEvaluate(command);
         
-        assertTrue(out.isEmpty());
+        assertEquals(out, Symbol.NEW_LINE_S);
         
         String fileName = Environment.getAbsPath("out");
         String contents = getContents(fileName);
