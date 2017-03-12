@@ -201,7 +201,7 @@ public class CalApplication implements Cal{
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false)).append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false));
 		
 		return calOutput.toString();
 	}
@@ -216,7 +216,7 @@ public class CalApplication implements Cal{
 		LocalDate now = LocalDate.now();
 		LocalDate currMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(System.lineSeparator()).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true)).append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(System.lineSeparator()).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true));
 		
 		return calOutput.toString();
 		
@@ -233,7 +233,7 @@ public class CalApplication implements Cal{
 		
 		currMonth = LocalDate.of(Integer.parseInt(argsArr[2]), Integer.parseInt(argsArr[1]), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false)).append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(false)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, false));
 		
 		return calOutput.toString();
 	}
@@ -266,6 +266,9 @@ public class CalApplication implements Cal{
 			}
 			calOutput.append(System.lineSeparator());
 			calOutput.append(printThreeMonths(monthDates, year, false));
+			if ((i+1) != 4){
+				calOutput.append(System.lineSeparator());
+			}
 		}
 		
 		return calOutput.toString();
@@ -283,7 +286,7 @@ public class CalApplication implements Cal{
 		String[] argsArr = parseArgs(args);
 		currMonth = LocalDate.of(Integer.parseInt(argsArr[3]), Integer.parseInt(argsArr[2]), 1);
 		
-		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true)).append(LINE_SEPARATOR);
+		calOutput.append(printMonthYear(currMonth.getMonthValue(), currMonth.getYear())).append(LINE_SEPARATOR).append(printDaysHeader(true)).append(LINE_SEPARATOR).append(printDaysOfMonth(currMonth, true));
 		
 		return calOutput.toString();
 	}
@@ -354,7 +357,9 @@ public class CalApplication implements Cal{
 						cal.append(EMPTY_BORDER);
 					}
 					else{
-						cal.append(System.lineSeparator());
+						if (days[0] <= daysInMonths[0] || days[1] <= daysInMonths[1] || days[2] <= daysInMonths[2]){
+							cal.append(System.lineSeparator());
+						}
 					}
 					counters[month] = 0;
 				}
@@ -366,7 +371,9 @@ public class CalApplication implements Cal{
 								cal.append(EMPTY_BORDER);
 							}
 							else{
-								cal.append(System.lineSeparator());
+								if (days[0] <= daysInMonths[0] || days[1] <= daysInMonths[1] || days[2] <= daysInMonths[2]){
+									cal.append(System.lineSeparator());
+								}
 							}
 
 						}
@@ -413,6 +420,9 @@ public class CalApplication implements Cal{
 			}
 			calOutput.append(System.lineSeparator());
 			calOutput.append(printThreeMonths(monthDates, year, true));
+			if ((i+1) != 4){
+				calOutput.append(System.lineSeparator());
+			}
 		}
 		
 		return calOutput.toString();

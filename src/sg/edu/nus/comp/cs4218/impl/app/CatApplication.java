@@ -79,20 +79,22 @@ public class CatApplication implements Application {
 
 				// file could be read. perform cat command
 				if (filePathArray.length != 0) {
-//					for(int i=0;i<filePathArray.length;i++){
-//						System.out.println(filePathArray[i].toString());
-//					}
+					//					for(int i=0;i<filePathArray.length;i++){
+					//						System.out.println(filePathArray[i].toString());
+					//					}
 					for (int j = 0; j < filePathArray.length; j++) {
 						try {
 							List<String> stringListArray = Files
 									.readAllLines(filePathArray[j]);
 							for(int i=0; i<stringListArray.size();i++){
 								stdout.write(stringListArray.get(i).getBytes());
-								stdout.write(LINE_SEPARATOR.getBytes());
+								if(i!= stringListArray.size()-1){
+									stdout.write(LINE_SEPARATOR.getBytes());
+								}
 							}
 						} catch (IOException e) {
-							
-									e.printStackTrace();
+
+							e.printStackTrace();
 						}
 					}
 
