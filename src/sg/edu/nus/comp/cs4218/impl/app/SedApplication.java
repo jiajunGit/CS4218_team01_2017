@@ -199,10 +199,8 @@ public class SedApplication implements Sed {
     private String[] split( String expression, String separator, int validSeparatorCount ) 
             throws SedException {
         
-        expression = expression.substring(2);
-        
         int count = 0;
-        int start = 0;
+        int start = 2;
         int end = -1;
         
         List<String> args = new LinkedList<String>();
