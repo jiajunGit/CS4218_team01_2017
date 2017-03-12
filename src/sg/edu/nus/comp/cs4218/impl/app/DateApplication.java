@@ -40,7 +40,7 @@ public class DateApplication implements Date {
     public String printCurrentDate(String args) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
     	
-        return ZonedDateTime.now().format(formatter)+LINE_SEPARATOR;
+        return ZonedDateTime.now().format(formatter);
     }
 
 }
