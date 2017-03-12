@@ -40,9 +40,7 @@ public class EchoApplication implements Application {
 			throw new EchoException("OutputStream not provided");
 		}
 		try {
-			if (args.length == 0) {
-				stdout.write(LINE_SEPARATOR.getBytes());
-			} else {
+			if (args.length > 0) {
 				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
 				    if(i!=args.length-1){
