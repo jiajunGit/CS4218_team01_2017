@@ -494,7 +494,8 @@ public class WcApplication implements Wc {
 		
 		
 		noNewLines = contents.length() - contents.replace(System.getProperty("line.separator"), "").length();
-				
+		noNewLines /= System.getProperty("line.separator").length();
+		
 		return noNewLines;
 	}
 
