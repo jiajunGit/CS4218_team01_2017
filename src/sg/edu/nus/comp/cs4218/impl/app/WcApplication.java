@@ -492,9 +492,7 @@ public class WcApplication implements Wc {
 			e.printStackTrace();
 		}
 		
-		
-		noNewLines = contents.length() - contents.replace(System.getProperty("line.separator"), "").length();
-		noNewLines /= System.getProperty("line.separator").length();
+		noNewLines = contents.length() - contents.replace("\n", "").length();
 		
 		return noNewLines;
 	}
@@ -586,7 +584,7 @@ public class WcApplication implements Wc {
 	        noChars = line.length();
 	        noCharsStdin = noChars;
 			noWordsStdin = line.split("\\s+").length; 
-	        noNewlinesStdin = line.length() - line.replace(System.getProperty("line.separator"), "").length(); 
+	        noNewlinesStdin = line.length() - line.replace("\n", "").length(); 
 		}
 		
 		if(noCharsStdin != -1){
@@ -655,7 +653,7 @@ public class WcApplication implements Wc {
 	        
 	        noCharsStdin = line.length();
 			noWords = line.split("\\s+").length; 
-	        noNewlinesStdin = line.length() - line.replace(System.getProperty("line.separator"), "").length(); 
+	        noNewlinesStdin = line.length() - line.replace("\n", "").length(); 
 			noWordsStdin = noWords;
 		}
 		
@@ -724,7 +722,7 @@ public class WcApplication implements Wc {
 	        
 	        noCharsStdin = line.length();
 	        noWordsStdin = line.split("\\s+").length; 
-	        noNewLines = line.length() - line.replace(System.getProperty("line.separator"), "").length(); 
+	        noNewLines = line.length() - line.replace("\n", "").length(); 
 			noNewlinesStdin = noNewLines;
 		}
 		
