@@ -33,7 +33,7 @@ public class HeadApplicationTest {
 			"8" + LINE_SEPARATOR +
 			"9" + LINE_SEPARATOR +
 			"10" + LINE_SEPARATOR +
-			"11" + LINE_SEPARATOR;
+			"11";
 
 	private final static String TEST_STRING_10_LINES= "1" +  LINE_SEPARATOR +
 			"2" + LINE_SEPARATOR +
@@ -44,7 +44,7 @@ public class HeadApplicationTest {
 			"7" + LINE_SEPARATOR +
 			"8" + LINE_SEPARATOR +
 			"9" + LINE_SEPARATOR +
-			"10" + LINE_SEPARATOR;
+			"10";
 	/**
 	 * @throws java.lang.Exception
 	 */

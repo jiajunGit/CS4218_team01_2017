@@ -365,7 +365,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 
 	@Test
@@ -385,7 +385,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -405,7 +405,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}	
 
 	@Test
@@ -425,7 +425,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -445,7 +445,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -465,7 +465,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -485,7 +485,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -505,7 +505,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -525,7 +525,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -545,7 +545,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 
 	@Test
@@ -565,7 +565,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}	
 	
 	@Test
@@ -585,7 +585,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -605,7 +605,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -625,7 +625,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -645,7 +645,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -665,7 +665,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -685,7 +685,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -705,7 +705,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 	
 	@Test
@@ -725,7 +725,7 @@ public class SortApplicationTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 
 	@Test
@@ -754,7 +754,7 @@ public class SortApplicationTest {
 
 		sort.run(args, is, System.out);
 
-		assertEquals(expectedOutput+LINE_SEPARATOR, out.toString());
+		assertEquals(expectedOutput, out.toString());
 	}
 
 }

@@ -32,7 +32,7 @@ public class TailApplicationTest {
 			"8" + LINE_SEPARATOR +
 			"9" + LINE_SEPARATOR +
 			"10" + LINE_SEPARATOR +
-			"11" + LINE_SEPARATOR;
+			"11";
 
 	private final static String TESTSTRING10LINES= "2" + LINE_SEPARATOR +
 			"3" + LINE_SEPARATOR +
@@ -43,7 +43,7 @@ public class TailApplicationTest {
 			"8" + LINE_SEPARATOR +
 			"9" + LINE_SEPARATOR +
 			"10"+ LINE_SEPARATOR +
-			"11"+ LINE_SEPARATOR;
+			"11";
 
 	/**
 	 * @throws java.lang.Exception

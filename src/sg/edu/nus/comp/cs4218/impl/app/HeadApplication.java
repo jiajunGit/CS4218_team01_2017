@@ -144,7 +144,7 @@ public class HeadApplication implements Head {
 			if(noLines == i)
 				break;
 			stdout.write(lines[i].getBytes());
-			if(i!=lines.length-1){
+			if(i!=lines.length-1 && i != noLines - 1){
 				stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		}
