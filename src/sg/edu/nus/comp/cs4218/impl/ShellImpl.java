@@ -935,7 +935,12 @@ public class ShellImpl implements Shell {
                     break;
                     
                 case Symbol.BACK_QUOTE:
-                    throw new ShellException(EXP_SYNTAX);
+                    if(quoteStack.isEmpty()){
+                        throw new ShellException(EXP_SYNTAX);
+                    }else{
+                        symbols.append(Symbol.UNRELATED);
+                    }
+                    break;
                     
                 case Symbol.SPACE:
                 case Symbol.TAB:
@@ -1135,7 +1140,12 @@ public class ShellImpl implements Shell {
                     break;
                     
                 case Symbol.DOUBLE_QUOTE:
-                    throw new ShellException(EXP_SYNTAX);
+                    if(quoteStack.isEmpty()){
+                        throw new ShellException(EXP_SYNTAX);
+                    } else{
+                        symbols.append(Symbol.UNRELATED);
+                    }
+                    break;
                     
                 case Symbol.SPACE:
                 case Symbol.TAB:
