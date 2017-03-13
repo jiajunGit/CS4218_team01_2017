@@ -42,7 +42,12 @@ public class WcApplication implements Wc {
 			throw new WcException("stdout invalid");
 		}
 		
+		if(args==null){
+			throw new WcException("null args");
+		}
+		
 		fileNames = new Vector<String>();
+		toDisplay = new Vector<String>();
 		String result = new String();
 		
 		int currArg = 0;
@@ -73,9 +78,25 @@ public class WcApplication implements Wc {
 			result = loadFromFiles(combinedNames);
 		}
 		
+		
 		try {
-			stdout.write(result.getBytes());
-			stdout.flush();
+			String[] resultArray = result.split(System.getProperty("line.separator"));
+			for(int resIndex = 0; resIndex<resultArray.length; resIndex++){
+				if(resultArray[resIndex].equals("Invalid File")){
+					throw new WcException("Invalid File");
+				}
+				if(resIndex != resultArray.length -1){
+					stdout.write((resultArray[resIndex]+System.getProperty("line.separator")).getBytes());
+					stdout.flush();
+				}
+				
+				if(resIndex == resultArray.length -1){
+					stdout.write(resultArray[resIndex].getBytes());
+					stdout.flush();
+				}
+				
+			}
+
 		} catch (IOException e) {
 			throw new WcException("Cannot write to stdout");
 		}
@@ -188,22 +209,56 @@ public class WcApplication implements Wc {
 		int spaces = 8;
 		
 		if(!displayIsPrimed){
-			primeDisplay(argsArr.length - 2);
-			displayIsPrimed = true;
-		}
-		
-		for(int startIndex = 2; startIndex < argsArr.length; startIndex++){
-			try {
-				tempChar = getNoCharsInFile(argsArr[startIndex]);
-				if(String.valueOf(tempChar).length() >= 8){
-					spaces = String.valueOf(tempChar).length() + 1;
-				}
-				noChars.add(tempChar);
-				
-			} catch (WcException e) {
-				return "Invalid File";
+			if(argsArr[1].charAt(0)=='-'){
+				primeDisplay(argsArr.length - 2);
+				displayIsPrimed = true;
+			}
+			if(argsArr[1].charAt(0)!='-'){
+				primeDisplay(argsArr.length - 1);
+				displayIsPrimed = true;
 			}
 		}
+		
+		
+		if(fileNames!=null){
+			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+				try {
+					tempChar = getNoCharsInFile(fileNames.get(startIndex));
+					if(String.valueOf(tempChar).length() >= 8){
+						spaces = String.valueOf(tempChar).length() + 1;
+					}
+					noChars.add(tempChar);
+					
+				} catch (WcException e) {
+					return "Invalid File";
+				}
+			}
+		}
+		
+		if(fileNames == null){
+			int startIndex = 2;
+			if(argsArr[1].charAt(0) == '-'){
+				startIndex = 2;
+			}
+	
+			if(argsArr[1].charAt(0) != '-'){
+				startIndex = 1;
+			}
+			
+			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+				try {
+					tempChar = getNoCharsInFile(argsArr[startIndex]);
+					if(String.valueOf(tempChar).length() >= 8){
+						spaces = String.valueOf(tempChar).length() + 1;
+					}
+					noChars.add(tempChar);
+					
+				} catch (WcException e) {
+					return "Invalid File";
+				}
+			}
+		}
+		
 		
 		for (int toAdd = 0; toAdd < noChars.size() ; toAdd++){
 			addToDisplay(toAdd, noChars.get(toAdd), spaces);
@@ -279,17 +334,43 @@ public class WcApplication implements Wc {
 			displayIsPrimed = true;
 		}
 		
-		for(int startIndex = 2; startIndex < argsArr.length; startIndex++){
-			try {
-				tempWord = getNoWordsInFile(argsArr[startIndex]);
-				if(String.valueOf(tempWord).length() >= 8){
-					spaces = String.valueOf(tempWord).length() + 1;
-				}
-				noWords.add(tempWord);
-				
-			} catch (WcException e) {
-				return "Invalid File";
+		if(fileNames == null){
+			int startIndex = 2;
+			if(argsArr[1].charAt(0) == '-'){
+				startIndex = 2;
 			}
+	
+			if(argsArr[1].charAt(0) != '-'){
+				startIndex = 1;
+			}
+			
+			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+				try {
+					tempWord = getNoWordsInFile(argsArr[startIndex]);
+					if(String.valueOf(tempWord).length() >= 8){
+						spaces = String.valueOf(tempWord).length() + 1;
+					}
+					noWords.add(tempWord);
+					
+				} catch (WcException e) {
+					return "Invalid File";
+				}
+			}
+		}
+		
+		if(fileNames != null){
+			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+				try {
+					tempWord = getNoWordsInFile(fileNames.get(startIndex));
+					if(String.valueOf(tempWord).length() >= 8){
+						spaces = String.valueOf(tempWord).length() + 1;
+					}
+					noWords.add(tempWord);
+					
+				} catch (WcException e) {
+					return "Invalid File";
+				}
+			}			
 		}
 		
 		for (int toAdd = 0; toAdd < noWords.size() ; toAdd++){
@@ -337,16 +418,41 @@ public class WcApplication implements Wc {
 			displayIsPrimed = true;
 		}
 		
-		for(int startIndex = 2; startIndex < argsArr.length; startIndex++){
-			try {
-				tempNewLine = getNoNewlineInFile(argsArr[startIndex]);
-				if(String.valueOf(tempNewLine).length() >= 8){
-					spaces = String.valueOf(tempNewLine).length() + 1;
+		if(fileNames == null){
+			int startIndex = 2;
+			if(argsArr[1].charAt(0) == '-'){
+				startIndex = 2;
+			}
+	
+			if(argsArr[1].charAt(0) != '-'){
+				startIndex = 1;
+			}
+			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+				try {
+					tempNewLine = getNoNewlineInFile(argsArr[startIndex]);
+					if(String.valueOf(tempNewLine).length() >= 8){
+						spaces = String.valueOf(tempNewLine).length() + 1;
+					}
+					noNewline.add(tempNewLine);
+					
+				} catch (WcException e) {
+					return "Invalid File";
 				}
-				noNewline.add(tempNewLine);
-				
-			} catch (WcException e) {
-				return "Invalid File";
+			}
+		}
+		
+		if (fileNames != null){
+			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+				try {
+					tempNewLine = getNoNewlineInFile(fileNames.get(startIndex));
+					if(String.valueOf(tempNewLine).length() >= 8){
+						spaces = String.valueOf(tempNewLine).length() + 1;
+					}
+					noNewline.add(tempNewLine);
+					
+				} catch (WcException e) {
+					return "Invalid File";
+				}
 			}
 		}
 		
