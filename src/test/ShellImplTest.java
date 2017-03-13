@@ -73,7 +73,7 @@ public class ShellImplTest {
 	@Test
 	public void redirectInputWithNoFile(){
 		ShellImpl shell = new ShellImpl();
-		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectInputWithNoFile("cat < "));
+		Assert.assertEquals("cat: Null Pointer Exception", shell.redirectInputWithNoFile("cat < "));
 
 	}
 
@@ -81,7 +81,7 @@ public class ShellImplTest {
 	public void redirectOutputWithNoFile(){
 		ShellImpl shell = new ShellImpl();
 
-		Assert.assertEquals("shell: " +sg.edu.nus.comp.cs4218.Shell.EXP_SYNTAX, shell.redirectOutputWithNoFile("cat > "));
+		Assert.assertEquals("cat: Null Pointer Exception", shell.redirectOutputWithNoFile("cat > "));
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class ShellImplTest {
 	public void testRedirInputBeforeCat(){
 		ShellImpl shell = new ShellImpl();
 		try {
-			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput")));
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput"))) + LINE_SEPARATOR;
 			Assert.assertEquals(expectedOutput, shell.redirectInput("< " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirInput" + " cat"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -163,7 +163,7 @@ public class ShellImplTest {
 	public void testRedirInputCat(){
 		ShellImpl shell = new ShellImpl();
 		try {
-			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput")));
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput"))) + LINE_SEPARATOR;
 			Assert.assertEquals(expectedOutput, shell.redirectInput("cat < " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirInput"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -246,7 +246,7 @@ public class ShellImplTest {
 			shell.parseAndEvaluate("sort -n < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
-			Assert.assertEquals(expectedOutput+LINE_SEPARATOR, actualOutput);
+			Assert.assertEquals(expectedOutput, actualOutput);
 			
 			File nowExists = new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut");
 
@@ -305,7 +305,7 @@ public class ShellImplTest {
 	public void testRedirectInputOutputPwd(){
 		ShellImpl shell = new ShellImpl();
 		try {
-			String expectedOutput = Environment.currentDirectory + LINE_SEPARATOR;
+			String expectedOutput = Environment.currentDirectory;
 			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "pwdOut";
 			shell.parseAndEvaluate("pwd > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
