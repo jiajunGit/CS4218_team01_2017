@@ -1,18 +1,15 @@
 package test;
 
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
 
 public class CallCommandTest {
@@ -30,22 +27,31 @@ public class CallCommandTest {
 	
 	@Test(expected=ShellException.class)
 	public void testCallCommand() throws AbstractApplicationException, ShellException {
-		CallCommand call = new CallCommand("\"echo\"");
-		call.parse();
+	    
+	    String input = "\"echo\"";
+	    String inputSymbols = ShellImpl.generateSymbolString(input);
+	    
+		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
 	
 	@Test(expected=ShellException.class)
 	public void testCallCommandNull() throws AbstractApplicationException, ShellException {
-		CallCommand call = new CallCommand(null);
-		call.parse();
+	    
+	    String input = null;
+        String inputSymbols = ShellImpl.generateSymbolString(input);
+	    
+		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
 
 	@Test
 	public void testCallCommandArg1() throws AbstractApplicationException, ShellException{
-		CallCommand call = new CallCommand("echo 'black cat'");
-		call.parse();
+	    
+	    String input = "echo 'black cat'";
+        String inputSymbols = ShellImpl.generateSymbolString(input);
+	    
+		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
 	
