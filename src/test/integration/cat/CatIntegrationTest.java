@@ -147,4 +147,16 @@ public class CatIntegrationTest {
 		String actual = shell.parseAndEvaluate(command);
 		assertEquals(expected, actual);		
 	}
+	
+	@Test
+	public void testIntegrateGrep() throws AbstractApplicationException, ShellException{
+		String command = "cat " + RELATIVE_RICK2 + " | grep you";
+		String expected = "Never gonna give you up" + LINE_SEPARATOR 
+				+ "Never gonna let you down" + LINE_SEPARATOR
+				+ "Never gonna run around and desert you" + LINE_SEPARATOR
+				+ "Never gonna make you cry" + LINE_SEPARATOR
+				+ "Never gonna tell a lie and hurt you"+ LINE_SEPARATOR ;
+		String actual = shell.parseAndEvaluate(command);
+		assertEquals(expected, actual);		
+	}
 }
