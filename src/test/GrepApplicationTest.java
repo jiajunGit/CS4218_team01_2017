@@ -480,7 +480,7 @@ public class GrepApplicationTest {
                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "2.txt: seom  some" + Symbol.NEW_LINE_S +
                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: some day" + Symbol.NEW_LINE_S +
                          absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt:     somsome some\t" + Symbol.NEW_LINE_S +
-                         absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some";
+                         absTestDirPath + Symbol.PATH_SEPARATOR_S + "3.txt: seom  some" + Symbol.NEW_LINE_S;
         
         String command = "grep " + pattern + " \"" + filePathOne + "\"" + " \"" + filePathTwo + "\"" + " \"" + filePathThree + "\"";
         
@@ -541,7 +541,7 @@ public class GrepApplicationTest {
 	    String command = "grep " + pattern + " \"" + filePath + "\"";
 	    
 	    String expected = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
-                + Symbol.TAB + Symbol.NEW_LINE_S + "seom  some";
+                          + Symbol.TAB + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
 	    
 	    String output = grep.grepFromOneFile(command);
 	    
@@ -600,7 +600,7 @@ public class GrepApplicationTest {
         String command = "grep " + pattern + " <" + filePath;
         
         String expected = "some day" + Symbol.NEW_LINE_S + "    somsome some" 
-                + Symbol.TAB + Symbol.NEW_LINE_S + "seom  some";
+                + Symbol.TAB + Symbol.NEW_LINE_S + "seom  some" + Symbol.NEW_LINE_S;
         
         String output = grep.grepFromStdin(command);
         
