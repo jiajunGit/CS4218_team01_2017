@@ -319,8 +319,7 @@ public class CallCommand implements Command {
                     } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
                         quoteStack.push(currentChar);
                         symbols.append(Symbol.UNRELATED);
-                    }
-                    else{
+                    } else{
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
@@ -328,7 +327,17 @@ public class CallCommand implements Command {
                 case Symbol.BACK_QUOTE:
                     if(quoteStack.isEmpty()){
                         throw new ShellException(EXP_SYNTAX);
-                    }else{
+                    } else if( quoteStack.peek() == Symbol.BACK_QUOTE ){
+                        quoteStack.pop();
+                        if(quoteStack.isEmpty()){
+                            throw new ShellException(EXP_SYNTAX);
+                        }else{
+                            symbols.append(Symbol.UNRELATED);
+                        }
+                    } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
+                        quoteStack.push(currentChar);
+                        symbols.append(Symbol.UNRELATED);
+                    } else{
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
@@ -545,8 +554,7 @@ public class CallCommand implements Command {
                     } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
                         quoteStack.push(currentChar);
                         symbols.append(Symbol.UNRELATED);
-                    }
-                    else{
+                    } else{
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
@@ -554,6 +562,16 @@ public class CallCommand implements Command {
                 case Symbol.DOUBLE_QUOTE:
                     if( quoteStack.isEmpty() ){
                         throw new ShellException(EXP_SYNTAX);
+                    } else if( quoteStack.peek() == Symbol.DOUBLE_QUOTE ) {
+                        quoteStack.pop();
+                        if(quoteStack.isEmpty()){
+                            throw new ShellException(EXP_SYNTAX);
+                        } else{
+                            symbols.append(Symbol.UNRELATED);
+                        }
+                    } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
+                        quoteStack.push(currentChar);
+                        symbols.append(Symbol.UNRELATED);
                     } else {
                         symbols.append(Symbol.UNRELATED);
                     }

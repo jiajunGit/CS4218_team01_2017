@@ -937,7 +937,17 @@ public class ShellImpl implements Shell {
                 case Symbol.BACK_QUOTE:
                     if(quoteStack.isEmpty()){
                         throw new ShellException(EXP_SYNTAX);
-                    }else{
+                    } else if( quoteStack.peek() == Symbol.BACK_QUOTE ){
+                        quoteStack.pop();
+                        if(quoteStack.isEmpty()){
+                            throw new ShellException(EXP_SYNTAX);
+                        }else{
+                            symbols.append(Symbol.UNRELATED);
+                        }
+                    } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
+                        quoteStack.push(currentChar);
+                        symbols.append(Symbol.UNRELATED);
+                    } else{
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
@@ -1140,9 +1150,19 @@ public class ShellImpl implements Shell {
                     break;
                     
                 case Symbol.DOUBLE_QUOTE:
-                    if(quoteStack.isEmpty()){
+                    if( quoteStack.isEmpty() ){
                         throw new ShellException(EXP_SYNTAX);
-                    } else{
+                    } else if( quoteStack.peek() == Symbol.DOUBLE_QUOTE ) {
+                        quoteStack.pop();
+                        if(quoteStack.isEmpty()){
+                            throw new ShellException(EXP_SYNTAX);
+                        } else{
+                            symbols.append(Symbol.UNRELATED);
+                        }
+                    } else if( quoteStack.peek() != Symbol.SINGLE_QUOTE ) {
+                        quoteStack.push(currentChar);
+                        symbols.append(Symbol.UNRELATED);
+                    } else {
                         symbols.append(Symbol.UNRELATED);
                     }
                     break;
