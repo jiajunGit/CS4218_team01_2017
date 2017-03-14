@@ -140,7 +140,7 @@ public class HeadIntegrationTest {
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("head -n 1 " + RELATIVE_DIR + "10headlines | wc -w");
-		String expectedOut = "1" + LINE_SEPARATOR;
+		String expectedOut = "       1" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 

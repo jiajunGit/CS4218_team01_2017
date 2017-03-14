@@ -39,21 +39,21 @@ public class WcIntegrationTest {
 	@Test
 	public void testIntegrateHead() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("wc -m " + RELATIVE_DIR + "wcIntegrate | head");
-		String expected = "       29" + LINE_SEPARATOR;
+		String expected = "      29" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 	
 	@Test
 	public void testIntegrateTail() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("wc -m " + RELATIVE_DIR + "wcIntegrate | tail");
-		String expected = "       29" + LINE_SEPARATOR;
+		String expected = "      29" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 	
 	@Test
 	public void testIntegrateEcho() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("wc `echo '-l'` " + RELATIVE_DIR + "wcIntegrate | tail");
-		String expected = "       3" + LINE_SEPARATOR;
+		String expected = "       2" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 	
@@ -96,7 +96,7 @@ public class WcIntegrationTest {
 	@Test
 	public void testIntegrateSortCat() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("wc " + RELATIVE_DIR + "wcIntegrate > " + RELATIVE_DIR + "wcResults ; cat " + RELATIVE_DIR + "* | sort" );
-		String expected = "      29       6       4"  + LINE_SEPARATOR + "many wc" + LINE_SEPARATOR + "wc wc" + LINE_SEPARATOR + "wc:wc count";
+		String expected = "      29       6       2"  + LINE_SEPARATOR + "many wc" + LINE_SEPARATOR + "wc wc" + LINE_SEPARATOR + "wc:wc count";
 		
 		File file = new File(RELATIVE_DIR + "wcResults");
 		if (file.exists()){

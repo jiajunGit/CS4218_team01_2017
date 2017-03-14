@@ -75,7 +75,7 @@ public class SedIntegrationTest {
 		String output = shell.parseAndEvaluate("sed s/sub/many/ " + RELATIVE_DIR + "sedIntegration > " + RELATIVE_DIR
 				+ "sedIntegration2.txt ; cat " + RELATIVE_DIR + "*");
 		String expected = "sub sub string" + LINE_SEPARATOR + "replacement substring" + LINE_SEPARATOR + "substitution"
-				+ LINE_SEPARATOR + "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR
+				+ "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR
 				+ "manystitution" + LINE_SEPARATOR;
 
 		File file = new File(RELATIVE_DIR + "sedIntegration2.txt");
@@ -124,7 +124,7 @@ public class SedIntegrationTest {
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("sed s/sub/sub/ " + RELATIVE_DIR + "sedIntegration | wc -lw");
-		String expected = "6 3" + LINE_SEPARATOR;
+		String expected = "       6       2" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 	
