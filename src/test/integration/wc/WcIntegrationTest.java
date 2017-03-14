@@ -96,7 +96,7 @@ public class WcIntegrationTest {
 	@Test
 	public void testIntegrateSortCat() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("wc " + RELATIVE_DIR + "wcIntegrate > " + RELATIVE_DIR + "wcResults ; cat " + RELATIVE_DIR + "* | sort" );
-		String expected = "      29       6       2"  + LINE_SEPARATOR + "many wc" + LINE_SEPARATOR + "wc wc" + LINE_SEPARATOR + "wc:wc count";
+		String expected = "many wc" + "      29       6       2"+ LINE_SEPARATOR + "wc wc" + LINE_SEPARATOR + "wc:word count" + LINE_SEPARATOR;
 		
 		File file = new File(RELATIVE_DIR + "wcResults");
 		if (file.exists()){
