@@ -657,7 +657,14 @@ public class ShellImpl implements Shell {
                 ((ByteArrayOutputStream) outputStream).toByteArray()) : new ByteArrayInputStream(new byte[0]));
     }
     
-    private InputStream defaultInputStream = null;
+    // TODO
+    // Shell methods
+    
+    private static InputStream defaultInputStream = null;
+    
+    public static InputStream getDefaultInputStream() {
+        return defaultInputStream;
+    }
     
     private static StringBuilder generateSymbols( String cmdline ) throws ShellException {
         
@@ -868,10 +875,6 @@ public class ShellImpl implements Shell {
         }
         
         return firstCmd;
-    }
-    
-    private InputStream getDefaultInputStream() {
-        return defaultInputStream;
     }
     
     private void executeCommands( CallCommand firstCmd, OutputStream stdout ) 

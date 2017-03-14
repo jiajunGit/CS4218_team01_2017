@@ -43,8 +43,6 @@ public class CallCommand implements Command {
     
     private Link prevLink;
     
-    private InputStream defaultInputStream;
-    
     private String appName;
     
     private OutStream streamOut;
@@ -72,8 +70,6 @@ public class CallCommand implements Command {
         prevLink = Link.NONE;
         
         globber = new Globber();
-        
-        defaultInputStream = null;
     }
     
     private InputStream getStdin( InputStream defaultStream ) throws ShellException {
@@ -197,14 +193,6 @@ public class CallCommand implements Command {
     
     public void setLinkToPrevCommand( Link link ) {
         prevLink = link;
-    }
-    
-    private void setDefaultInputStream( InputStream defaultStream ) {
-        defaultInputStream = defaultStream;
-    }
-    
-    private InputStream getDefaultInputStream() {
-        return defaultInputStream;
     }
     
     // TODO
@@ -384,7 +372,7 @@ public class CallCommand implements Command {
     private void executeCommands( CallCommand firstCmd, OutputStream stdout ) 
             throws ShellException, AbstractApplicationException {
         
-        InputStream defaultStdin = getDefaultInputStream();
+        InputStream defaultStdin = ShellImpl.getDefaultInputStream();
         
         CallCommand currentCmd = firstCmd;
         while( currentCmd != null ){
@@ -1090,9 +1078,8 @@ public class CallCommand implements Command {
         }
     }
     
-    private void executeCommandToPipe() throws ShellException, AbstractApplicationException {
+    private void executeCommandToPipe(InputStream stdin) throws ShellException, AbstractApplicationException {
         
-        InputStream defaultInputStream = getDefaultInputStream();
         InputStream inStream = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         
@@ -1100,12 +1087,12 @@ public class CallCommand implements Command {
             
             String appName = getAppName();
             String []args = getArguments();
-            inStream = getStdin(defaultInputStream);
+            inStream = getStdin(stdin);
             ShellImpl.runApp(appName, args, inStream, outStream);
             
         } finally {
             
-            if(inStream != defaultInputStream){
+            if(inStream != stdin){
                 closeInputStream(inStream);
             }
         }
@@ -1118,9 +1105,9 @@ public class CallCommand implements Command {
         }
     }
     
-    private void executeCommandToSeq( OutputStream stdout ) throws ShellException, AbstractApplicationException {
+    private void executeCommandToSeq( InputStream stdin, OutputStream stdout ) 
+            throws ShellException, AbstractApplicationException {
         
-        InputStream defaultInputStream = getDefaultInputStream();
         InputStream inStream = null;
         OutputStream outStream = null;
         
@@ -1128,14 +1115,14 @@ public class CallCommand implements Command {
             
             String appName = getAppName();
             String []args = getArguments();
-            inStream = getStdin(defaultInputStream);
+            inStream = getStdin(stdin);
             outStream = getStdout(stdout);
             ShellImpl.runApp(appName, args, inStream, outStream);
             writeToStdout(outStream, Symbol.NEW_LINE_S);
             
         } finally {
             
-            if(inStream != defaultInputStream){
+            if(inStream != stdin){
                 closeInputStream(inStream);
             }
             if(outStream != stdout){
@@ -1144,16 +1131,15 @@ public class CallCommand implements Command {
         }
     }
     
-    private void executeCommand( OutputStream stdout ) 
+    private void executeCommand( InputStream stdin, OutputStream stdout ) 
             throws ShellException, AbstractApplicationException {
         
         if( nextLink == Link.PIPE ){
-            executeCommandToPipe();
+            executeCommandToPipe(stdin);
         } else if( nextLink == Link.SEQUENCE ) {
-            executeCommandToSeq(stdout);
+            executeCommandToSeq(stdin, stdout);
         } else {
             
-            InputStream defaultInputStream = getDefaultInputStream();
             InputStream inStream = null;
             OutputStream outStream = null;
             
@@ -1161,13 +1147,13 @@ public class CallCommand implements Command {
                 
                 String appName = getAppName();
                 String []args = getArguments();
-                inStream = getStdin(defaultInputStream);
+                inStream = getStdin(stdin);
                 outStream = getStdout(stdout);
                 ShellImpl.runApp(appName, args, inStream, outStream);
                 
             } finally {
                 
-                if(inStream != defaultInputStream){
+                if(inStream != stdin){
                     closeInputStream(inStream);
                 }
                 if(outStream != stdout){
@@ -1199,8 +1185,6 @@ public class CallCommand implements Command {
             throw new ShellException(Shell.EXP_INTERNAL);
         }
         
-        setDefaultInputStream(stdin);
-        
         StringBuilder inputSymbols = new StringBuilder(cmdSymbols);
         StringBuilder input = new StringBuilder(cmdInput);
         
@@ -1213,7 +1197,7 @@ public class CallCommand implements Command {
         
         populateCommand(segments);
         
-        executeCommand(stdout);
+        executeCommand(stdin, stdout);
     }
 
     @Override
