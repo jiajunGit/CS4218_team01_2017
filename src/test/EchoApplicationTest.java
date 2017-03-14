@@ -78,7 +78,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testDoubleArgument() throws EchoException {
 		String[] input = {"INPUT 1"," INPUT2"};
-		String expected = "INPUT 1  INPUT2"+ LINE_SEPARATOR;
+		String expected = "INPUT 1  INPUT2";
 		echo.run(input, System.in, System.out );
 		assertEquals(expected, outContent.toString());
 	}
