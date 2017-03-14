@@ -60,15 +60,15 @@ public class CalIntegrationTest {
         Environment.setDefaultDirectory();
     }
     
-    @Test // TODO
+    @Test
     public void testCalWithWc() throws AbstractApplicationException, ShellException {
         
         String command = "cal -m `echo new years eve > " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out "
-                       + ";head < " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out|wc -l`|wc -w";
+                       + ";cat < " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out|wc -l`|wc -w";
         
         String out = shell.parseAndEvaluate(command);
         
-        String expected = ""; //TODO need to replace this with expected word count from wc
+        String expected = "     463" + NEW_LINE;
         
         assertEquals( out, expected );
     }
