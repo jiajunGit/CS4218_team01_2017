@@ -72,7 +72,7 @@ public class DateIntegrationTest {
 		String CURRENT_DIRECTORY = Environment.currentDirectory;
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
 	}
 	
 	@Test
@@ -105,7 +105,7 @@ public class DateIntegrationTest {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+expectedCalendar, output);
+		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+expectedCalendar+LINE_SEPARATOR, output);
 	}
 	
 	@Test

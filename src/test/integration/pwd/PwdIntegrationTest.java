@@ -51,7 +51,7 @@ public class PwdIntegrationTest {
 		String CURRENT_DIRECTORY_1 = new File(Environment.currentDirectory).getAbsolutePath();
 		String output= shell.parseAndEvaluate("pwd;cd ../;pwd");
 		String CURRENT_DIRECTORY_2 = new File(Environment.currentDirectory).getAbsolutePath();
-		assertEquals(CURRENT_DIRECTORY_1+LINE_SEPARATOR+CURRENT_DIRECTORY_2+LINE_SEPARATOR, output);
+		assertEquals(CURRENT_DIRECTORY_1+LINE_SEPARATOR+LINE_SEPARATOR+CURRENT_DIRECTORY_2+LINE_SEPARATOR, output);
 	}
 	
 	@Test
@@ -99,7 +99,7 @@ public class PwdIntegrationTest {
 			System.out.println(e);
 		}
 		String CURRENT_DIRECTORY = new File(Environment.currentDirectory).getAbsolutePath();
-		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+expectedCalendar, output);
+		assertEquals(CURRENT_DIRECTORY+LINE_SEPARATOR+expectedCalendar+LINE_SEPARATOR, output);
 	}
 	
 	@Test

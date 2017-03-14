@@ -100,7 +100,7 @@ public class SortIntegrationTest {
 	@Test
 	public void testWithCat() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort input/input01>input/test; cat<input/test");
-		assertEquals(expectedOutput01,output);
+		assertEquals(expectedOutput01+LINE_SEPARATOR,output);
 	}
 	
 	@Test
@@ -113,14 +113,14 @@ public class SortIntegrationTest {
 	public void testWithCd() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort input/input01; cd ../; pwd");
 		String CURRENT_DIRECTORY= Environment.currentDirectory;
-		assertEquals(expectedOutput01+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+		assertEquals(expectedOutput01+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
 	}
 	
 	@Test
 	public void testWithCdCmdSub() throws AbstractApplicationException, ShellException {
 		String output=shell.parseAndEvaluate("sort input/input01; cd `echo ../`; pwd");
 		String CURRENT_DIRECTORY= Environment.currentDirectory;
-		assertEquals(expectedOutput01+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+		assertEquals(expectedOutput01+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
 	}
 	
 	@Test
@@ -158,7 +158,7 @@ public class SortIntegrationTest {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		assertEquals(expectedOutput04+expectedCalendar, output);
+		assertEquals(expectedOutput04+expectedCalendar+LINE_SEPARATOR, output);
 	}
 	
 	@Test
