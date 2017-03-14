@@ -474,7 +474,7 @@ public class ShellImplTest {
 			System.out.println(e);
 		}
 
-		assertEquals(expectedOut, outContent.toString());
+		assertEquals(expectedOut + LINE_SEPARATOR, outContent.toString());
 	}
 
 	@Test
