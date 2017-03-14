@@ -63,7 +63,7 @@ public class CalIntegrationTest {
     @Test
     public void testCalWithWc() throws AbstractApplicationException, ShellException {
         
-        String command = "cal -m `echo new years eve > " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out "
+        String command = "cal -m `echo new years eve > " + RELATIVE_TEST_DIRECTORY + "\"`echo`\"" + PATH_SEPARATOR + "out "
                        + ";cat < " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out|wc -l`|wc -w";
         
         String out = shell.parseAndEvaluate(command);
@@ -76,7 +76,7 @@ public class CalIntegrationTest {
     @Test
     public void testCalWithSed() throws AbstractApplicationException, ShellException {
         
-        String command = "cal `head " + RELATIVE_TEST_DIRECTORY + "\"`echo`\"" + PATH_SEPARATOR + "in|sort -n"
+        String command = "cal `head " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in|sort -n"
                        + "|sed ss-42s-ms`|sed sg'19 20'g'51 52'g";
         
         String fileName = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in";
