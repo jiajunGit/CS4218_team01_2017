@@ -378,9 +378,9 @@ public class GlobberTest {
         Environment.setDefaultDirectory();
         
         String[] expected = {
+            absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "New folder",
             absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "file with spaces", 
-            absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "file with spaces.txt", 
-            absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "New folder"
+            absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "file with spaces.txt"
         };
         
         assertEquals( out[0], expected[0] );
@@ -403,13 +403,13 @@ public class GlobberTest {
         String[] expected = {
                 
                 absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
+                + Symbol.PATH_SEPARATOR_S + "New folder",
+                
+                absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
                 + Symbol.PATH_SEPARATOR_S + "file with spaces", 
                 
                 absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
-                + Symbol.PATH_SEPARATOR_S + "file with spaces.txt", 
-                
-                absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
-                + Symbol.PATH_SEPARATOR_S + "New folder"
+                + Symbol.PATH_SEPARATOR_S + "file with spaces.txt"  
         };
         
         assertEquals( out[0], expected[0] );
@@ -434,13 +434,13 @@ public class GlobberTest {
         String[] expected = {
                 
                 absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
+                + Symbol.PATH_SEPARATOR_S + "New folder",
+                
+                absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
                 + Symbol.PATH_SEPARATOR_S + "file with spaces", 
                 
                 absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
-                + Symbol.PATH_SEPARATOR_S + "file with spaces.txt", 
-                
-                absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" 
-                + Symbol.PATH_SEPARATOR_S + "New folder"
+                + Symbol.PATH_SEPARATOR_S + "file with spaces.txt",   
         };
         
         assertEquals( out[0], expected[0] );
