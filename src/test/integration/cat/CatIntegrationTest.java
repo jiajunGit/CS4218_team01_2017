@@ -3,15 +3,20 @@ package test.integration.cat;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
@@ -35,6 +40,32 @@ public class CatIntegrationTest {
 	private static final String RELATIVE_STRANGER1 = RELATIVE_INPUT_DIR + "stranger1";
 	private static final String RELATIVE_FILENAMES = RELATIVE_INPUT_DIR + "filenames";
 
+	@BeforeClass
+	public static void setUpBeforeClass() throws IOException{
+		StringBuilder toWrite = new StringBuilder();
+		toWrite.append(RELATIVE_INPUT_DIR);
+		toWrite.append("rickroll1");
+		toWrite.append(LINE_SEPARATOR);
+		toWrite.append(RELATIVE_INPUT_DIR);
+		toWrite.append("rickroll2");
+		toWrite.append(LINE_SEPARATOR);
+		toWrite.append(RELATIVE_INPUT_DIR);
+		toWrite.append("toto1");
+		toWrite.append(LINE_SEPARATOR);
+		toWrite.append(RELATIVE_INPUT_DIR);
+		toWrite.append("toto2");
+		toWrite.append(LINE_SEPARATOR);
+		toWrite.append(RELATIVE_INPUT_DIR);
+		toWrite.append("stranger1");
+		writeToFile(RELATIVE_FILENAMES, toWrite.toString());
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass(){
+		File toDelete = new File(RELATIVE_FILENAMES);
+		toDelete.delete();
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		shell = new ShellImpl();
@@ -142,8 +173,8 @@ public class CatIntegrationTest {
 	
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException{
-		String command = "cat `cat " + RELATIVE_FILENAMES + "` | wc";
-		String expected = "    1056     212      22" + LINE_SEPARATOR;
+		String command = "cat " + RELATIVE_FILENAMES + " " + RELATIVE_RICK2 + " | wc";
+		String expected = "     376      38       9" + LINE_SEPARATOR;
 		String actual = shell.parseAndEvaluate(command);
 		assertEquals(expected, actual);		
 	}
@@ -158,5 +189,17 @@ public class CatIntegrationTest {
 				+ "Never gonna tell a lie and hurt you"+ LINE_SEPARATOR ;
 		String actual = shell.parseAndEvaluate(command);
 		assertEquals(expected, actual);		
+	}
+
+	public static void writeToFile(String filename, String toWrite) throws IOException {
+		try {
+			BufferedWriter bw = new BufferedWriter
+				    (new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
+			bw.write(toWrite);
+			bw.close();
+		} catch (IOException e) {
+			throw e;
+		}
+		
 	}
 }
