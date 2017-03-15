@@ -67,7 +67,9 @@ public class TailIntegrationTest {
     @Test
     public void testTailWithWc() throws AbstractApplicationException, ShellException {
         
-        String command = "tail -n 9 <" + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in > " + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out; wc -m <" + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out";
+        String command = "tail -n 9 <" + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in > " 
+                         + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out; wc -m <" + ABSOLUTE_TEST_DIRECTORY 
+                         + PATH_SEPARATOR + "out";
         
         String fileContents = "\t12" + NEW_LINE
                 + "  11" + NEW_LINE
@@ -85,7 +87,7 @@ public class TailIntegrationTest {
         
         String out = shell.parseAndEvaluate(command);
         
-        String readContents = getContents(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in");
+        String readContents = getContents(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out");
         int expectedCharCount = readContents.getBytes().length;
         
         String expected = "     " + expectedCharCount + NEW_LINE;
