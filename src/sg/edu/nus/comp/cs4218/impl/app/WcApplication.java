@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.Vector;
 
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Wc;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
@@ -294,8 +295,9 @@ public class WcApplication implements Wc {
 		
 	}
 
-	private int getNoCharsInFile(String string) throws WcException {
+	private int getNoCharsInFile(String fileName) throws WcException {
 		// TODO Auto-generated method stub
+		String string = Environment.getAbsPath(fileName);
 		File toFind = new File(string);
 		int noChars = 0;
 //		try {
@@ -387,8 +389,8 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
-	private int getNoWordsInFile(String string) throws WcException {
-		// TODO Auto-generated method stub
+	private int getNoWordsInFile(String fileName) throws WcException {
+		String string = Environment.getAbsPath(fileName);
 		File toFind = new File(string);
 		int noWords = 0;
 		try {
@@ -470,8 +472,9 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
-	private int getNoNewlineInFile(String string) throws WcException {
+	private int getNoNewlineInFile(String fileName) throws WcException {
 		// TODO Auto-generated method stub
+		String string = Environment.getAbsPath(fileName);
 		File toFind = new File(string);
 		int noNewLines = 0;
 		try {

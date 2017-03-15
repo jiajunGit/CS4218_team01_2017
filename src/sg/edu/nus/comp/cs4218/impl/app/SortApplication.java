@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Vector;
 
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Sort;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
@@ -519,7 +520,8 @@ public class SortApplication implements Sort {
 	 * @param fileName name of file to load lines from 
 	 * @throws SortException if file does not exist
 	 */
-	private void load(String fileName) throws SortException {
+	private void load(String fileNameRelative) throws SortException {
+		String fileName = Environment.getAbsPath(fileNameRelative);
 		File workingFile = new File(fileName);
 		Vector<String> linesVector;
 		
