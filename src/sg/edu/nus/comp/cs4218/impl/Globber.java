@@ -1,6 +1,7 @@
 package sg.edu.nus.comp.cs4218.impl;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,7 +122,9 @@ public class Globber {
         }
         
         if( dirPaths != listReference ){
-            return dirPaths.toArray(new String[dirPaths.size()]);
+            String[] outDirPaths = dirPaths.toArray(new String[dirPaths.size()]);
+            Arrays.sort(outDirPaths);
+            return outDirPaths;
         } else{
             return new String[0];
         }  
