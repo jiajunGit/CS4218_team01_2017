@@ -33,7 +33,7 @@ public class WcApplicationTest {
 	@Test
 	public void testPrintCharacterCountInFile(){
 		WcApplication wcApp = new WcApplication();
-		assertEquals(" 6488666", wcApp.printCharacterCountInFile("wc -m " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals(" 6617123", wcApp.printCharacterCountInFile("wc -m " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class WcApplicationTest {
 	@Test
 	public void testPrintAllCountsInFile(){
 		WcApplication wcApp = new WcApplication();
-		assertEquals(" 6488666 1095695  128457", wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals(" 6617123 1095695  128457", wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 			
 	}
 	
@@ -87,7 +87,7 @@ public class WcApplicationTest {
 		try {
 			WcApplication wcApp = new WcApplication();
 			InputStream stdin = writeToStdin("text1");
-			assertEquals("    3576", wcApp.printCharacterCountInStdin("wc -m", stdin));
+			assertEquals("    3647", wcApp.printCharacterCountInStdin("wc -m", stdin));
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail();
@@ -131,7 +131,7 @@ public class WcApplicationTest {
 		try {
 			WcApplication wcApp = new WcApplication();
 			InputStream stdin = writeToStdin("text1");
-			assertEquals("    3576     592      71", wcApp.printAllCountsInStdin("wc -mwl", stdin));
+			assertEquals("    3647     592      71", wcApp.printAllCountsInStdin("wc -mwl", stdin));
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail();
@@ -147,7 +147,7 @@ public class WcApplicationTest {
 	@Test
 	public void test2Files(){
 		WcApplication wcApp = new WcApplication();
-		String response = "    3576     592      71" + LINE_SEPARATOR + "     306      53      10";
+		String response = "    3647     592      71" + LINE_SEPARATOR + "     316      53      10";
 		assertEquals(response, wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text1 " 
 				+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2" ));
 	}
@@ -155,10 +155,10 @@ public class WcApplicationTest {
 	@Test
 	public void test4Files(){
 		WcApplication wcApp = new WcApplication();
-		String response = " 6488666 1095695  128457" + LINE_SEPARATOR 
-				+ "    3576     592      71" + LINE_SEPARATOR
-				+ "     306      53      10" + LINE_SEPARATOR
-				+ "      99       0      99";
+		String response = " 6617123 1095695  128457" + LINE_SEPARATOR 
+				+ "    3647     592      71" + LINE_SEPARATOR
+				+ "     316      53      10" + LINE_SEPARATOR
+				+ "     198       0      99";
 		assertEquals(response, wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt " 
 				+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text1 "
 				+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2 "
@@ -190,7 +190,7 @@ public class WcApplicationTest {
 		String[] arguments = {"-m", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"}; 
 		try {
 			wcApp.run(arguments, null, System.out);
-			assertEquals("     306", out.toString());
+			assertEquals("     316", out.toString());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 			fail();
@@ -232,7 +232,7 @@ public class WcApplicationTest {
 		String[] arguments = {"-m", "-w", "-l", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"}; 
 		try {
 			wcApp.run(arguments, null, System.out);
-			assertEquals("     306      53      10", out.toString());
+			assertEquals("     316      53      10", out.toString());
 		} catch (AbstractApplicationException e) {
 			e.printStackTrace();
 			fail();
@@ -247,7 +247,7 @@ public class WcApplicationTest {
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
-			assertEquals("      99", out.toString());
+			assertEquals("     198", out.toString());
 		} catch (AbstractApplicationException | IOException e) {
 			e.printStackTrace();
 			fail();
@@ -292,7 +292,7 @@ public class WcApplicationTest {
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
-			assertEquals("      99       0      99", out.toString());
+			assertEquals("     198       0      99", out.toString());
 		} catch (AbstractApplicationException | IOException e) {
 			e.printStackTrace();
 			fail();
