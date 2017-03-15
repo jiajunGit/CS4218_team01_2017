@@ -91,8 +91,11 @@ public class Globber {
                     continue;
                 }
                     
-                PathSymbolType symbolType = getPathSymbolType(segments[i]);
+                boolean isFullWildcards = isAllWildCards(symbolSegments[i]);
                 
+                String regex = generateGlobRegex(segments[i], symbolSegments[i]);
+                FileRegexFilter filter = new FileRegexFilter(regex);
+
                 LinkedList<String> newDirPaths = new LinkedList<String>();
                 for( String dirPath : dirPaths ){
                     
@@ -100,13 +103,30 @@ public class Globber {
                         continue;
                     }
                         
-                    if( symbolType == PathSymbolType.NORMAL ) {
-                        processNormalSymbolType(dirPath, segments[i], symbolSegments[i], newDirPaths);
-                    } else if( symbolType == PathSymbolType.PREVIOUS ) {
-                        processPreviousSymbolType(dirPath, newDirPaths);
-                    } else {
-                        processCurrentSymbolType(dirPath, newDirPaths);
-                    }
+                    File dir = new File(dirPath);
+                    String[] fileNames = dir.list(filter);
+                    
+                    if( fileNames.length > 0 ){
+                        for( String fileName : fileNames ){
+                            String newPath = dirPath;
+                            newPath += Symbol.PATH_SEPARATOR;
+                            newPath += fileName;
+                            if( !Environment.isHidden(newPath) ){
+                                newDirPaths.add(newPath);
+                            }
+                        }
+                    } else if( !isFullWildcards ) {
+                        if( Symbol.CURRENT_DIR_S.matches(regex) ) {
+                            if( !Environment.isHidden(dirPath) ){
+                                newDirPaths.add(dirPath);
+                            }
+                        } else if( Symbol.PREV_DIR_S.matches(regex) ) {
+                            String prevPath = Environment.getAbsPath(dirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S);
+                            if( !prevPath.isEmpty() && !Environment.isHidden(prevPath) ){
+                                newDirPaths.add(prevPath);
+                            }
+                        }
+                    }                    
                 }
                 dirPaths = newDirPaths;
             }
@@ -124,48 +144,13 @@ public class Globber {
         }  
     }
     
-    private void processPreviousSymbolType(String dirPath, List<String> newDirPaths) {
-        String prevPath = Environment.getAbsPath(dirPath + Symbol.PATH_SEPARATOR + Symbol.PREV_DIR_S);
-        if( !prevPath.isEmpty() && !Environment.isHidden(prevPath) ){
-            newDirPaths.add(prevPath);
-        }
-    }
-    
-    private void processCurrentSymbolType(String dirPath, List<String> newDirPaths) {
-        if( !Environment.isHidden(dirPath) ){
-            newDirPaths.add(dirPath);
-        }
-    }
-    
-    private void processNormalSymbolType(String dirPath, String segment, 
-                                         String segmentSymbol, List<String> newDirPaths) {
-        
-        File dir = new File(dirPath);
-        String regex = generateGlobRegex(segment, segmentSymbol);
-        FileRegexFilter filter = new FileRegexFilter(regex);
-        
-        String[] fileNames = dir.list(filter);
-        
-        for( String fileName : fileNames ){
-            
-            String newPath = dirPath;
-            newPath += Symbol.PATH_SEPARATOR;
-            newPath += fileName;
-            
-            if( !Environment.isHidden(newPath) ){
-                newDirPaths.add(newPath);
+    private boolean isAllWildCards(String segmentSymbol){
+        for( int i = 0, length = segmentSymbol.length(); i < length; ++i ){
+            if(segmentSymbol.charAt(i) != Symbol.GLOB_OP){
+                return false;
             }
         }
-    }
-    
-    private PathSymbolType getPathSymbolType( String pathSymbol ) {
-        if(Symbol.CURRENT_DIR_S.equals(pathSymbol)){
-            return PathSymbolType.CURRENT;
-        } else if(Symbol.PREV_DIR_S.equals(pathSymbol)){
-            return PathSymbolType.PREVIOUS;
-        } else {
-            return PathSymbolType.NORMAL;
-        }
+        return true;
     }
     
     private String[] splitSegmentSymbols( String pathToSplit, String pathSymbolToSplit, String regex, int numSegments ) {
