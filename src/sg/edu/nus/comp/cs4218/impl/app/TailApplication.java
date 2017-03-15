@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
+
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Tail;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
@@ -159,7 +161,8 @@ public class TailApplication implements Tail {
 		}
 	}
 
-	private void load(String fileName) throws IOException, TailException {
+	private void load(String fileNameRelative) throws IOException, TailException {
+		String fileName = Environment.getAbsPath(fileNameRelative);
 		File workingFile = new File(fileName);
 		Vector<String> linesVector; 
 

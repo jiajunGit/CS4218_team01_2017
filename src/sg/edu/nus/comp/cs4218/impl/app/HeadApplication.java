@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 import java.util.Vector;
+
+import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.app.Head;
 import sg.edu.nus.comp.cs4218.exception.GrepException;
 import sg.edu.nus.comp.cs4218.exception.HeadException;
@@ -170,7 +172,8 @@ public class HeadApplication implements Head {
 		}
 	}
 
-	private void load(String fileName) throws IOException, HeadException {
+	private void load(String fileNameRelative) throws IOException, HeadException {
+		String fileName = Environment.getAbsPath(fileNameRelative);
 		File workingFile = new File(fileName);
 		if(workingFile.exists()){
 			Vector<String> linesVector; 
