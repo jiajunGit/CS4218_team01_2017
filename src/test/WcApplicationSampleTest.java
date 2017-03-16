@@ -21,8 +21,8 @@ public class WcApplicationSampleTest {
 	private static final String FILE_SEPARATOR = File.separator;
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR + "wc"
-			+ PATH_SEPARATOR + "input" + PATH_SEPARATOR;
+	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
+			+ PATH_SEPARATOR + "wc" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
 	private static final String TEST_FILE_EMPTY = RELATIVE_TEST_DIRECTORY + "empty.txt";
 	private static final String TEST_FILE_SINGLE_WORD = RELATIVE_TEST_DIRECTORY + "singleWord.txt";
 	private static final String TEST_FILE_TITLES = RELATIVE_TEST_DIRECTORY + "titles.txt";
@@ -40,11 +40,11 @@ public class WcApplicationSampleTest {
 		stdin = writeToStdin("");
 		stdout = new ByteArrayOutputStream();
 	}
-	
+
 	static InputStream writeToStdin(String fileName) throws IOException {
 		InputStream stdin = new ByteArrayInputStream(fileName.getBytes());
 		return stdin;
-		
+
 	}
 
 	@Test(expected = WcException.class)
@@ -135,7 +135,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcWithMultipleSingleFlags() throws AbstractApplicationException  {
+	public void testWcWithMultipleSingleFlags() throws AbstractApplicationException {
 		String filePath = TEST_FILE_SINGLE_WORD;
 		String[] args = { "-w", "-m", "-l", filePath };
 		app.run(args, stdin, stdout);
@@ -143,7 +143,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcWithMixFlags() throws AbstractApplicationException  {
+	public void testWcWithMixFlags() throws AbstractApplicationException {
 		String filePath = TEST_FILE_SINGLE_WORD;
 		String[] args = { "-w", "-ml", "-mlw", filePath };
 		app.run(args, stdin, stdout);
@@ -159,7 +159,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcWithDuplicateFlags() throws AbstractApplicationException  {
+	public void testWcWithDuplicateFlags() throws AbstractApplicationException {
 		String filePath = TEST_FILE_SINGLE_WORD;
 		String[] args = { "-wwwww", filePath };
 		app.run(args, stdin, stdout);
@@ -180,7 +180,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test(expected = WcException.class)
-	public void testWcWithOutOfOrderFlag() throws AbstractApplicationException  {
+	public void testWcWithOutOfOrderFlag() throws AbstractApplicationException {
 		String filePath = TEST_FILE_SINGLE_WORD;
 		String[] args = { filePath, "-w" };
 		app.run(args, stdin, stdout);
@@ -194,7 +194,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcWithMultipleFiles() throws AbstractApplicationException  {
+	public void testWcWithMultipleFiles() throws AbstractApplicationException {
 		String[] args = { TEST_FILE_EMPTY, TEST_FILE_SINGLE_WORD, TEST_FILE_TITLES };
 		app.run(args, stdin, stdout);
 		String emptyFileExpected = "       0       0       0" + LINE_SEPARATOR;
@@ -213,7 +213,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcReadFromStdin() throws AbstractApplicationException, IOException  {
+	public void testWcReadFromStdin() throws AbstractApplicationException, IOException {
 		String[] args = {};
 		stdin = writeToStdin("hello world");
 		app.run(args, stdin, stdout);
@@ -222,7 +222,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcReadFromStdinWithFlag() throws AbstractApplicationException , IOException {
+	public void testWcReadFromStdinWithFlag() throws AbstractApplicationException, IOException {
 		String[] args = { "-m" };
 		stdin = writeToStdin("hello world");
 		app.run(args, stdin, stdout);
@@ -231,14 +231,14 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test(expected = WcException.class)
-	public void testWcReadFromStdinWithInvalidFlag() throws AbstractApplicationException, IOException  {
+	public void testWcReadFromStdinWithInvalidFlag() throws AbstractApplicationException, IOException {
 		String[] args = { "-x" };
 		stdin = writeToStdin("hello world");
 		app.run(args, stdin, stdout);
 	}
 
 	@Test
-	public void testWcWithBothStdinAndFile() throws AbstractApplicationException, IOException  {
+	public void testWcWithBothStdinAndFile() throws AbstractApplicationException, IOException {
 		String[] args = { TEST_FILE_SINGLE_WORD };
 		stdin = writeToStdin("not single word");
 		String singleWordFileExpected = "       5       1       0";
@@ -247,7 +247,7 @@ public class WcApplicationSampleTest {
 	}
 
 	@Test
-	public void testWcWithFileNameContainSpace() throws AbstractApplicationException  {
+	public void testWcWithFileNameContainSpace() throws AbstractApplicationException {
 		String[] args = { TEST_FILE_NAME_HAS_SPACE };
 		File testFile = new File(TEST_FILE_NAME_HAS_SPACE);
 		long byteCount = testFile.length();
@@ -310,4 +310,3 @@ public class WcApplicationSampleTest {
 	}
 
 }
-

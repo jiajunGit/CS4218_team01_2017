@@ -14,45 +14,45 @@ import sg.edu.nus.comp.cs4218.impl.cmd.CallCommand;
 
 public class CallCommandTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-	
+
 	@Before
-	public void setUpBeforeTest(){
+	public void setUpBeforeTest() {
 		System.setOut(new PrintStream(outContent));
 	}
-	
+
 	@After
-	public void tearDownAfterTest(){
+	public void tearDownAfterTest() {
 		System.setOut(System.out);
 	}
-	
-	@Test(expected=ShellException.class)
+
+	@Test(expected = ShellException.class)
 	public void testCallCommand() throws AbstractApplicationException, ShellException {
-	    
-	    String input = "\"echo\"";
-	    String inputSymbols = ShellImpl.generateSymbolString(input);
-	    
+
+		String input = "\"echo\"";
+		String inputSymbols = ShellImpl.generateSymbolString(input);
+
 		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
-	
-	@Test(expected=ShellException.class)
+
+	@Test(expected = ShellException.class)
 	public void testCallCommandNull() throws AbstractApplicationException, ShellException {
-	    
-	    String input = null;
-        String inputSymbols = ShellImpl.generateSymbolString(input);
-	    
+
+		String input = null;
+		String inputSymbols = ShellImpl.generateSymbolString(input);
+
 		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
 
 	@Test
-	public void testCallCommandArg1() throws AbstractApplicationException, ShellException{
-	    
-	    String input = "echo 'black cat'";
-        String inputSymbols = ShellImpl.generateSymbolString(input);
-	    
+	public void testCallCommandArg1() throws AbstractApplicationException, ShellException {
+
+		String input = "echo 'black cat'";
+		String inputSymbols = ShellImpl.generateSymbolString(input);
+
 		CallCommand call = new CallCommand(input, inputSymbols);
 		call.evaluate(System.in, outContent);
 	}
-	
+
 }

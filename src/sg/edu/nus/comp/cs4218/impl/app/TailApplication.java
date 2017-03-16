@@ -31,23 +31,19 @@ public class TailApplication implements Tail {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws TailException {
 		try {
-			if( stdout == null ){
+			if (stdout == null) {
 				throw new TailException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			int noLines = 10; //default 10 lines
-			if(args==null || args.length==0){
+			int noLines = 10; // default 10 lines
+			if (args == null || args.length == 0) {
 				loadFromStdIn(stdin);
-			}
-			else if (args.length==1){
+			} else if (args.length == 1) {
 				logicFor1Argument(args, stdin);
-			}
-			else if (args.length==2){
+			} else if (args.length == 2) {
 				noLines = logicFor2Arguments(args, stdin, noLines);
-			}
-			else if (args.length==3){ 
+			} else if (args.length == 3) {
 				noLines = logicFor3Arguments(args, stdin, noLines);
-			}
-			else{
+			} else {
 				throw new TailException(INVALID_FORMAT);
 			}
 			printLines(noLines, stdout);
@@ -59,112 +55,101 @@ public class TailApplication implements Tail {
 	}
 
 	private void logicFor1Argument(String[] args, InputStream stdin) throws TailException, IOException {
-		if(args[0].length()==0){
-			loadFromStdIn(stdin); //stdin 10 lines
-		}
-		else{
-			load(args[0]); //tail [file], tail [option]
+		if (args[0].length() == 0) {
+			loadFromStdIn(stdin); // stdin 10 lines
+		} else {
+			load(args[0]); // tail [file], tail [option]
 		}
 
 	}
 
 	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
-		if(args[0].length()==0){
-			if(args[1].length()==0){
-				loadFromStdIn(stdin); //tail "",""
-			}
-			else{ //tail "",[number]/[file]
+		if (args[0].length() == 0) {
+			if (args[1].length() == 0) {
+				loadFromStdIn(stdin); // tail "",""
+			} else { // tail "",[number]/[file]
 				load(args[1]);
 			}
-		}
-		else if(args[0].equals("-n")){
-			if( isNumeric(args[1]) ){ //tail -n, 10
-				if(args[1].contains("-") || args[1].contains("+")){
+		} else if (args[0].equals("-n")) {
+			if (isNumeric(args[1])) { // tail -n, 10
+				if (args[1].contains("-") || args[1].contains("+")) {
 					throw new TailException(NUMBER_NOT_SPECIFIED);
 				}
-				noLines=Integer.parseInt(args[1]);
+				noLines = Integer.parseInt(args[1]);
 				loadFromStdIn(stdin);
-			}
-			else{
+			} else {
 				throw new TailException(NUMBER_NOT_SPECIFIED);
 			}
-		}
-		else{
-			throw new TailException(INVALID_FORMAT); //tail -nxx file
+		} else {
+			throw new TailException(INVALID_FORMAT); // tail -nxx file
 		}
 		return noLines;
 	}
 
 	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
-		if(args[0].length()==0 && args[1].length()==0){
-			if(args[2].length()==0){ //tail "" "" ""
+		if (args[0].length() == 0 && args[1].length() == 0) {
+			if (args[2].length() == 0) { // tail "" "" ""
 				loadFromStdIn(stdin);
+			} else {
+				load(args[2]); // tail "" "" file
 			}
-			else{
-				load(args[2]); //tail "" "" file
-			}
-		}
-		else if (args[0].equals("-n")){ //tail -n x x
-			if(isNumeric(args[1])){
-				if(args[1].contains("-") || args[1].contains("+")){
+		} else if (args[0].equals("-n")) { // tail -n x x
+			if (isNumeric(args[1])) {
+				if (args[1].contains("-") || args[1].contains("+")) {
 					throw new TailException(NUMBER_NOT_SPECIFIED);
 				}
-				if(args[2].length()==0){ //tail -n 10 ""
-					noLines=Integer.parseInt(args[1]);
+				if (args[2].length() == 0) { // tail -n 10 ""
+					noLines = Integer.parseInt(args[1]);
 					loadFromStdIn(stdin);
-				}
-				else{
-					noLines=Integer.parseInt(args[1]); //tail -n 10 file
+				} else {
+					noLines = Integer.parseInt(args[1]); // tail -n 10 file
 					load(args[2]);
 				}
-			}
-			else{
+			} else {
 				throw new TailException(NUMBER_NOT_SPECIFIED);
 			}
-		}
-		else{
-			throw new TailException(INVALID_FORMAT); //head -xxx 10 file
+		} else {
+			throw new TailException(INVALID_FORMAT); // head -xxx 10 file
 		}
 		return noLines;
 	}
 
-	private void printLines(int noLines, OutputStream stdout ) throws IOException {
+	private void printLines(int noLines, OutputStream stdout) throws IOException {
 		int startIndex = lines.length - noLines;
 		startIndex = startIndex < 0 ? 0 : startIndex;
-		for(int i = startIndex; i<lines.length; i++){
-			//if(noLines == i) <-- do this for head
-			//	break;
+		for (int i = startIndex; i < lines.length; i++) {
+			// if(noLines == i) <-- do this for head
+			// break;
 			stdout.write(lines[i].getBytes());
-			if(i!= lines.length-1){
+			if (i != lines.length - 1) {
 				stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		}
 
 	}
 
-	private void loadFromStdIn(InputStream stdin) throws TailException{
-		if(stdin==null){
+	private void loadFromStdIn(InputStream stdin) throws TailException {
+		if (stdin == null) {
 			throw new TailException(ERROR_EXP_INVALID_INSTREAM);
-		}
-		else{
+		} else {
 			String wholeText = convertStreamToString(stdin);
 			lines = wholeText.split(LINE_SEPARATOR);
 		}
 	}
 
-	private Boolean isNumeric(String s){
-		try{ 
-			int i = Integer.parseInt(s); return true;
-		}
-		catch(NumberFormatException e){ 
-			return false; 
+	private Boolean isNumeric(String s) {
+		try {
+			int i = Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
 		}
 	}
 
 	private void load(String fileNameRelative) throws IOException, TailException {
 		String fileName = Environment.getAbsPath(fileNameRelative);
 		File workingFile = new File(fileName);
-		Vector<String> linesVector; 
+		Vector<String> linesVector;
 
 		if (workingFile.exists()) {
 			linesVector = importFile(fileName);
@@ -173,11 +158,10 @@ public class TailApplication implements Tail {
 		} else {
 			throw new TailException(FILE_NOT_FOUND);
 		}
-	}	
+	}
 
 	private Vector<String> importFile(String fileName) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(
-				fileName));
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
 		Vector<String> linesVector = new Vector<String>();
 
 		try {
@@ -192,7 +176,7 @@ public class TailApplication implements Tail {
 		} finally {
 			bufferedReader.close();
 		}
-	}	
+	}
 
 	static String convertStreamToString(InputStream stdin) throws TailException {
 		int bytesRead = 0;
@@ -210,6 +194,5 @@ public class TailApplication implements Tail {
 		}
 		return content.toString();
 	}
-
 
 }

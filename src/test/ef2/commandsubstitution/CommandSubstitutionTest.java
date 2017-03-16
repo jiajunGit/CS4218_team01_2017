@@ -19,12 +19,14 @@ public class CommandSubstitutionTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final static String PATH_SEPARATOR = File.separator;
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"+ PATH_SEPARATOR + "commandsubstitution"+PATH_SEPARATOR+"input"+PATH_SEPARATOR;
+	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
+			+ PATH_SEPARATOR + "commandsubstitution" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
+
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUpBeforeTest(){
+	public void setUpBeforeTest() {
 		shell = new ShellImpl();
 		System.setOut(new PrintStream(outContent));
 	}
@@ -33,45 +35,45 @@ public class CommandSubstitutionTest {
 	 * @throws java.lang.Exception
 	 */
 	@After
-	public void tearDownAfterTest(){
+	public void tearDownAfterTest() {
 		System.setOut(System.out);
 	}
 
 	@Test
 	public void testBackquoteEcho() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `echo hi`");
-		String expectedOut = "hi"+LINE_SEPARATOR;
+		String expectedOut = "hi" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testBackquoteEchoWithSemiColon() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `echo hello;echo world`");
-		String expectedOut = "hello world"+LINE_SEPARATOR;
+		String expectedOut = "hello world" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testBackquoteEchoWithDoubleQuote() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `echo hello;echo \"echo world*&^%;#@|\"`");
-		String expectedOut = "hello echo world*&^%;#@|"+LINE_SEPARATOR;
+		String expectedOut = "hello echo world*&^%;#@|" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testBackquoteEchoWithSingleQuote() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `echo hello;echo 'echo world *&^%;#@|'`");
-		String expectedOut = "hello echo world *&^%;#@|"+LINE_SEPARATOR;
+		String expectedOut = "hello echo world *&^%;#@|" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testInvalidSubCmd() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitutionWithException("echo `hi`");
 		String expectedOut = "shell: hi: Invalid app.";
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testInvalidSubCmdSyntax() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitutionWithException("echo `hi");
@@ -81,32 +83,32 @@ public class CommandSubstitutionTest {
 
 	@Test
 	public void testBackquoteCat() throws AbstractApplicationException, ShellException {
-		String file = RELATIVE_TEST_DIRECTORY+"test11Lines";
-		String output = shell.performCommandSubstitution("echo `cat "+file+"`");
-		String expectedOut = "1 2 3 4 5 6 7 8 9 10 11"+ LINE_SEPARATOR;
+		String file = RELATIVE_TEST_DIRECTORY + "test11Lines";
+		String output = shell.performCommandSubstitution("echo `cat " + file + "`");
+		String expectedOut = "1 2 3 4 5 6 7 8 9 10 11" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 
 	@Test
 	public void testBackquotePwd() throws AbstractApplicationException, ShellException {
 		String output = shell.performCommandSubstitution("echo `pwd`");
-		String expectedOut = Environment.currentDirectory+LINE_SEPARATOR;
+		String expectedOut = Environment.currentDirectory + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 
 	@Test
 	public void testBackquoteHead() throws AbstractApplicationException, ShellException {
-		String file = RELATIVE_TEST_DIRECTORY+"test11Lines";
-		String output = shell.performCommandSubstitution("echo `head "+file+"`");
-		String expectedOut = "1 2 3 4 5 6 7 8 9 10"+ LINE_SEPARATOR;
+		String file = RELATIVE_TEST_DIRECTORY + "test11Lines";
+		String output = shell.performCommandSubstitution("echo `head " + file + "`");
+		String expectedOut = "1 2 3 4 5 6 7 8 9 10" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testBackquoteTail() throws AbstractApplicationException, ShellException {
-		String file = RELATIVE_TEST_DIRECTORY+"test11Lines";
-		String output = shell.performCommandSubstitution("echo `tail "+file+"`");
-		String expectedOut = "2 3 4 5 6 7 8 9 10 11"+ LINE_SEPARATOR;
+		String file = RELATIVE_TEST_DIRECTORY + "test11Lines";
+		String output = shell.performCommandSubstitution("echo `tail " + file + "`");
+		String expectedOut = "2 3 4 5 6 7 8 9 10 11" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 

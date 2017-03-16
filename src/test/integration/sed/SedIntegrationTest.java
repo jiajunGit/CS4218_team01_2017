@@ -75,16 +75,15 @@ public class SedIntegrationTest {
 		String output = shell.parseAndEvaluate("sed s/sub/many/ " + RELATIVE_DIR + "sedIntegration > " + RELATIVE_DIR
 				+ "sedIntegration2.txt ; cat " + RELATIVE_DIR + "*");
 		String expected = "sub sub string" + LINE_SEPARATOR + "replacement substring" + LINE_SEPARATOR + "substitution"
-				+ "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR
-				+ "manystitution" + LINE_SEPARATOR;
+				+ "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR + "manystitution"
+				+ LINE_SEPARATOR;
 
 		File file = new File(RELATIVE_DIR + "sedIntegration2.txt");
 		if (file.exists()) {
 			file.delete();
 		}
-		
-		assertEquals(expected, output);
 
+		assertEquals(expected, output);
 
 	}
 
@@ -120,19 +119,20 @@ public class SedIntegrationTest {
 		;
 		assertEquals(expected, output);
 	}
-	
+
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("sed s/sub/sub/ " + RELATIVE_DIR + "sedIntegration | wc -lw");
 		String expected = "       6       2" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
-	
+
 	@Test
 	public void testIntegrateSed() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("sed s/sub/sub1/ " + RELATIVE_DIR + "sedIntegration | sed s/sub1/sub2/ | sed s/sub2/sub3/  | sed s/sub3/sub4/");
-		String expected = "sub4 sub string" + LINE_SEPARATOR + "replacement sub4string" + LINE_SEPARATOR + "sub4stitution"
-				+ LINE_SEPARATOR;
+		String output = shell.parseAndEvaluate("sed s/sub/sub1/ " + RELATIVE_DIR
+				+ "sedIntegration | sed s/sub1/sub2/ | sed s/sub2/sub3/  | sed s/sub3/sub4/");
+		String expected = "sub4 sub string" + LINE_SEPARATOR + "replacement sub4string" + LINE_SEPARATOR
+				+ "sub4stitution" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 }

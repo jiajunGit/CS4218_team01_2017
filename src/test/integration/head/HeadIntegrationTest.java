@@ -34,16 +34,17 @@ public class HeadIntegrationTest {
 
 	@Test
 	public void testIntegrateCat() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines > " + RELATIVE_DIR + "headOut.txt" + " ; cat " + RELATIVE_DIR + "headOut.txt");
+		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines > " + RELATIVE_DIR + "headOut.txt"
+				+ " ; cat " + RELATIVE_DIR + "headOut.txt");
 		String expectedOut = "head1" + LINE_SEPARATOR + "head2" + LINE_SEPARATOR + "head3" + LINE_SEPARATOR + "head4"
 				+ LINE_SEPARATOR + "head5" + LINE_SEPARATOR + "head6" + LINE_SEPARATOR + "head7" + LINE_SEPARATOR
 				+ "head8" + LINE_SEPARATOR + "head9" + LINE_SEPARATOR + "head10" + LINE_SEPARATOR;
-		
+
 		File file = new File(RELATIVE_DIR + "headOut.txt");
-		if (file.exists()){
+		if (file.exists()) {
 			file.delete();
 		}
-		
+
 		assertEquals(expectedOut, output);
 
 	}
@@ -122,21 +123,17 @@ public class HeadIntegrationTest {
 				+ "tail8" + LINE_SEPARATOR + "tail9" + LINE_SEPARATOR + "tail10" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testIntegrateCal() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("head -n 1 " + RELATIVE_DIR + "10headlines; cal 3 2017");
-		String expectedOut = "head1" + LINE_SEPARATOR +      
-		"     March 2017     "   + LINE_SEPARATOR +
-		"Su Mo Tu We Th Fr Sa"   + LINE_SEPARATOR +
-		"         1  2  3  4 " + LINE_SEPARATOR +
-		"5  6  7  8  9  10 11" + LINE_SEPARATOR +
-		"12 13 14 15 16 17 18" + LINE_SEPARATOR +
-		"19 20 21 22 23 24 25" + LINE_SEPARATOR +
-		"26 27 28 29 30 31   " + LINE_SEPARATOR;
+		String expectedOut = "head1" + LINE_SEPARATOR + "     March 2017     " + LINE_SEPARATOR + "Su Mo Tu We Th Fr Sa"
+				+ LINE_SEPARATOR + "         1  2  3  4 " + LINE_SEPARATOR + "5  6  7  8  9  10 11" + LINE_SEPARATOR
+				+ "12 13 14 15 16 17 18" + LINE_SEPARATOR + "19 20 21 22 23 24 25" + LINE_SEPARATOR
+				+ "26 27 28 29 30 31   " + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-	
+
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("head -n 1 " + RELATIVE_DIR + "10headlines | wc -w");
