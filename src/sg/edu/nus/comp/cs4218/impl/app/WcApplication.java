@@ -36,6 +36,28 @@ public class WcApplication implements Wc {
 	Vector<String> fileNames;
 	Vector<String> toDisplay = new Vector<String>();
 
+	/**
+	 * Runs the grep application with the specified arguments.
+	 * 
+	 * @param args
+	 *            Array of arguments for the application. Order is option(s) first
+	 *            followed by file(s). No files can be given. If
+	 *            this is the case, then count for stdin
+	 * 
+	 * @param stdin
+	 *            An InputStream. The input for the command is read from this
+	 *            inputStream if no files are specified.
+	 * @param stdout
+	 *            An OutputStream. The output of the command is written to this
+	 *            OutputStream.
+	 * 
+	 * @throws SortException
+	 *             If arguments do not follow assumption expected of args and if. 
+	 *             invalid options are given Also
+	 *             thrown if there are any I/O errors to/from stdin, stdout or
+	 *             file.
+	 * 
+	 */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		// TODO Auto-generated method stub
@@ -102,6 +124,13 @@ public class WcApplication implements Wc {
 		}
 	}
 
+	/**
+	 * Gets the count from the files in the parameter. Files must not contain
+	 * spaces. Files with spaces would already have been handled by app.run(..)
+	 * 
+	 * @param combinedNames the string containing filenames seperated by space
+	 * @return the resultant with formatted counts
+	 */
 	private String loadFromFiles(String combinedNames) {
 		String result = "";
 		if (isAll) {
@@ -130,6 +159,12 @@ public class WcApplication implements Wc {
 		return result;
 	}
 
+	/**
+	 * Gets the count from stdin
+	 * 
+	 * @param stdin the InputStream
+	 * @return the result with formatted counts
+	 */
 	private String loadFromStdIn(InputStream stdin) {
 		String result = "";
 		if (isAll) {
@@ -158,6 +193,12 @@ public class WcApplication implements Wc {
 		return result;
 	}
 
+	
+	/**
+	 * combines the file names from the name list into a string
+	 * 
+	 * @return the string containing gile names
+	 */
 	private String combineFileNames() {
 		// TODO Auto-generated method stub
 		StringBuilder result = new StringBuilder();
@@ -171,6 +212,13 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	
+	/**
+	 * Finds all the options in the string
+	 * 
+	 * @param string the command
+	 * @throws WcException when there is an invalid option
+	 */
 	private void findOps(String string) throws WcException {
 		if (string.length() == 1) {
 			throw new WcException("Invalid Option");
@@ -200,6 +248,14 @@ public class WcApplication implements Wc {
 
 	}
 
+	/* 
+	 * Returns formatted string with  char count according to string parameter command
+	 * 
+	 * args the command to print char. strictly "wc -m filename(s)"
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printCharacterCountInFile(java.lang.String)
+	 */
 	@Override
 	public String printCharacterCountInFile(String args) {
 		String[] argsArr = args.split(" ");
@@ -236,9 +292,6 @@ public class WcApplication implements Wc {
 
 		if (fileNames == null) {
 			int startIndex = 2;
-			if (argsArr[1].charAt(0) == '-') {
-				startIndex = 2;
-			}
 
 			if (argsArr[1].charAt(0) != '-') {
 				startIndex = 1;
@@ -272,6 +325,13 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	/**
+	 * adds the info to formatted string list
+	 * 
+	 * @param fileIndex the index of the file counted
+	 * @param toAdd the count to add
+	 * @param offset the number of spaces allocated for each count
+	 */
 	private void addToDisplay(int fileIndex, Integer toAdd, int offset) {
 		StringBuilder newInfoB = new StringBuilder();
 		newInfoB.append(toDisplay.get(fileIndex));
@@ -284,6 +344,12 @@ public class WcApplication implements Wc {
 		toDisplay.set(fileIndex, newInfoB.toString());
 	}
 
+	
+	/**
+	 * initialize the first i elements of the list of strings to display
+	 * 
+	 * @param i 
+	 */
 	private void primeDisplay(int i) {
 		// TODO Auto-generated method stub
 		for (int index = 0; index < i; index++) {
@@ -292,6 +358,13 @@ public class WcApplication implements Wc {
 
 	}
 
+	/**
+	 * Get the number of chaaceters in a single file
+	 * 
+	 * @param fileName 
+	 * @return the number of characters
+	 * @throws WcException
+	 */
 	private int getNoCharsInFile(String fileName) throws WcException {
 		// TODO Auto-generated method stub
 		String string = Environment.getAbsPath(fileName);
@@ -320,6 +393,15 @@ public class WcApplication implements Wc {
 		return noChars;
 	}
 
+
+	/* 
+	 * Returns formatted string with word count according to string parameter command
+	 * 
+	 * args the command to print word. strictly "wc -w filename(s)"
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printCharacterCountInFile(java.lang.String)
+	 */
 	@Override
 	public String printWordCountInFile(String args) {
 		String[] argsArr = args.split(" ");
@@ -386,6 +468,13 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	/**
+	 * Returns the number of words in the given file
+	 * 
+	 * @param fileName
+	 * @return the number of words in the file fileName
+	 * @throws WcException
+	 */
 	private int getNoWordsInFile(String fileName) throws WcException {
 		String string = Environment.getAbsPath(fileName);
 		File toFind = new File(string);
@@ -404,6 +493,15 @@ public class WcApplication implements Wc {
 		return noWords;
 	}
 
+
+	/* 
+	 * Returns formatted string according to string parameter command
+	 * 
+	 * args the command to print newLines. strictly "wc -l filename(s)"
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printCharacterCountInFile(java.lang.String)
+	 */
 	@Override
 	public String printNewlineCountInFile(String args) {
 		String[] argsArr = args.split(" ");
@@ -469,6 +567,13 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	/**
+	 * Returns the number of newLines in a single filee
+	 * 
+	 * @param fileName
+	 * @return the number of newLines in the file fileName
+	 * @throws WcException
+	 */
 	private int getNoNewlineInFile(String fileName) throws WcException {
 		// TODO Auto-generated method stub
 		String string = Environment.getAbsPath(fileName);
@@ -497,6 +602,16 @@ public class WcApplication implements Wc {
 		return noNewLines;
 	}
 
+	/* 
+	 * See javadoc. returns all the counts in the files in the string args
+	 * 
+	 * String args is an entire command. This command MUST contain ALL mwl options
+	 * in any order. This methods expects args to be this way as it has been 
+	 * filtered by app.run before being called
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printAllCountsInFile(java.lang.String)
+	 */
 	@Override
 	public String printAllCountsInFile(String args) {
 		String[] argsArr = args.split(" ");
@@ -519,6 +634,17 @@ public class WcApplication implements Wc {
 		return printNewlineCountInFile(args);
 	}
 
+	/* 
+	 * Returns the character count in stdin.
+	 * 
+	 * @param args the string command. has to be "wc -m" as it has been filtered by
+	 * 			app.run(..)
+	 * 
+	 * @param stdin the InputStream to be counted
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printCharacterCountInStdin(java.lang.String, java.io.InputStream)
+	 */
 	@Override
 	public String printCharacterCountInStdin(String args, InputStream stdin) {
 		if (stdin == null) {
@@ -554,7 +680,12 @@ public class WcApplication implements Wc {
 
 		return result.toString();
 	}
-
+	
+	
+	/**
+	 * @param stdin the input stream to count
+	 * @return the number of chars in stdin
+	 */
 	private int getNoCharsInStdin(InputStream stdin) {
 		int noChars = 0;
 		// Scanner inFile = new Scanner(stdin);
@@ -594,6 +725,17 @@ public class WcApplication implements Wc {
 		return noChars;
 	}
 
+	/* 
+	 * Returns the word count in stdin.
+	 * 
+	 * @param args the string command. has to be "wc -w" as it has been filtered by
+	 * 			app.run(..)
+	 * 
+	 * @param stdin the InputStream to be counted
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printWordCountInStdin(java.lang.String, java.io.InputStream)
+	 */
 	@Override
 	public String printWordCountInStdin(String args, InputStream stdin) {
 		if (stdin == null) {
@@ -630,6 +772,12 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	/**
+	 * returnt the number of words in std in
+	 * 
+	 * @param stdin
+	 * @return the no of words in stdin
+	 */
 	private int getNoWordsInStdin(InputStream stdin) {
 		int noWords = 0;
 		if (noWordsStdin == -1) {
@@ -662,6 +810,17 @@ public class WcApplication implements Wc {
 		return noWords;
 	}
 
+	/* 
+	 * Returns the newline count in stdin.
+	 * 
+	 * @param args the string command. has to be "wc -l" as it has been filtered by
+	 * 			app.run(..)
+	 * 
+	 * @param stdin the InputStream to be counted
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printNewLineCountInStdin(java.lang.String, java.io.InputStream)
+	 */
 	@Override
 	public String printNewlineCountInStdin(String args, InputStream stdin) {
 		if (stdin == null) {
@@ -698,6 +857,10 @@ public class WcApplication implements Wc {
 		return result.toString();
 	}
 
+	/**
+	 * @param stdin the InputStream to count
+	 * @return the number of newlines in stdin
+	 */
 	private int getNoNewlinesInStdin(InputStream stdin) {
 		int noNewLines = 0;
 		if (noNewlinesStdin == -1) {
@@ -730,6 +893,17 @@ public class WcApplication implements Wc {
 		return noNewLines;
 	}
 
+	/* 
+	 * Returns the character, word and newline count in stdin.
+	 * 
+	 * @param args the string command. has to be "wc -mwl" or "wc" as it has been filtered by
+	 * 			app.run(..)
+	 * 
+	 * @param stdin the InputStream to be counted
+	 * 
+	 * (non-Javadoc)
+	 * @see sg.edu.nus.comp.cs4218.app.Wc#printCharacterCountInStdin(java.lang.String, java.io.InputStream)
+	 */
 	@Override
 	public String printAllCountsInStdin(String args, InputStream stdin) {
 		if (stdin == null) {
