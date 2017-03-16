@@ -3,7 +3,6 @@ package sg.edu.nus.comp.cs4218.impl;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -14,7 +13,15 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.Shell;
 
 /**
- * A class used to expand glob paths. Hidden files are ignored by glob.
+ * A class used to expand glob paths. 
+ * 
+ * Hidden files are ignored by glob.
+ * 
+ * Do NOT support glob with path segments (i.e. . and ..) so syntax like *.
+ * or *.* or .* does not match path segment symbol . (the symbol for representing current directory)
+ * and *.. or ..* or .*. does not match path segment symbol .. (the symbol for representing previous directory).
+ * However, paths like src/./dir (dot means current directory) and src/../dir (dot means previous directory) 
+ * are supported.
  */
 
 public class Globber {
@@ -91,7 +98,7 @@ public class Globber {
                     continue;
                 }
                     
-                boolean isFullWildcards = isAllWildCards(symbolSegments[i]);
+                PathSymbolType pathSymbolType = getpathSymbolType(segments[i]);
                 
                 String regex = generateGlobRegex(segments[i], symbolSegments[i]);
                 FileRegexFilter filter = new FileRegexFilter(regex);
@@ -106,27 +113,29 @@ public class Globber {
                     File dir = new File(dirPath);
                     String[] fileNames = dir.list(filter);
                     
-                    if( fileNames.length > 0 ){
-                        for( String fileName : fileNames ){
-                            String newPath = dirPath;
-                            newPath += Symbol.PATH_SEPARATOR;
-                            newPath += fileName;
-                            if( !Environment.isHidden(newPath) ){
-                                newDirPaths.add(newPath);
-                            }
-                        }
-                    } else if( !isFullWildcards ) {
-                        if( Symbol.CURRENT_DIR_S.matches(regex) ) {
+                    switch(pathSymbolType){
+                        case CURRENT:
                             if( !Environment.isHidden(dirPath) ){
                                 newDirPaths.add(dirPath);
                             }
-                        } else if( Symbol.PREV_DIR_S.matches(regex) ) {
+                            break;
+                        case PREVIOUS:
                             String prevPath = Environment.getAbsPath(dirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S);
                             if( !prevPath.isEmpty() && !Environment.isHidden(prevPath) ){
                                 newDirPaths.add(prevPath);
                             }
-                        }
-                    }                    
+                            break;
+                        default:
+                            for( String fileName : fileNames ){
+                                String newPath = dirPath;
+                                newPath += Symbol.PATH_SEPARATOR;
+                                newPath += fileName;
+                                if( !Environment.isHidden(newPath) ){
+                                    newDirPaths.add(newPath);
+                                }
+                            }
+                            break;
+                    }     
                 }
                 dirPaths = newDirPaths;
             }
@@ -144,13 +153,14 @@ public class Globber {
         }  
     }
     
-    private boolean isAllWildCards(String segmentSymbol){
-        for( int i = 0, length = segmentSymbol.length(); i < length; ++i ){
-            if(segmentSymbol.charAt(i) != Symbol.GLOB_OP){
-                return false;
-            }
+    private PathSymbolType getpathSymbolType( String segment ) {
+        if(Symbol.CURRENT_DIR_S.equals(segment)){
+            return PathSymbolType.CURRENT;
+        } else if(Symbol.PREV_DIR_S.equals(segment)){
+            return PathSymbolType.PREVIOUS;
+        } else {
+            return PathSymbolType.NORMAL;
         }
-        return true;
     }
     
     private String[] splitSegmentSymbols( String pathToSplit, String pathSymbolToSplit, String regex, int numSegments ) {
