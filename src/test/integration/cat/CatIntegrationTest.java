@@ -33,6 +33,7 @@ public class CatIntegrationTest {
 	private static final String RELATIVE_EXP_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration"
 			+ PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "expected" + PATH_SEPARATOR;
 	private static final String ABS_DIR = Environment.currentDirectory + PATH_SEPARATOR;
+	private static final String RELATIVE_FOOBAR = RELATIVE_INPUT_DIR + "foobar";
 	private static final String RELATIVE_RICK1 = RELATIVE_INPUT_DIR + "rickroll1";
 	private static final String RELATIVE_RICK2 = RELATIVE_INPUT_DIR + "rickroll2";
 	private static final String RELATIVE_TOTO1 = RELATIVE_INPUT_DIR + "toto1";
@@ -171,6 +172,19 @@ public class CatIntegrationTest {
 				+ "Never gonna tell a lie and hurt you" + LINE_SEPARATOR;
 		String actual = shell.parseAndEvaluate(command);
 		assertEquals(expected, actual);
+	}
+	
+	@Test 
+	public void testIntegrateMultiple() throws AbstractApplicationException, ShellException{
+		String command = "cd " + RELATIVE_INPUT_DIR + ";    cat `echo \"foobar\"\' \'` `echo \"\"``echo \"foobar\"` `echo \" foobar \"` `echo foobar` | sort | sed suffoourabug";
+		String expected = LINE_SEPARATOR
+				+ "foobarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboo"
+				+ "rabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboo"
+				+ "rabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboo"
+				+ "rabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboorabbarraboof"
+				+ LINE_SEPARATOR;
+		String actual = shell.parseAndEvaluate(command);
+		assertEquals(expected, actual);		
 	}
 
 	public static void writeToFile(String filename, String toWrite) throws IOException {

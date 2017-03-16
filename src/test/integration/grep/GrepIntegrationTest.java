@@ -36,6 +36,7 @@ public class GrepIntegrationTest {
 	private static final String RELATIVE_RICK2 = RELATIVE_INPUT_DIR + "rickroll2";
 	private static final String RELATIVE_TOTO1 = RELATIVE_INPUT_DIR + "toto1";
 	private static final String RELATIVE_TOTO2 = RELATIVE_INPUT_DIR + "toto2";
+	private static final String RELATIVE_CRAWL = RELATIVE_INPUT_DIR + "crawl";
 	private static final String RELATIVE_STRANGER1 = RELATIVE_INPUT_DIR + "stranger1";
 	private static final String RELATIVE_FILENAMES = RELATIVE_INPUT_DIR + "filenames";
 
@@ -175,6 +176,14 @@ public class GrepIntegrationTest {
 		assertEquals(expected, output);
 	}
 
+	@Test
+	public void testIntegrateMultiple() throws AbstractApplicationException, ShellException{
+		String command = "cd " + RELATIVE_INPUT_DIR + ";grep \"`echo \"DEATH STAR\"`\" `echo crawl` | sed s/\" \"//g | wc -m";
+		String expected = LINE_SEPARATOR + "     152" + LINE_SEPARATOR;
+		String output = shell.parseAndEvaluate(command);
+		assertEquals(expected, output);		
+	}
+	
 	public static void writeToFile(String filename, String toWrite) throws IOException {
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));

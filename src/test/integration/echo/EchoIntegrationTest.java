@@ -160,6 +160,14 @@ public class EchoIntegrationTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
+		String command = "echo `wc " + RELATIVE_FILENAMES + "`";
+		String expected = "205 5 4" + LINE_SEPARATOR;
+		String actual = shell.parseAndEvaluate(command);
+		assertEquals(expected, actual);
+	}	
+	
 	public static void writeToFile(String filename, String toWrite) throws IOException {
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
