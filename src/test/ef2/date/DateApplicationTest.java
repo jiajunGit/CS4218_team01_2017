@@ -47,7 +47,13 @@ public class DateApplicationTest {
 	public void testDateWithNullStdinAndStdout() throws DateException {
 		app.run(null, null, null);
 	}
-
+	
+	@Test(expected = DateException.class)
+	public void testDateWithRandomArg() throws DateException {
+		String[] args = {"random stuff"};
+		app.run(args, null, null);
+	}
+	
 	@Test
 	public void testDateWithNullStdin() throws DateException {
 		String message = "date - test with null stdin";

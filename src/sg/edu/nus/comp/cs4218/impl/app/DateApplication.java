@@ -25,7 +25,11 @@ public class DateApplication implements Date {
 			outputStr = printCurrentDate("");
 		} else if (stdin != null) {
 			throw new DateException("Date does not accept stdin");
-		} else {
+		} 
+		else if (!args[0].equals("")){
+			throw new DateException("Date does not take in arguments");
+		}
+		else {
 			outputStr = printCurrentDate(args.toString());
 		}
 
