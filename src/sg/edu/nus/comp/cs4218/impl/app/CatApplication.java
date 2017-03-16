@@ -83,13 +83,8 @@ public class CatApplication implements Application {
 					// }
 					for (int j = 0; j < filePathArray.length; j++) {
 						try {
-							List<String> stringListArray = Files.readAllLines(filePathArray[j]);
-							for (int i = 0; i < stringListArray.size(); i++) {
-								stdout.write(stringListArray.get(i).getBytes());
-								if (i != stringListArray.size() - 1) {
-									stdout.write(LINE_SEPARATOR.getBytes());
-								}
-							}
+							byte[] data=Files.readAllBytes(filePathArray[j]);
+							stdout.write(data);
 						} catch (IOException e) {
 
 							e.printStackTrace();
