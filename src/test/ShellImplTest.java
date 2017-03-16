@@ -418,7 +418,7 @@ public class ShellImplTest {
 																		// `echo
 																		// inner
 																		// quote`"
-		String expectedOut = "hi inner quote "; // extra space because of inner
+		String expectedOut = "hi inner quote"; // extra space because of inner
 												// echo
 		assertEquals(expectedOut, output);
 	}
