@@ -72,7 +72,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testSingleArgument() throws EchoException {
 		String[] input = { "INPUT" };
-		String expected = "INPUT" + LINE_SEPARATOR;
+		String expected = "INPUT";
 		echo.run(input, System.in, System.out);
 		assertEquals(expected, outContent.toString());
 	}
@@ -88,7 +88,7 @@ public class EchoApplicationTest {
 	@Test
 	public void testEmptyArgument() throws EchoException {
 		String[] input = { "" };
-		String expected = LINE_SEPARATOR; // not sure if this is the requirement
+		String expected = ""; // not sure if this is the requirement
 		echo.run(input, System.in, System.out);
 		assertEquals(expected, outContent.toString());
 	}
