@@ -42,6 +42,11 @@ public class DateIntegrationTest {
 		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + "hi" + LINE_SEPARATOR,
 				output);
 	}
+	
+	@Test(expected=ShellException.class)
+	public void testWithEchoException() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("date;;;;echo hi");
+	}
 
 	@Test
 	public void testWithEchoCmdSub() throws AbstractApplicationException, ShellException {
@@ -66,6 +71,11 @@ public class DateIntegrationTest {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
+	}
+	
+	@Test(expected=Exception.class)
+	public void testWithTailException() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("date|tail -m -1000");
 	}
 
 	@Test

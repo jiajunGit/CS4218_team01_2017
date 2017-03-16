@@ -47,6 +47,11 @@ public class PwdIntegrationTest {
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR + currentDir + LINE_SEPARATOR, output);
 	}
+	
+	@Test(expected=ShellException.class)
+	public void testWithEchoCmdSubException() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("pwd ; echo ``");
+	}
 
 	@Test
 	public void testWithCd() throws AbstractApplicationException, ShellException {
@@ -58,10 +63,7 @@ public class PwdIntegrationTest {
 	}
 
 	@Test
-	public void testWithCat() throws AbstractApplicationException, ShellException { // todo:
-																					// globbing
-																					// cat
-																					// input/*
+	public void testWithCat() throws AbstractApplicationException, ShellException {
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		String output = shell.parseAndEvaluate("pwd>input" + PATH_SEPARATOR + "test ; cat input" + PATH_SEPARATOR + "test");
 		assertEquals(currentDir + LINE_SEPARATOR + LINE_SEPARATOR, output);
@@ -93,6 +95,11 @@ public class PwdIntegrationTest {
 		String output = shell.parseAndEvaluate("pwd | tail -n 10");
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR, output);
+	}
+	
+	@Test(expected=ShellException.class)
+	public void testWithTailOptionsExceptions() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("pwd | |tail -n -10");
 	}
 
 	@Test

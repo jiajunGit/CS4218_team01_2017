@@ -64,6 +64,11 @@ public class SortIntegrationTest {
 		String output = shell.parseAndEvaluate("sort `echo input/input01`");
 		assertEquals(EXPECTED_OUTPUT_1, output);
 	}
+	
+	@Test(expected=ShellException.class)
+	public void testWithEchoCmdSubException() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("sort `echo `input/input01``");
+	}
 
 	@Test
 	public void testWithCat() throws AbstractApplicationException, ShellException {
@@ -95,6 +100,11 @@ public class SortIntegrationTest {
 	public void testWithHead() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("sort input/input01 | head -n 10");
 		assertEquals(EXPECTED_OUTPUT_2, output);
+	}
+	
+	@Test (expected=ShellException.class)
+	public void testWithHeadInvalidPipeException() throws AbstractApplicationException, ShellException {
+		String output = shell.parseAndEvaluate("sort input/input01 | head -n 10 |");
 	}
 
 	@Test
