@@ -64,9 +64,9 @@ public class WcIntegrationTest {
 		assertEquals(expected, output);
 	}
 
-	@Test
+	@Test(expected=AbstractApplicationException.class)
 	public void testIntegrateCd() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("wc -w " + RELATIVE_DIR + "wcIntegrate ; pwd");
+		String output = shell.parseAndEvaluate("wc -w " + RELATIVE_DIR + "wcIntegrate ; cd pathThatDoesNotExist");
 		String expected = "       6" + LINE_SEPARATOR + Environment.currentDirectory + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
@@ -81,10 +81,10 @@ public class WcIntegrationTest {
 		assertEquals(expected, output);
 	}
 
-	@Test
+	@Test(expected=AbstractApplicationException.class)
 	public void testIntegrateSed() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("wc -w " + RELATIVE_DIR + "wcIntegrate | sed s/6/six/");
-		String expected = "       six" + LINE_SEPARATOR;
+		String output = shell.parseAndEvaluate("wc -w " + RELATIVE_DIR + "wcIntegrate | sed s/`echo 6`/six/ | sed s/`echo \"'      '\"/`''/ ");
+		String expected = "six" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
 
@@ -105,7 +105,7 @@ public class WcIntegrationTest {
 	@Test
 	public void testIntegrateGrep() throws AbstractApplicationException, ShellException {
 		String output = shell
-				.parseAndEvaluate("wc " + RELATIVE_DIR + "wcIntegrate | grep 'expression that does not exist'");
+				.parseAndEvaluate("wc " + RELATIVE_DIR + "wcIntegrate | grep 'expression that does not exist' | grep 29");
 		String expected = LINE_SEPARATOR;
 
 		assertEquals(expected, output);
