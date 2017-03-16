@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 import org.junit.Test;
 
@@ -97,9 +98,16 @@ public class CalApplicationTest {
 		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
+		String fileLocation = RELATIVE_TEST_DIRECTORY;
+		LocalDate now = LocalDate.now();
+		if (now.getMonthValue() == 4){
+			fileLocation += "aprilMonth";  
+		}
+		else{
+			fileLocation += "currentMonth";
+		}
 		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonth")));
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(fileLocation)));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -115,10 +123,17 @@ public class CalApplicationTest {
 		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
+		String fileLocation = RELATIVE_TEST_DIRECTORY;
+		LocalDate now = LocalDate.now();
+		if (now.getMonthValue() == 4){
+			fileLocation += "aprilMonthMonday";  
+		}
+		else{
+			fileLocation += "currentMonthMonday";
+		}
 		try {
 			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonthMonday")));
+					Files.readAllBytes(Paths.get(fileLocation)));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -246,9 +261,16 @@ public class CalApplicationTest {
 	public void testPrintCal() {
 		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
+		String fileLocation = RELATIVE_TEST_DIRECTORY;
+		LocalDate now = LocalDate.now();
+		if (now.getMonthValue() == 4){
+			fileLocation += "aprilMonth";  
+		}
+		else{
+			fileLocation += "currentMonth";
+		}
 		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonth")));
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(fileLocation)));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
@@ -260,10 +282,17 @@ public class CalApplicationTest {
 	public void testPrintCalWithMondayFirst() {
 		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
+		String fileLocation = RELATIVE_TEST_DIRECTORY;
+		LocalDate now = LocalDate.now();
+		if (now.getMonthValue() == 4){
+			fileLocation += "aprilMonthMonday";  
+		}
+		else{
+			fileLocation += "currentMonthMonday";
+		}
 		try {
 			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonthMonday")));
+					Files.readAllBytes(Paths.get(fileLocation)));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
