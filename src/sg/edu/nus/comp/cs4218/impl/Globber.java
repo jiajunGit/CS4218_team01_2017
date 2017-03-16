@@ -20,7 +20,7 @@ import sg.edu.nus.comp.cs4218.Shell;
  * Do NOT support glob with path segments symbols (i.e. . and ..) so syntax like *.
  * or *.* or .* does not match path segment symbol . (the symbol for representing current directory)
  * and *.. or ..* or .*. or *. or .* does not match path segment symbol .. (the symbol for representing 
- * previous directory). However, paths like src/./dir* (dot means current directory) and src/../dir* (dot 
+ * previous directory). However, paths like src/./dir* (dot means current directory) and src/../dir* (dot dot
  * means previous directory) are supported.
  */
 
