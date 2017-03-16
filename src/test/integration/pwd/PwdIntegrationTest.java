@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class PwdIntegrationTest {
 	@Test
 	public void testWithCd() throws AbstractApplicationException, ShellException {
 		String currentDir1 = new File(Environment.currentDirectory).getAbsolutePath();
-		String output = shell.parseAndEvaluate("pwd;cd ../;pwd");
+		String output = shell.parseAndEvaluate("pwd;cd .." + PATH_SEPARATOR + ";pwd");
 		String currentDir2 = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir1 + LINE_SEPARATOR + LINE_SEPARATOR + currentDir2 + LINE_SEPARATOR,
 				output);
@@ -62,7 +63,7 @@ public class PwdIntegrationTest {
 																					// cat
 																					// input/*
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
-		String output = shell.parseAndEvaluate("pwd>input/test ; cat input/test");
+		String output = shell.parseAndEvaluate("pwd>input" + PATH_SEPARATOR + "test ; cat input" + PATH_SEPARATOR + "test");
 		assertEquals(currentDir + LINE_SEPARATOR, output);
 	}
 
@@ -110,14 +111,16 @@ public class PwdIntegrationTest {
 
 	@Test
 	public void testWithGrep() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("pwd;pwd>input/test; grep / input/test");
+	    String pattern = Pattern.quote(PATH_SEPARATOR);
+		String output = shell.parseAndEvaluate("pwd;pwd>input" + PATH_SEPARATOR + "test; grep " + pattern + " input" + PATH_SEPARATOR + "test");
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR + currentDir + LINE_SEPARATOR, output);
 	}
 
 	@Test
 	public void testWithSort() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("pwd;pwd>input/test; sort input/test");
+		String output = shell.parseAndEvaluate("pwd;pwd>input" + PATH_SEPARATOR + "test; sort input" 
+		                                       + PATH_SEPARATOR + "test");
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR + currentDir + LINE_SEPARATOR, output);
 	}
@@ -134,7 +137,8 @@ public class PwdIntegrationTest {
 
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("pwd;pwd>input/test;sed s/2017/2017abc/ input/test");
+		String output = shell.parseAndEvaluate("pwd;pwd>input" + PATH_SEPARATOR + "test;sed s/2017/2017abc/ input" 
+		                                        + PATH_SEPARATOR + "test");
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR + currentDir + "abc" + LINE_SEPARATOR + LINE_SEPARATOR,
 				output);
@@ -142,7 +146,8 @@ public class PwdIntegrationTest {
 
 	@Test
 	public void testWithWc() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("pwd;pwd>input/test;wc -l input/test");
+		String output = shell.parseAndEvaluate("pwd;pwd>input" + PATH_SEPARATOR + "test;wc -l input" 
+		                                       + PATH_SEPARATOR + "test");
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		assertEquals(currentDir + LINE_SEPARATOR + "       1" + LINE_SEPARATOR, output);
 	}
