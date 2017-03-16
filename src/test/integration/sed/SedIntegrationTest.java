@@ -58,7 +58,7 @@ public class SedIntegrationTest {
 
 	@Test
 	public void testIntegrateHead() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("sed s/sub/many/ " + RELATIVE_DIR + "sedIntegration | head -n 1");
+		String output = shell.parseAndEvaluate("sed s/sub/`echo many`/ " + RELATIVE_DIR + "sedIntegration | head `cat " + RELATIVE_DIR + "parameters`");
 		String expected = "many sub string" + LINE_SEPARATOR;
 		assertEquals(expected, output);
 	}
@@ -74,7 +74,7 @@ public class SedIntegrationTest {
 	public void testIntegrateCat() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("sed s/sub/many/ " + RELATIVE_DIR + "sedIntegration > " + RELATIVE_DIR
 				+ "sedIntegration2.txt ; cat " + RELATIVE_DIR + "*");
-		String expected = "sub sub string" + LINE_SEPARATOR + "replacement substring" + LINE_SEPARATOR + "substitution"
+		String expected = "-n 1sub sub string" + LINE_SEPARATOR + "replacement substring" + LINE_SEPARATOR + "substitution"
 				+ "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR + "manystitution"
 				+ LINE_SEPARATOR;
 

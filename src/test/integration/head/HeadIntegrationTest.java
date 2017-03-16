@@ -68,7 +68,7 @@ public class HeadIntegrationTest {
 
 	@Test(expected = AbstractApplicationException.class)
 	public void testTerminateIntegratePwd() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "1000headlines" + " ; pwd ");
+		shell.parseAndEvaluate("head " + RELATIVE_DIR + "1000headlines" + " ; pwd ");
 	}
 
 	@Test
@@ -90,9 +90,8 @@ public class HeadIntegrationTest {
 
 	@Test
 	public void testIntegrateTail() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines | tail -n 5 ");
-		String expectedOut = "head6" + LINE_SEPARATOR + "head7" + LINE_SEPARATOR + "head8" + LINE_SEPARATOR + "head9"
-				+ LINE_SEPARATOR + "head10" + LINE_SEPARATOR;
+		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines | tail -n 5 | head -n 0");
+		String expectedOut = LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
 
@@ -116,7 +115,7 @@ public class HeadIntegrationTest {
 
 	@Test
 	public void testIntegrateSed() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines* | sed \"s/head/tail/\"");
+		String output = shell.parseAndEvaluate("head " + RELATIVE_DIR + "10headlines* | sed \"s/`cat " + RELATIVE_DIR + "sedRegex" + " `/`echo 'tail'`/\"");
 
 		String expectedOut = "tail1" + LINE_SEPARATOR + "tail2" + LINE_SEPARATOR + "tail3" + LINE_SEPARATOR + "tail4"
 				+ LINE_SEPARATOR + "tail5" + LINE_SEPARATOR + "tail6" + LINE_SEPARATOR + "tail7" + LINE_SEPARATOR
@@ -140,5 +139,9 @@ public class HeadIntegrationTest {
 		String expectedOut = "       1" + LINE_SEPARATOR;
 		assertEquals(expectedOut, output);
 	}
-
+	
+	@Test(expected=AbstractApplicationException.class)
+	public void testIntegrateDate() throws AbstractApplicationException, ShellException {
+		shell.parseAndEvaluate("head -n 1 " + RELATIVE_DIR + "10headlines | date random stuff" );
+	}
 }
