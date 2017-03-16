@@ -22,46 +22,49 @@ public class PwdApplication implements Application {
 
 	public static final String ERROR_EXP_INVALID_OUTSTREAM = "OutputStream not provided";
 	public static final String ERROR_EXP_UNKNOWN_DIR = "Unknown current directory";
-	
+
 	/**
 	 * Runs the pwd application with the specified arguments.
 	 * 
 	 * @param args
 	 *            Array of arguments for this application will be ignored.
 	 * @param stdin
-	 *            An InputStream. The input stream for this application will be ignored.
+	 *            An InputStream. The input stream for this application will be
+	 *            ignored.
 	 * @param stdout
-	 *            An OutputStream. The output of the command is written to this outputStream.
+	 *            An OutputStream. The output of the command is written to this
+	 *            outputStream.
 	 * 
 	 * @throws PwdException
-	 * 			  If current directory is invalid or the output stream specified is invalid.
+	 *             If current directory is invalid or the output stream
+	 *             specified is invalid.
 	 */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws PwdException {
-		
-		if( stdout == null ){
+
+		if (stdout == null) {
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
 		}
-		
-		if( Environment.currentDirectory == null || !isCurrentDirectoryValid() ) {
+
+		if (Environment.currentDirectory == null || !isCurrentDirectoryValid()) {
 			throw new PwdException(ERROR_EXP_UNKNOWN_DIR);
 		}
-		
+
 		try {
 			stdout.write(Environment.currentDirectory.getBytes());
-			//stdout.write(Symbol.NEW_LINE_S.getBytes());
+			// stdout.write(Symbol.NEW_LINE_S.getBytes());
 			stdout.flush();
-		} 
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
 		}
 	}
-	
+
 	/**
-	 * Checks if the current directory referenced by this application is valid or not.
+	 * Checks if the current directory referenced by this application is valid
+	 * or not.
 	 * 
-	 * @return
-	 * 		A boolean value indicating if the current directory referenced by this application is valid or not.
+	 * @return A boolean value indicating if the current directory referenced by
+	 *         this application is valid or not.
 	 */
 	private boolean isCurrentDirectoryValid() {
 		File dir = new File(Environment.currentDirectory);

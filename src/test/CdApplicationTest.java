@@ -29,9 +29,9 @@ public class CdApplicationTest {
 	public void setUpBeforeTest() throws Exception {
 		cdApp = new CdApplication();
 	}
-	
+
 	@After
-	public void tearDownAfterTest(){
+	public void tearDownAfterTest() {
 		Environment.currentDirectory = revertDir;
 	}
 
@@ -74,7 +74,7 @@ public class CdApplicationTest {
 
 		testFile.delete();
 	}
-	
+
 	@Test
 	public void testCdDirectoryRelLocal() throws CdException {
 		String previousPath = Environment.currentDirectory + File.separator + "randomDirectory";
@@ -88,26 +88,26 @@ public class CdApplicationTest {
 
 		testFile.delete();
 	}
-	
-	//Assume that previous directory exists
+
+	// Assume that previous directory exists
 	@Test
 	public void testCdDirectoryRelBack() throws CdException {
 		String previousPath = Environment.currentDirectory;
 		File testFile = new File(previousPath);
 		testFile = new File(testFile.getParent());
-		String[] args = {".."};
+		String[] args = { ".." };
 
 		cdApp.run(args, input, output);
-		
+
 		assertEquals(testFile.getAbsolutePath(), Environment.currentDirectory);
 	}
-	
-	//Assume that previous directory exists
+
+	// Assume that previous directory exists
 	@Test
 	public void testCdDirectoryRelBackDir() throws CdException {
 		String previousPath = Environment.currentDirectory;
 		File testFile = new File(previousPath);
-		testFile = new File(testFile.getParent() + File.separator + "randomDirectory" );
+		testFile = new File(testFile.getParent() + File.separator + "randomDirectory");
 		testFile.mkdir();
 		String[] args = { ".." + File.separator + "randomDirectory" };
 
@@ -117,7 +117,7 @@ public class CdApplicationTest {
 
 		testFile.delete();
 	}
-	
+
 	@Test
 	public void testCdDirectoryAbsolute() throws CdException {
 		String previousPath = Environment.currentDirectory + File.separator + "randomDirectory";

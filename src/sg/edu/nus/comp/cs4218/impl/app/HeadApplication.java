@@ -16,12 +16,12 @@ import sg.edu.nus.comp.cs4218.exception.HeadException;
 
 /**
  * 
- * Description: Print first N lines of the file(or input stream). If there are less than N lines,
- * print existing lines without rising an exception
+ * Description: Print first N lines of the file(or input stream). If there are
+ * less than N lines, print existing lines without rising an exception
  * 
  * head [OPTIONS] [FILE], shell parses args as args{[OPTION],[NUMBER],[FILE]}
- * OPTIONS - "-n 15" means printing 15 lines, print first 10 lines if not specified
- * FILE - the name of the file. If not specified, use stdin
+ * OPTIONS - "-n 15" means printing 15 lines, print first 10 lines if not
+ * specified FILE - the name of the file. If not specified, use stdin
  */
 public class HeadApplication implements Head {
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -40,23 +40,19 @@ public class HeadApplication implements Head {
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws HeadException {
 		try {
-			if( stdout == null ){
+			if (stdout == null) {
 				throw new HeadException(ERROR_EXP_INVALID_OUTSTREAM);
 			}
-			int noLines = 10; //default 10 lines
-			if(args==null || args.length==0){
+			int noLines = 10; // default 10 lines
+			if (args == null || args.length == 0) {
 				loadFromStdIn(stdin);
-			}
-			else if (args.length==1){
+			} else if (args.length == 1) {
 				logicFor1Argument(args, stdin);
-			}
-			else if (args.length==2){
+			} else if (args.length == 2) {
 				noLines = logicFor2Arguments(args, stdin, noLines);
-			}
-			else if (args.length==3){ 
+			} else if (args.length == 3) {
 				noLines = logicFor3Arguments(args, stdin, noLines);
-			}
-			else{
+			} else {
 				throw new HeadException(INVALID_FORMAT);
 			}
 			printLines(noLines, stdout);
@@ -67,107 +63,95 @@ public class HeadApplication implements Head {
 		}
 	}
 
-
-
-
-
 	private void logicFor1Argument(String[] args, InputStream stdin) throws HeadException, IOException {
-		if(args[0].length()==0){
-			loadFromStdIn(stdin); //stdin 10 lines
-		}
-		else{
-			load(args[0]); //head [file], head [option]
+		if (args[0].length() == 0) {
+			loadFromStdIn(stdin); // stdin 10 lines
+		} else {
+			load(args[0]); // head [file], head [option]
 		}
 	}
 
-	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws HeadException, IOException {
-		if(args[0].length()==0){
-			if(args[1].length()==0){
-				loadFromStdIn(stdin); //head "",""
-			}
-			else{ //head "",[number]/[file]
+	private int logicFor2Arguments(String[] args, InputStream stdin, int numLines) throws HeadException, IOException {
+		int noLines = numLines;
+
+		if (args[0].length() == 0) {
+			if (args[1].length() == 0) {
+				loadFromStdIn(stdin); // head "",""
+			} else { // head "",[number]/[file]
 				load(args[1]);
 			}
-		}
-		else if(args[0].equals("-n")){
-			if( isNumeric(args[1]) ){ //head -n, 10
-				if(args[1].contains("-") || args[1].contains("+")){
+		} else if (args[0].equals("-n")) {
+			if (isNumeric(args[1])) { // head -n, 10
+				if (args[1].contains("-") || args[1].contains("+")) {
 					throw new HeadException(NUMBER_NOT_SPECIFIED);
 				}
-				noLines=Integer.parseInt(args[1]);
+				noLines = Integer.parseInt(args[1]);
 				loadFromStdIn(stdin);
-			}
-			else{
+			} else {
 				throw new HeadException(NUMBER_NOT_SPECIFIED);
 			}
-		}
-		else{
-			throw new HeadException(INVALID_FORMAT); //head -nxx file
+		} else {
+			throw new HeadException(INVALID_FORMAT); // head -nxx file
 		}
 		return noLines;
 	}
 
+	private int logicFor3Arguments(String[] args, InputStream stdin, int numLines) throws HeadException, IOException {
+		int noLines = numLines;
 
-	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws HeadException, IOException {
-		if(args[0].length()==0 && args[1].length()==0){
-			if(args[2].length()==0){ //head "" "" ""
+		if (args[0].length() == 0 && args[1].length() == 0) {
+			if (args[2].length() == 0) { // head "" "" ""
 				loadFromStdIn(stdin);
+			} else {
+				load(args[2]); // head "" "" file
 			}
-			else{
-				load(args[2]); //head "" "" file
-			}
-		}
-		else if (args[0].equals("-n")){ //head -n x x
-			if(isNumeric(args[1])){
-				if(args[1].contains("-") || args[1].contains("+")){
+		} else if (args[0].equals("-n")) { // head -n x x
+			if (isNumeric(args[1])) {
+				if (args[1].contains("-") || args[1].contains("+")) {
 					throw new HeadException(NUMBER_NOT_SPECIFIED);
 				}
-				if(args[2].length()==0){ //head -n 10 ""
-					noLines=Integer.parseInt(args[1]);
+				if (args[2].length() == 0) { // head -n 10 ""
+					noLines = Integer.parseInt(args[1]);
 					loadFromStdIn(stdin);
-				}
-				else{
-					noLines=Integer.parseInt(args[1]); //head -n 10 file
+				} else {
+					noLines = Integer.parseInt(args[1]); // head -n 10 file
 					load(args[2]);
 				}
-			}
-			else{
+			} else {
 				throw new HeadException(NUMBER_NOT_SPECIFIED);
 			}
-		}
-		else{
-			throw new HeadException(INVALID_FORMAT); //head -xxx 10 file
+		} else {
+			throw new HeadException(INVALID_FORMAT); // head -xxx 10 file
 		}
 		return noLines;
 	}
 
 	private void printLines(int noLines, OutputStream stdout) throws IOException {
-		for(int i = 0; i<lines.length; i++){
-			if(noLines == i)
+		for (int i = 0; i < lines.length; i++) {
+			if (noLines == i)
 				break;
 			stdout.write(lines[i].getBytes());
-			if(i!=lines.length-1 && i != noLines - 1){
+			if (i != lines.length - 1 && i != noLines - 1) {
 				stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		}
 
 	}
 
-	private Boolean isNumeric(String s){
-		try{ 
-			int i = Integer.parseInt(s); return true;
-		}
-		catch(NumberFormatException e){ 
-			return false; 
+	private Boolean isNumeric(String s) {
+		try {
+			int i = Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
 		}
 	}
 
-	private void loadFromStdIn(InputStream stdin) throws HeadException{
-		if(stdin==null){
+	private void loadFromStdIn(InputStream stdin) throws HeadException {
+		if (stdin == null) {
 			throw new HeadException(ERROR_EXP_INVALID_INSTREAM);
-		}
-		else{
-			String wholeText = convertStreamToString(stdin);	
+		} else {
+			String wholeText = convertStreamToString(stdin);
 			lines = wholeText.split(LINE_SEPARATOR);
 		}
 	}
@@ -175,19 +159,17 @@ public class HeadApplication implements Head {
 	private void load(String fileNameRelative) throws IOException, HeadException {
 		String fileName = Environment.getAbsPath(fileNameRelative);
 		File workingFile = new File(fileName);
-		if(workingFile.exists()){
-			Vector<String> linesVector; 
+		if (workingFile.exists()) {
+			Vector<String> linesVector;
 			linesVector = importFile(fileName);
 			lines = linesVector.toArray(new String[linesVector.size()]);
-		}
-		else{
+		} else {
 			throw new HeadException(FILE_NOT_FOUND);
 		}
 	}
 
 	private Vector<String> importFile(String fileName) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(
-				fileName));
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
 		Vector<String> linesVector = new Vector<String>();
 
 		try {
@@ -202,7 +184,7 @@ public class HeadApplication implements Head {
 		} finally {
 			bufferedReader.close();
 		}
-	}	
+	}
 
 	static String convertStreamToString(InputStream stdin) throws HeadException {
 
@@ -220,6 +202,6 @@ public class HeadApplication implements Head {
 			}
 		}
 		return content.toString();
-	}	
+	}
 
 }

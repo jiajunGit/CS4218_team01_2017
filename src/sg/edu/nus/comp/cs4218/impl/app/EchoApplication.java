@@ -17,6 +17,7 @@ import sg.edu.nus.comp.cs4218.exception.EchoException;
  */
 public class EchoApplication implements Application {
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	/**
 	 * Runs the echo application with the specified arguments.
 	 * 
@@ -31,8 +32,7 @@ public class EchoApplication implements Application {
 	 * @throws EchoException
 	 *             If an I/O exception occurs.
 	 */
-	public void run(String[] args, InputStream stdin, OutputStream stdout)
-			throws EchoException {
+	public void run(String[] args, InputStream stdin, OutputStream stdout) throws EchoException {
 		if (args == null) {
 			throw new EchoException("Null arguments");
 		}
@@ -43,11 +43,12 @@ public class EchoApplication implements Application {
 			if (args.length > 0) {
 				for (int i = 0; i < args.length; i++) {
 					stdout.write(args[i].getBytes());
-				    if(i!=args.length-1){
-				    	stdout.write(" ".getBytes());//elements gets separated by a spacing
-				    }
+					if (i != args.length - 1) {
+						stdout.write(" ".getBytes());// elements gets separated
+														// by a spacing
+					}
 				}
-				//stdout.write(LINE_SEPARATOR.getBytes());
+				// stdout.write(LINE_SEPARATOR.getBytes());
 			}
 		} catch (IOException e) {
 			throw new EchoException("IOException");

@@ -38,106 +38,116 @@ public class DateIntegrationTest {
 	public void testWithEcho() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date;echo hi");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+"hi"+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + "hi" + LINE_SEPARATOR,
+				output);
 	}
-	
+
 	@Test
 	public void testWithEchoCmdSub() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date;echo `date`");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR
+				+ defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithHead() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date|head -n 10");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithTail() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date|tail -n 10");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithCd() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date;cd ../;pwd");
-		String CURRENT_DIRECTORY = Environment.currentDirectory;
+		String currentDir = Environment.currentDirectory;
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + LINE_SEPARATOR
+				+ currentDir + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithPwd() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date;pwd");
-		String CURRENT_DIRECTORY = Environment.currentDirectory;
+		String currentDir = Environment.currentDirectory;
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+CURRENT_DIRECTORY+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + currentDir
+				+ LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithCat() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date>input/test;cat input/test");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithCal() throws AbstractApplicationException, ShellException {
-		String output= shell.parseAndEvaluate("date ;cal");
+		String output = shell.parseAndEvaluate("date ;cal");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar"
-				+ PATH_SEPARATOR;
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		String relativeTestDir = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR;
 		String expectedCalendar = "";
 		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "currentMonth")));
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(relativeTestDir + "currentMonth")));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+expectedCalendar+LINE_SEPARATOR, output);
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + expectedCalendar
+				+ LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
-	public void testWithGrep() throws AbstractApplicationException, ShellException { //todo: test with globbing
+	public void testWithGrep() throws AbstractApplicationException, ShellException { // todo:
+																						// test
+																						// with
+																						// globbing
 		String output = shell.parseAndEvaluate("date>input/test; grep : input/test");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithSort() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date>input/test; sort input/test");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR, output);
 	}
-	
+
 	@Test
 	public void testWithSed() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date>input/test; sed s/2017/2017abc/ input/test");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+"abc"+LINE_SEPARATOR+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + "abc" + LINE_SEPARATOR + LINE_SEPARATOR,
+				output);
 	}
-	
+
 	@Test
 	public void testWithWc() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("date;date>input/test; wc -l input/test");
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		assertEquals(DEFAULT_DATE_FORMAT.format(cal.getTime()).toString()+LINE_SEPARATOR+"       1"+LINE_SEPARATOR,output);
+		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		assertEquals(
+				defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + "       1" + LINE_SEPARATOR,
+				output);
 	}
-	
+
 }

@@ -20,19 +20,19 @@ import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 
 public class PipeTest {
-	
+
 	static ShellImpl shell;
 	static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	final static String LINE_SEPARATOR = System.lineSeparator();
 	final static String PATH_SEPARATOR = File.separator;
-	final static String RELATIVE_TEST_PIPE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR;
-	
-	
+	final static String RELATIVE_TEST_PIPE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
+			+ PATH_SEPARATOR;
+
 	@Before
 	public void setUpBeforeTest() throws Exception {
 		outContent = new ByteArrayOutputStream();
 	}
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		shell = new ShellImpl();
@@ -43,27 +43,30 @@ public class PipeTest {
 	public static void tearDownAfterClass() throws Exception {
 		System.setOut(System.out);
 	}
-	
+
 	@Test
-	public void testFailedPipeException() throws AbstractApplicationException, ShellException{
-		assertEquals("sort:Specify a file which exists", shell.pipeWithException("echo \"hello world\" | sort aFileThatDoesNotExist"));
+	public void testFailedPipeException() throws AbstractApplicationException, ShellException {
+		assertEquals("sort:Specify a file which exists",
+				shell.pipeWithException("echo \"hello world\" | sort aFileThatDoesNotExist"));
 	}
-	
+
 	@Test
-	public void testInvalidPipeException() throws AbstractApplicationException, ShellException{
+	public void testInvalidPipeException() throws AbstractApplicationException, ShellException {
 		assertEquals("shell: gerp: Invalid app.", shell.pipeWithException("echo \"hello world\" | gerp random"));
 	}
-	
+
 	@Test
 	public void testPipeTwoCommands() throws AbstractApplicationException, ShellException {
 		assertEquals("helloworld" + LINE_SEPARATOR, shell.pipeTwoCommands("echo helloworld | grep hello"));
 	}
 
 	@Test
-	public void testPipeMultipleCommands() throws AbstractApplicationException, ShellException, IOException{
-		String expected = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_PIPE_DIR + "pipe" + PATH_SEPARATOR + "output" + PATH_SEPARATOR + "testTwoPipes")));
-		
-		assertEquals(expected + LINE_SEPARATOR, shell.pipeMultipleCommands("cat " + RELATIVE_TEST_PIPE_DIR + "pipe" + PATH_SEPARATOR + "input" + PATH_SEPARATOR + "testTwoPipes" + " | grep security | grep solution"));
+	public void testPipeMultipleCommands() throws AbstractApplicationException, ShellException, IOException {
+		String expected = new String(Files.readAllBytes(Paths
+				.get(RELATIVE_TEST_PIPE_DIR + "pipe" + PATH_SEPARATOR + "output" + PATH_SEPARATOR + "testTwoPipes")));
+
+		assertEquals(expected + LINE_SEPARATOR, shell.pipeMultipleCommands("cat " + RELATIVE_TEST_PIPE_DIR + "pipe"
+				+ PATH_SEPARATOR + "input" + PATH_SEPARATOR + "testTwoPipes" + " | grep security | grep solution"));
 	}
 
 }

@@ -8,153 +8,159 @@ import java.nio.file.Paths;
 
 public final class Environment {
 
-    /**
-     * Java VM does not support changing the current working directory. For this
-     * reason, we use Environment.currentDirectory instead.
-     */
-    public static volatile String currentDirectory = System.getProperty("user.dir");
+	/**
+	 * Java VM does not support changing the current working directory. For this
+	 * reason, we use Environment.currentDirectory instead.
+	 */
+	public static volatile String currentDirectory = System.getProperty("user.dir");
 
-    private Environment() {};
+	private Environment() {
+	};
 
-    public static void setDefaultDirectory() {
-        currentDirectory = System.getProperty("user.dir");
-    }
-    
-    public static boolean isExists(String absPath) {
+	public static void setDefaultDirectory() {
+		currentDirectory = System.getProperty("user.dir");
+	}
 
-        if (absPath == null) {
-            return false;
-        }
-        File file = new File(absPath);
-        return file.exists();
-    }
+	public static boolean isExists(String absPath) {
 
-    public static boolean isFile(String absPath) {
+		if (absPath == null) {
+			return false;
+		}
+		File file = new File(absPath);
+		return file.exists();
+	}
 
-        if (absPath == null) {
-            return false;
-        }
-        File file = new File(absPath);
-        return file.isFile();
-    }
+	public static boolean isFile(String absPath) {
 
-    public static boolean isDirectory(String absPath) {
+		if (absPath == null) {
+			return false;
+		}
+		File file = new File(absPath);
+		return file.isFile();
+	}
 
-        if (absPath == null) {
-            return false;
-        }
-        File file = new File(absPath);
-        return file.isDirectory();
-    }
-    
-    public static boolean isHidden(String absPath) {
-        
-        if (absPath == null) {
-            return false;
-        }
-        File file = new File(absPath);
-        return file.isHidden();
-    }
+	public static boolean isDirectory(String absPath) {
 
-    public static boolean isAbsPath(String path) {
+		if (absPath == null) {
+			return false;
+		}
+		File file = new File(absPath);
+		return file.isDirectory();
+	}
 
-        if (path == null) {
-            return false;
-        }
-        File file = new File(path);
-        return file.isAbsolute();
-    }
+	public static boolean isHidden(String absPath) {
 
-    /*
-     * WARNING: This method only constructs the full path without all the . or
-     * .. or extra /. It does NOT mean that the path constructed exists [ Use
-     * isFile() or isExists() or isDirectory() ].
-     *
-     * Returns empty string if absolute path cannot be created
-     *
-     * Supports both absolute path and relative path and . and ..
-     */
-    public static String getAbsPath(String path) {
+		if (absPath == null) {
+			return false;
+		}
+		File file = new File(absPath);
+		return file.isHidden();
+	}
 
-        if (path == null || path.isEmpty()) {
-            return "";
-        }
+	public static boolean isAbsPath(String path) {
 
-        String absPath = "";
-        try{
-            if (!isAbsPath(path)) {
-                String oldPath = path;
-                path = currentDirectory;
-                path += Symbol.PATH_SEPARATOR;
-                path += oldPath;
-            }
-            Path filePath = Paths.get(path);
-            absPath = filePath.normalize().toString();
-        } catch( InvalidPathException e ) {
-            return "";
-        }
-        return absPath;
-    }
+		if (path == null) {
+			return false;
+		}
+		File file = new File(path);
+		return file.isAbsolute();
+	}
 
-    /*
-     * WARNING: This method only constructs the parent path. It does NOT mean
-     * that the path constructed exists [ Use isFile() or isExists() or
-     * isDirectory() ].
-     * 
-     * Returns empty string if parent path cannot be created
-     */
-    public static String getParentPathFrom(String path) {
+	/*
+	 * WARNING: This method only constructs the full path without all the . or
+	 * .. or extra /. It does NOT mean that the path constructed exists [ Use
+	 * isFile() or isExists() or isDirectory() ].
+	 *
+	 * Returns empty string if absolute path cannot be created
+	 *
+	 * Supports both absolute path and relative path and . and ..
+	 */
+	public static String getAbsPath(String file) {
+		String path = file;
+		
+		if (path == null || path.isEmpty()) {
+			return "";
+		}
 
-        if (path == null) {
-            return "";
-        }
-        File file = new File(path);
-        path = file.getParent();
-        return (path != null ? path : "");
-    }
+		String absPath = "";
+		try {
+			if (!isAbsPath(path)) {
+				String oldPath = path;
+				path = currentDirectory;
+				path += Symbol.PATH_SEPARATOR;
+				path += oldPath;
+			}
+			Path filePath = Paths.get(path);
+			absPath = filePath.normalize().toString();
+		} catch (InvalidPathException e) {
+			return "";
+		}
+		return absPath;
+	}
 
-    public static boolean createNewFile(String absPath) {
+	/*
+	 * WARNING: This method only constructs the parent path. It does NOT mean
+	 * that the path constructed exists [ Use isFile() or isExists() or
+	 * isDirectory() ].
+	 * 
+	 * Returns empty string if parent path cannot be created
+	 */
+	public static String getParentPathFrom(String filePath) {
+		String path = filePath;
 
-        if (absPath == null) {
-            return false;
-        }
+		if (path == null) {
+			return "";
+		}
+		File file = new File(path);
+		path = file.getParent();
+		return (path != null ? path : "");
+	}
 
-        boolean isCreated = false;
-        File file = new File(absPath);
-        try {
-            isCreated = file.createNewFile();
-        } catch (IOException | SecurityException e) {}
+	public static boolean createNewFile(String absPath) {
 
-        return isCreated;
-    }
-    
-    public static boolean deleteFile(String absPath) {
+		if (absPath == null) {
+			return false;
+		}
 
-        if (absPath == null) {
-            return false;
-        }
+		boolean isCreated = false;
+		File file = new File(absPath);
+		try {
+			isCreated = file.createNewFile();
+		} catch (IOException | SecurityException e) {
+		}
 
-        boolean isDeleted = false;
-        File file = new File(absPath);
-        try {
-            isDeleted = file.delete();
-        } catch (SecurityException e) {}
+		return isCreated;
+	}
 
-        return isDeleted;
-    }
-    
-    public static boolean createNewDirectory(String absPath) {
+	public static boolean deleteFile(String absPath) {
 
-        if (absPath == null) {
-            return false;
-        }
+		if (absPath == null) {
+			return false;
+		}
 
-        boolean isCreated = false;
-        File file = new File(absPath);
-        try {
-            isCreated = file.mkdir();
-        } catch (SecurityException e) {}
+		boolean isDeleted = false;
+		File file = new File(absPath);
+		try {
+			isDeleted = file.delete();
+		} catch (SecurityException e) {
+		}
 
-        return isCreated;
-    }
+		return isDeleted;
+	}
+
+	public static boolean createNewDirectory(String absPath) {
+
+		if (absPath == null) {
+			return false;
+		}
+
+		boolean isCreated = false;
+		File file = new File(absPath);
+		try {
+			isCreated = file.mkdir();
+		} catch (SecurityException e) {
+		}
+
+		return isCreated;
+	}
 }

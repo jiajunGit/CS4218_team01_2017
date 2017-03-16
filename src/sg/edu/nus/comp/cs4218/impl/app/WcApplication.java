@@ -25,77 +25,76 @@ public class WcApplication implements Wc {
 	boolean isW = false;
 	boolean isL = false;
 	boolean displayIsPrimed = false;
-	
+
 	private static final int TEMP_BUF_SZ = 10000;
-    private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
-	
-    int noCharsStdin = -1;
-    int noWordsStdin = -1;
-    int noNewlinesStdin = -1;
-    
+	private static byte[] tempBuf = new byte[TEMP_BUF_SZ];
+
+	int noCharsStdin = -1;
+	int noWordsStdin = -1;
+	int noNewlinesStdin = -1;
+
 	Vector<String> fileNames;
 	Vector<String> toDisplay = new Vector<String>();
-	
+
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws AbstractApplicationException {
 		// TODO Auto-generated method stub
-		if(stdout == null){
+		if (stdout == null) {
 			throw new WcException("stdout invalid");
 		}
-		
-		if(args==null){
+
+		if (args == null) {
 			throw new WcException("null args");
 		}
-		
+
 		fileNames = new Vector<String>();
 		toDisplay = new Vector<String>();
-		String result = new String();
-		
+		String result = "";
+
 		int currArg = 0;
-		
-		while(currArg < args.length && args[currArg].charAt(0) == '-'){
+
+		while (currArg < args.length && args[currArg].charAt(0) == '-') {
 			findOps(args[currArg]);
 			currArg++;
 		}
-		
-		while(currArg<args.length){
+
+		while (currArg < args.length) {
 			fileNames.add(args[currArg]);
 			toDisplay.add("");
 			currArg++;
 			displayIsPrimed = true;
 		}
-				
+
 		String combinedNames = combineFileNames();
-		
-		if (combinedNames.isEmpty()){
-			if(stdin == null){
+
+		if (combinedNames.isEmpty()) {
+			if (stdin == null) {
 				throw new WcException("expect stdin but stdin is null");
 			}
-			
+
 			result = loadFromStdIn(stdin);
 		}
-		
-		if (!combinedNames.isEmpty()){
+
+		if (!combinedNames.isEmpty()) {
 			result = loadFromFiles(combinedNames);
 		}
-		
-		
+
 		try {
 			String[] resultArray = result.split(System.getProperty("line.separator"));
-			for(int resIndex = 0; resIndex<resultArray.length; resIndex++){
-				if(resultArray[resIndex].equals("Invalid File")){
+			for (int resIndex = 0; resIndex < resultArray.length; resIndex++) {
+				if (resultArray[resIndex].equals("Invalid File")) {
 					throw new WcException("Invalid File");
 				}
-				if(resIndex != resultArray.length -1){
-					stdout.write((resultArray[resIndex]+System.getProperty("line.separator")).getBytes());
+				if (resIndex != resultArray.length - 1) {
+					stdout.write((resultArray[resIndex] + System.getProperty("line.separator")).getBytes());
 					stdout.flush();
 				}
-				
-				if(resIndex == resultArray.length -1){
+
+				if (resIndex == resultArray.length - 1) {
 					stdout.write(resultArray[resIndex].getBytes());
 					stdout.flush();
 				}
-				
+
 			}
 
 		} catch (IOException e) {
@@ -104,8 +103,8 @@ public class WcApplication implements Wc {
 	}
 
 	private String loadFromFiles(String combinedNames) {
-		String result = new String();
-		if(isAll){
+		String result = "";
+		if (isAll) {
 			String mCommand = "wc -mwl " + combinedNames;
 			result = printAllCountsInFile(mCommand);
 			isM = false;
@@ -113,27 +112,27 @@ public class WcApplication implements Wc {
 			isL = false;
 		}
 
-		if(isM){
+		if (isM) {
 			String mCommand = "wc -m " + combinedNames;
 			result = printCharacterCountInFile(mCommand);
 		}
-		
-		if(isW){
+
+		if (isW) {
 			String mCommand = "wc -w " + combinedNames;
 			result = printWordCountInFile(mCommand);
 		}
-		
-		if(isL){
+
+		if (isL) {
 			String mCommand = "wc -l " + combinedNames;
 			result = printNewlineCountInFile(mCommand);
 		}
-		
+
 		return result;
 	}
 
 	private String loadFromStdIn(InputStream stdin) {
-		String result = new String();
-		if(isAll){
+		String result = "";
+		if (isAll) {
 			String mCommand = "wc -mwl ";
 			result = printAllCountsInStdin(mCommand, stdin);
 			isM = false;
@@ -141,64 +140,64 @@ public class WcApplication implements Wc {
 			isL = false;
 		}
 
-		if(isM){
+		if (isM) {
 			String mCommand = "wc -m";
 			result = printCharacterCountInStdin(mCommand, stdin);
 		}
-		
-		if(isW){
+
+		if (isW) {
 			String mCommand = "wc -w";
 			result = printWordCountInStdin(mCommand, stdin);
 		}
-		
-		if(isL){
+
+		if (isL) {
 			String mCommand = "wc -l";
 			result = printNewlineCountInStdin(mCommand, stdin);
 		}
-		
+
 		return result;
 	}
 
 	private String combineFileNames() {
 		// TODO Auto-generated method stub
 		StringBuilder result = new StringBuilder();
-		for (int curName = 0; curName < fileNames.size(); curName++ ){
+		for (int curName = 0; curName < fileNames.size(); curName++) {
 			result.append(fileNames.get(curName));
-			if(curName!= fileNames.size() - 1){
+			if (curName != fileNames.size() - 1) {
 				result.append(" ");
 			}
 		}
-		
+
 		return result.toString();
 	}
 
 	private void findOps(String string) throws WcException {
-		if (string.length() == 1){
+		if (string.length() == 1) {
 			throw new WcException("Invalid Option");
 		}
-		
-		for(int currChar = 1; currChar < string.length(); currChar++){
-			if(string.charAt(currChar) == 'm'){
+
+		for (int currChar = 1; currChar < string.length(); currChar++) {
+			if (string.charAt(currChar) == 'm') {
 				isM = true;
 				isAll = false;
 				continue;
 			}
-		
-			if(string.charAt(currChar) == 'w'){
+
+			if (string.charAt(currChar) == 'w') {
 				isW = true;
 				isAll = false;
 				continue;
 			}
-			
-			if(string.charAt(currChar) == 'l'){
+
+			if (string.charAt(currChar) == 'l') {
 				isL = true;
 				isAll = false;
 				continue;
 			}
-			
+
 			throw new WcException("Invalid Options");
 		}
-		
+
 	}
 
 	@Override
@@ -206,72 +205,70 @@ public class WcApplication implements Wc {
 		String[] argsArr = args.split(" ");
 		StringBuilder result = new StringBuilder();
 		int tempChar;
-		Vector<Integer> noChars = new Vector<Integer>(); 
+		Vector<Integer> noChars = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
-			if(argsArr[1].charAt(0)=='-'){
+
+		if (!displayIsPrimed) {
+			if (argsArr[1].charAt(0) == '-') {
 				primeDisplay(argsArr.length - 2);
 				displayIsPrimed = true;
 			}
-			if(argsArr[1].charAt(0)!='-'){
+			if (argsArr[1].charAt(0) != '-') {
 				primeDisplay(argsArr.length - 1);
 				displayIsPrimed = true;
 			}
 		}
-		
-		
-		if(fileNames!=null){
-			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+
+		if (fileNames != null) {
+			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempChar = getNoCharsInFile(fileNames.get(startIndex));
-					if(String.valueOf(tempChar).length() >= 8){
+					if (String.valueOf(tempChar).length() >= 8) {
 						spaces = String.valueOf(tempChar).length() + 1;
 					}
 					noChars.add(tempChar);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
 			}
 		}
-		
-		if(fileNames == null){
+
+		if (fileNames == null) {
 			int startIndex = 2;
-			if(argsArr[1].charAt(0) == '-'){
+			if (argsArr[1].charAt(0) == '-') {
 				startIndex = 2;
 			}
-	
-			if(argsArr[1].charAt(0) != '-'){
+
+			if (argsArr[1].charAt(0) != '-') {
 				startIndex = 1;
 			}
-			
-			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+
+			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempChar = getNoCharsInFile(argsArr[startIndex]);
-					if(String.valueOf(tempChar).length() >= 8){
+					if (String.valueOf(tempChar).length() >= 8) {
 						spaces = String.valueOf(tempChar).length() + 1;
 					}
 					noChars.add(tempChar);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
 			}
 		}
-		
-		
-		for (int toAdd = 0; toAdd < noChars.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noChars.size(); toAdd++) {
 			addToDisplay(toAdd, noChars.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
@@ -279,20 +276,20 @@ public class WcApplication implements Wc {
 		StringBuilder newInfoB = new StringBuilder();
 		newInfoB.append(toDisplay.get(fileIndex));
 		int toAddLength = toAdd.toString().length();
-		for(int currOff = 0; currOff < offset - toAddLength; currOff++){
+		for (int currOff = 0; currOff < offset - toAddLength; currOff++) {
 			newInfoB.append(" ");
 		}
-		
+
 		newInfoB.append(toAdd.toString());
 		toDisplay.set(fileIndex, newInfoB.toString());
 	}
 
 	private void primeDisplay(int i) {
 		// TODO Auto-generated method stub
-		for (int index = 0; index < i; index++){
+		for (int index = 0; index < i; index++) {
 			toDisplay.add("");
 		}
-		
+
 	}
 
 	private int getNoCharsInFile(String fileName) throws WcException {
@@ -300,26 +297,26 @@ public class WcApplication implements Wc {
 		String string = Environment.getAbsPath(fileName);
 		File toFind = new File(string);
 		int noChars = 0;
-//		try {
-//			Scanner inFile = new Scanner(toFind);
-//		    while(inFile.hasNextLine())  {
-//		        String line = inFile.nextLine();
-//		        noChars += line.length();
-//		        noChars++;
-//		    }
-//		    inFile.close();
-//		} catch (FileNotFoundException e) {
-//			throw new WcException("Invalid File");
-//		}
+		// try {
+		// Scanner inFile = new Scanner(toFind);
+		// while(inFile.hasNextLine()) {
+		// String line = inFile.nextLine();
+		// noChars += line.length();
+		// noChars++;
+		// }
+		// inFile.close();
+		// } catch (FileNotFoundException e) {
+		// throw new WcException("Invalid File");
+		// }
 		String contents = "";
 		try {
 			contents = new String(Files.readAllBytes(toFind.toPath()));
 		} catch (IOException e) {
 			throw new WcException("Invalid File");
 		}
-		
+
 		noChars = contents.length();
-		
+
 		return noChars;
 	}
 
@@ -328,64 +325,64 @@ public class WcApplication implements Wc {
 		String[] argsArr = args.split(" ");
 		StringBuilder result = new StringBuilder();
 		int tempWord;
-		Vector<Integer> noWords = new Vector<Integer>(); 
+		Vector<Integer> noWords = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
+
+		if (!displayIsPrimed) {
 			primeDisplay(argsArr.length - 2);
 			displayIsPrimed = true;
 		}
-		
-		if(fileNames == null){
+
+		if (fileNames == null) {
 			int startIndex = 2;
-			if(argsArr[1].charAt(0) == '-'){
+			if (argsArr[1].charAt(0) == '-') {
 				startIndex = 2;
 			}
-	
-			if(argsArr[1].charAt(0) != '-'){
+
+			if (argsArr[1].charAt(0) != '-') {
 				startIndex = 1;
 			}
-			
-			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+
+			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempWord = getNoWordsInFile(argsArr[startIndex]);
-					if(String.valueOf(tempWord).length() >= 8){
+					if (String.valueOf(tempWord).length() >= 8) {
 						spaces = String.valueOf(tempWord).length() + 1;
 					}
 					noWords.add(tempWord);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
 			}
 		}
-		
-		if(fileNames != null){
-			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+
+		if (fileNames != null) {
+			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempWord = getNoWordsInFile(fileNames.get(startIndex));
-					if(String.valueOf(tempWord).length() >= 8){
+					if (String.valueOf(tempWord).length() >= 8) {
 						spaces = String.valueOf(tempWord).length() + 1;
 					}
 					noWords.add(tempWord);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
-			}			
+			}
 		}
-		
-		for (int toAdd = 0; toAdd < noWords.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noWords.size(); toAdd++) {
 			addToDisplay(toAdd, noWords.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
@@ -395,15 +392,15 @@ public class WcApplication implements Wc {
 		int noWords = 0;
 		try {
 			Scanner inFile = new Scanner(toFind);
-		    while(inFile.hasNext())  {
-		        inFile.next();
-		        noWords ++;
-		    }
-		    inFile.close();
+			while (inFile.hasNext()) {
+				inFile.next();
+				noWords++;
+			}
+			inFile.close();
 		} catch (FileNotFoundException e) {
 			throw new WcException("Invalid File");
 		}
-		
+
 		return noWords;
 	}
 
@@ -412,63 +409,63 @@ public class WcApplication implements Wc {
 		String[] argsArr = args.split(" ");
 		StringBuilder result = new StringBuilder();
 		int tempNewLine;
-		Vector<Integer> noNewline = new Vector<Integer>(); 
+		Vector<Integer> noNewline = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
+
+		if (!displayIsPrimed) {
 			primeDisplay(argsArr.length - 2);
 			displayIsPrimed = true;
 		}
-		
-		if(fileNames == null){
+
+		if (fileNames == null) {
 			int startIndex = 2;
-			if(argsArr[1].charAt(0) == '-'){
+			if (argsArr[1].charAt(0) == '-') {
 				startIndex = 2;
 			}
-	
-			if(argsArr[1].charAt(0) != '-'){
+
+			if (argsArr[1].charAt(0) != '-') {
 				startIndex = 1;
 			}
-			for(startIndex+=0; startIndex < argsArr.length; startIndex++){
+			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempNewLine = getNoNewlineInFile(argsArr[startIndex]);
-					if(String.valueOf(tempNewLine).length() >= 8){
+					if (String.valueOf(tempNewLine).length() >= 8) {
 						spaces = String.valueOf(tempNewLine).length() + 1;
 					}
 					noNewline.add(tempNewLine);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
 			}
 		}
-		
-		if (fileNames != null){
-			for(int startIndex = 0; startIndex < fileNames.size(); startIndex++){
+
+		if (fileNames != null) {
+			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempNewLine = getNoNewlineInFile(fileNames.get(startIndex));
-					if(String.valueOf(tempNewLine).length() >= 8){
+					if (String.valueOf(tempNewLine).length() >= 8) {
 						spaces = String.valueOf(tempNewLine).length() + 1;
 					}
 					noNewline.add(tempNewLine);
-					
+
 				} catch (WcException e) {
 					return "Invalid File";
 				}
 			}
 		}
-		
-		for (int toAdd = 0; toAdd < noNewline.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noNewline.size(); toAdd++) {
 			addToDisplay(toAdd, noNewline.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
@@ -479,34 +476,34 @@ public class WcApplication implements Wc {
 		int noNewLines = 0;
 		try {
 			Scanner inFile = new Scanner(toFind);
-		    while(inFile.hasNextLine())  {
-		        inFile.nextLine();
-		        noNewLines ++;
-		    }
-		    inFile.close();
+			while (inFile.hasNextLine()) {
+				inFile.nextLine();
+				noNewLines++;
+			}
+			inFile.close();
 		} catch (FileNotFoundException e) {
 			throw new WcException("Invalid File");
 		}
-		
+
 		String contents = "";
 		try {
 			contents = new String(Files.readAllBytes(toFind.toPath()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		noNewLines = contents.length() - contents.replace("\n", "").length();
-		
+
 		return noNewLines;
 	}
 
 	@Override
 	public String printAllCountsInFile(String args) {
 		String[] argsArr = args.split(" ");
-		
+
 		int currArg = 1;
-		
-		while(currArg < argsArr.length && argsArr[currArg].charAt(0) == '-'){
+
+		while (currArg < argsArr.length && argsArr[currArg].charAt(0) == '-') {
 			try {
 				findOps(argsArr[currArg]);
 			} catch (WcException e) {
@@ -514,239 +511,235 @@ public class WcApplication implements Wc {
 			}
 			currArg++;
 		}
-		
+
 		printCharacterCountInFile(args);
 
 		printWordCountInFile(args);
-		
+
 		return printNewlineCountInFile(args);
 	}
 
 	@Override
 	public String printCharacterCountInStdin(String args, InputStream stdin) {
-		if(stdin == null){
+		if (stdin == null) {
 			return "Specify file or stdin";
 		}
-		
+
 		StringBuilder result = new StringBuilder();
 		int tempChar;
-		Vector<Integer> noChars = new Vector<Integer>(); 
+		Vector<Integer> noChars = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
+
+		if (!displayIsPrimed) {
 			primeDisplay(1);
 			displayIsPrimed = true;
 		}
 
 		tempChar = getNoCharsInStdin(stdin);
-		if(String.valueOf(tempChar).length() >= 8){
+		if (String.valueOf(tempChar).length() >= 8) {
 			spaces = String.valueOf(tempChar).length() + 1;
 		}
 		noChars.add(tempChar);
-		
-		for (int toAdd = 0; toAdd < noChars.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noChars.size(); toAdd++) {
 			addToDisplay(toAdd, noChars.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
 	private int getNoCharsInStdin(InputStream stdin) {
 		int noChars = 0;
-//		Scanner inFile = new Scanner(stdin);
-//		while(inFile.hasNextLine())  {
-//		    String line = inFile.nextLine();
-//		    noChars += line.length();
-//		    noChars++;
-//		}
+		// Scanner inFile = new Scanner(stdin);
+		// while(inFile.hasNextLine()) {
+		// String line = inFile.nextLine();
+		// noChars += line.length();
+		// noChars++;
+		// }
 
-		if(noCharsStdin == -1){
-	        int bytesRead = 0;
-	        StringBuilder content = new StringBuilder();
-	        while (true) {
-	            try {
-	                bytesRead = stdin.read(tempBuf);
-	                if (bytesRead <= -1) {
-	                    break;
-	                }
-	                content.append(new String(tempBuf, 0, bytesRead));
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        
-	        String line = content.toString();
-	        
-	        noChars = line.length();
-	        noCharsStdin = noChars;
-			noWordsStdin = line.split("\\s+").length; 
-	        noNewlinesStdin = line.length() - line.replace("\n", "").length(); 
+		if (noCharsStdin == -1) {
+			int bytesRead = 0;
+			StringBuilder content = new StringBuilder();
+			while (true) {
+				try {
+					bytesRead = stdin.read(tempBuf);
+					if (bytesRead <= -1) {
+						break;
+					}
+					content.append(new String(tempBuf, 0, bytesRead));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			String line = content.toString();
+
+			noChars = line.length();
+			noCharsStdin = noChars;
+			noWordsStdin = line.split("\\s+").length;
+			noNewlinesStdin = line.length() - line.replace("\n", "").length();
 		}
-		
-		if(noCharsStdin != -1){
+
+		if (noCharsStdin != -1) {
 			noChars = noCharsStdin;
 		}
 
-		
 		return noChars;
 	}
 
 	@Override
 	public String printWordCountInStdin(String args, InputStream stdin) {
-		if(stdin == null){
+		if (stdin == null) {
 			return "Specify file or stdin";
 		}
-		
+
 		StringBuilder result = new StringBuilder();
 		int tempWord;
-		Vector<Integer> noWords = new Vector<Integer>(); 
+		Vector<Integer> noWords = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
+
+		if (!displayIsPrimed) {
 			primeDisplay(1);
 			displayIsPrimed = true;
 		}
 
 		tempWord = getNoWordsInStdin(stdin);
-		if(String.valueOf(tempWord).length() >= 8){
+		if (String.valueOf(tempWord).length() >= 8) {
 			spaces = String.valueOf(tempWord).length() + 1;
 		}
 		noWords.add(tempWord);
-		
-		for (int toAdd = 0; toAdd < noWords.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noWords.size(); toAdd++) {
 			addToDisplay(toAdd, noWords.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
 	private int getNoWordsInStdin(InputStream stdin) {
 		int noWords = 0;
-		if(noWordsStdin == -1){
-	        int bytesRead = 0;
-	        StringBuilder content = new StringBuilder();
-	        while (true) {
-	            try {
-	                bytesRead = stdin.read(tempBuf);
-	                if (bytesRead <= -1) {
-	                    break;
-	                }
-	                content.append(new String(tempBuf, 0, bytesRead));
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        
-	        String line = content.toString();
-	        
-	        
-	        noCharsStdin = line.length();
-			noWords = line.split("\\s+").length; 
-	        noNewlinesStdin = line.length() - line.replace("\n", "").length(); 
+		if (noWordsStdin == -1) {
+			int bytesRead = 0;
+			StringBuilder content = new StringBuilder();
+			while (true) {
+				try {
+					bytesRead = stdin.read(tempBuf);
+					if (bytesRead <= -1) {
+						break;
+					}
+					content.append(new String(tempBuf, 0, bytesRead));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			String line = content.toString();
+
+			noCharsStdin = line.length();
+			noWords = line.split("\\s+").length;
+			noNewlinesStdin = line.length() - line.replace("\n", "").length();
 			noWordsStdin = noWords;
 		}
-		
-		if(noCharsStdin != -1){
+
+		if (noCharsStdin != -1) {
 			noWords = noWordsStdin;
 		}
-		
+
 		return noWords;
 	}
 
 	@Override
 	public String printNewlineCountInStdin(String args, InputStream stdin) {
-		if(stdin == null){
+		if (stdin == null) {
 			return "Specify file or stdin";
 		}
-		
+
 		StringBuilder result = new StringBuilder();
 		int tempNewline;
-		Vector<Integer> noNewlines = new Vector<Integer>(); 
+		Vector<Integer> noNewlines = new Vector<Integer>();
 		int spaces = 8;
-		
-		if(!displayIsPrimed){
+
+		if (!displayIsPrimed) {
 			primeDisplay(1);
 			displayIsPrimed = true;
 		}
 
 		tempNewline = getNoNewlinesInStdin(stdin);
-		if(String.valueOf(tempNewline).length() >= 8){
+		if (String.valueOf(tempNewline).length() >= 8) {
 			spaces = String.valueOf(tempNewline).length() + 1;
 		}
 		noNewlines.add(tempNewline);
-		
-		for (int toAdd = 0; toAdd < noNewlines.size() ; toAdd++){
+
+		for (int toAdd = 0; toAdd < noNewlines.size(); toAdd++) {
 			addToDisplay(toAdd, noNewlines.get(toAdd), spaces);
 		}
-		
-		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++){
+
+		for (int currDisp = 0; currDisp < toDisplay.size(); currDisp++) {
 			result.append(toDisplay.get(currDisp));
-			if(currDisp != toDisplay.size() -1){
+			if (currDisp != toDisplay.size() - 1) {
 				result.append(System.lineSeparator());
 			}
 		}
-		
+
 		return result.toString();
 	}
 
 	private int getNoNewlinesInStdin(InputStream stdin) {
 		int noNewLines = 0;
-		if(noNewlinesStdin == -1){
-	        int bytesRead = 0;
-	        StringBuilder content = new StringBuilder();
-	        while (true) {
-	            try {
-	                bytesRead = stdin.read(tempBuf);
-	                if (bytesRead <= -1) {
-	                    break;
-	                }
-	                content.append(new String(tempBuf, 0, bytesRead));
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        
-	        String line = content.toString();
-	        
-	        
-	        noCharsStdin = line.length();
-	        noWordsStdin = line.split("\\s+").length; 
-	        noNewLines = line.length() - line.replace("\n", "").length(); 
+		if (noNewlinesStdin == -1) {
+			int bytesRead = 0;
+			StringBuilder content = new StringBuilder();
+			while (true) {
+				try {
+					bytesRead = stdin.read(tempBuf);
+					if (bytesRead <= -1) {
+						break;
+					}
+					content.append(new String(tempBuf, 0, bytesRead));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			String line = content.toString();
+
+			noCharsStdin = line.length();
+			noWordsStdin = line.split("\\s+").length;
+			noNewLines = line.length() - line.replace("\n", "").length();
 			noNewlinesStdin = noNewLines;
 		}
-		
-		if(noNewlinesStdin != -1){
+
+		if (noNewlinesStdin != -1) {
 			noNewLines = noNewlinesStdin;
 		}
-		
-		
+
 		return noNewLines;
 	}
 
 	@Override
 	public String printAllCountsInStdin(String args, InputStream stdin) {
-		if(stdin == null){
+		if (stdin == null) {
 			return "Specify file or stdin";
 		}
 		String[] argsArr = args.split(" ");
-		
+
 		int currArg = 1;
-		
-		while(currArg < argsArr.length && argsArr[currArg].charAt(0) == '-'){
+
+		while (currArg < argsArr.length && argsArr[currArg].charAt(0) == '-') {
 			try {
 				findOps(argsArr[currArg]);
 			} catch (WcException e) {
@@ -754,11 +747,11 @@ public class WcApplication implements Wc {
 			}
 			currArg++;
 		}
-		
+
 		printCharacterCountInStdin(args, stdin);
 
 		printWordCountInStdin(args, stdin);
-		
+
 		return printNewlineCountInStdin(args, stdin);
 	}
 
