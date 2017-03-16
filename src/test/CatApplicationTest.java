@@ -1,5 +1,5 @@
 /**
- * Cat JUnit Test
+ * Cat JUnit Test   
  */
 package test;
 
