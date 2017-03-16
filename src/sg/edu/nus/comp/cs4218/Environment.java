@@ -75,8 +75,9 @@ public final class Environment {
 	 *
 	 * Supports both absolute path and relative path and . and ..
 	 */
-	public static String getAbsPath(String path) {
-
+	public static String getAbsPath(String file) {
+		String path = file;
+		
 		if (path == null || path.isEmpty()) {
 			return "";
 		}
@@ -104,7 +105,8 @@ public final class Environment {
 	 * 
 	 * Returns empty string if parent path cannot be created
 	 */
-	public static String getParentPathFrom(String path) {
+	public static String getParentPathFrom(String filePath) {
+		String path = filePath;
 
 		if (path == null) {
 			return "";

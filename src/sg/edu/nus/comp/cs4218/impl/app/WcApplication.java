@@ -49,7 +49,7 @@ public class WcApplication implements Wc {
 
 		fileNames = new Vector<String>();
 		toDisplay = new Vector<String>();
-		String result = new String();
+		String result = "";
 
 		int currArg = 0;
 
@@ -103,7 +103,7 @@ public class WcApplication implements Wc {
 	}
 
 	private String loadFromFiles(String combinedNames) {
-		String result = new String();
+		String result = "";
 		if (isAll) {
 			String mCommand = "wc -mwl " + combinedNames;
 			result = printAllCountsInFile(mCommand);
@@ -131,7 +131,7 @@ public class WcApplication implements Wc {
 	}
 
 	private String loadFromStdIn(InputStream stdin) {
-		String result = new String();
+		String result = "";
 		if (isAll) {
 			String mCommand = "wc -mwl ";
 			result = printAllCountsInStdin(mCommand, stdin);

@@ -381,7 +381,8 @@ public class CalIntegrationTest {
 		return out;
 	}
 
-	private static boolean createFile(String fileName, String content) {
+	private static boolean createFile(String file, String content) {
+		String fileName = file;
 
 		if (fileName == null || content == null) {
 			return false;

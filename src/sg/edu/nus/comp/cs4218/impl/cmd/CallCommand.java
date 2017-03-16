@@ -668,8 +668,8 @@ public class CallCommand implements Command {
 		return true;
 	}
 
-	private int inverseSearch(StringBuilder fullString, int startIndex, char charNotToFind, int defaultReturn) {
-
+	private int inverseSearch(StringBuilder fullString, int startInd, char charNotToFind, int defaultReturn) {
+		int startIndex = startInd;
 		if (startIndex < 0 || startIndex >= fullString.length()) {
 			return defaultReturn;
 		}

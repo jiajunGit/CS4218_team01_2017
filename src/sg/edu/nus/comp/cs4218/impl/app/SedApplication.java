@@ -319,7 +319,8 @@ public class SedApplication implements Sed {
 	 *         replacement string specified if the g suffix is specified in the
 	 *         given replacement expression.
 	 */
-	public String sedFromOneFile(String replacement, String fileName) throws SedException {
+	public String sedFromOneFile(String replacement, String file) throws SedException {
+		String fileName = file;
 
 		if (fileName == null || fileName.length() <= 0) {
 			throw new SedException(ERROR_EXP_INVALID_FILE);

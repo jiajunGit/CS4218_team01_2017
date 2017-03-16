@@ -71,7 +71,9 @@ public class HeadApplication implements Head {
 		}
 	}
 
-	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws HeadException, IOException {
+	private int logicFor2Arguments(String[] args, InputStream stdin, int numLines) throws HeadException, IOException {
+		int noLines = numLines;
+
 		if (args[0].length() == 0) {
 			if (args[1].length() == 0) {
 				loadFromStdIn(stdin); // head "",""
@@ -94,7 +96,9 @@ public class HeadApplication implements Head {
 		return noLines;
 	}
 
-	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws HeadException, IOException {
+	private int logicFor3Arguments(String[] args, InputStream stdin, int numLines) throws HeadException, IOException {
+		int noLines = numLines;
+
 		if (args[0].length() == 0 && args[1].length() == 0) {
 			if (args[2].length() == 0) { // head "" "" ""
 				loadFromStdIn(stdin);

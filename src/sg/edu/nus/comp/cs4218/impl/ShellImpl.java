@@ -1381,9 +1381,11 @@ public class ShellImpl implements Shell {
 	 *             If an exception happens while processing the command given.
 	 */
 	@Override
-	public void parseAndEvaluate(String cmdline, OutputStream stdout)
+	public void parseAndEvaluate(String cmdLine, OutputStream stdout)
 			throws AbstractApplicationException, ShellException {
-
+		
+		String cmdline = cmdLine;
+		
 		try {
 
 			if (cmdline == null) {

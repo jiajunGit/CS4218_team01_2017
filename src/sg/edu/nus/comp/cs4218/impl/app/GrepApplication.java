@@ -302,7 +302,8 @@ public class GrepApplication implements Grep {
 	 * @return A String containing all lines within the file that contains the
 	 *         specified regex pattern delimited by a newline character.
 	 */
-	public String grepFromOneFile(String pattern, String fileName) throws GrepException {
+	public String grepFromOneFile(String pattern, String file) throws GrepException {
+		String fileName = file;
 
 		if (fileName == null || fileName.length() <= 0) {
 			throw new GrepException(ERROR_EXP_INVALID_FILE);

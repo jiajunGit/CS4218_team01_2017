@@ -63,7 +63,9 @@ public class TailApplication implements Tail {
 
 	}
 
-	private int logicFor2Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
+	private int logicFor2Arguments(String[] args, InputStream stdin, int numLines) throws TailException, IOException {
+		int noLines = numLines;
+
 		if (args[0].length() == 0) {
 			if (args[1].length() == 0) {
 				loadFromStdIn(stdin); // tail "",""
@@ -86,7 +88,9 @@ public class TailApplication implements Tail {
 		return noLines;
 	}
 
-	private int logicFor3Arguments(String[] args, InputStream stdin, int noLines) throws TailException, IOException {
+	private int logicFor3Arguments(String[] args, InputStream stdin, int numLines) throws TailException, IOException {
+		int noLines= numLines;
+		
 		if (args[0].length() == 0 && args[1].length() == 0) {
 			if (args[2].length() == 0) { // tail "" "" ""
 				loadFromStdIn(stdin);

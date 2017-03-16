@@ -348,8 +348,9 @@ public class CdIntegrationTest {
 		return getContents(ABSOLUTE_EXPECTED_DIRECTORY + PATH_SEPARATOR + "newLine");
 	}
 
-	private static boolean createFile(String fileName, String content) {
-
+	private static boolean createFile(String file, String content) {
+		String fileName = file;
+		
 		if (fileName == null || content == null) {
 			return false;
 		}

@@ -225,7 +225,8 @@ public class Globber {
 		return character == Symbol.PATH_SEPARATOR;
 	}
 
-	private int findGlobStart(String input, int globIndex) {
+	private int findGlobStart(String input, int globInd) {
+		int globIndex = globInd;
 
 		if (globIndex < 0 || globIndex >= input.length()) {
 			return -1;

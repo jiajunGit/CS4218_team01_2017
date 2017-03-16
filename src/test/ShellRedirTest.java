@@ -262,7 +262,8 @@ public class ShellRedirTest {
 		return out;
 	}
 
-	private static boolean createTxtFile(String fileName, String content) {
+	private static boolean createTxtFile(String file, String content) {
+		String fileName = file;
 
 		if (fileName == null || content == null) {
 			return false;
