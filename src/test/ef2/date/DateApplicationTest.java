@@ -48,10 +48,14 @@ public class DateApplicationTest {
 		app.run(null, null, null);
 	}
 	
-	@Test(expected = DateException.class)
+	@Test
 	public void testDateWithRandomArg() throws DateException {
 		String[] args = {"random stuff"};
-		app.run(args, null, null);
+		ZonedDateTime exactTime = ZonedDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
+		app.run(args, null, outContent);
+		
+		assertEquals(exactTime.format(formatter), outContent.toString());
 	}
 	
 	@Test

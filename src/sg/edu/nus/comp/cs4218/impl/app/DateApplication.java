@@ -3,18 +3,16 @@ package sg.edu.nus.comp.cs4218.impl.app;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import sg.edu.nus.comp.cs4218.app.Date;
-import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
-import sg.edu.nus.comp.cs4218.exception.CalException;
 import sg.edu.nus.comp.cs4218.exception.DateException;
 
 public class DateApplication implements Date {
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
+	/**
+	 * Assumption: if args contains some string, it will throw an exception
+	 */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws DateException {
 		String outputStr;
@@ -26,9 +24,6 @@ public class DateApplication implements Date {
 		} else if (stdin != null) {
 			throw new DateException("Date does not accept stdin");
 		} 
-		else if (!args[0].equals("")){
-			throw new DateException("Date does not take in arguments");
-		}
 		else {
 			outputStr = printCurrentDate(args.toString());
 		}
