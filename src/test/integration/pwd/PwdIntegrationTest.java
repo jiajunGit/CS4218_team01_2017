@@ -64,7 +64,7 @@ public class PwdIntegrationTest {
 																					// input/*
 		String currentDir = new File(Environment.currentDirectory).getAbsolutePath();
 		String output = shell.parseAndEvaluate("pwd>input" + PATH_SEPARATOR + "test ; cat input" + PATH_SEPARATOR + "test");
-		assertEquals(currentDir + LINE_SEPARATOR, output);
+		assertEquals(currentDir + LINE_SEPARATOR + LINE_SEPARATOR, output);
 	}
 
 	@Test
