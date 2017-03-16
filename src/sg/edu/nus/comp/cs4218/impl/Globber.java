@@ -17,11 +17,11 @@ import sg.edu.nus.comp.cs4218.Shell;
  * 
  * Hidden files are ignored by glob.
  * 
- * Do NOT support glob with path segments (i.e. . and ..) so syntax like *.
+ * Do NOT support glob with path segments symbols (i.e. . and ..) so syntax like *.
  * or *.* or .* does not match path segment symbol . (the symbol for representing current directory)
- * and *.. or ..* or .*. does not match path segment symbol .. (the symbol for representing previous directory).
- * However, paths like src/./dir (dot means current directory) and src/../dir (dot means previous directory) 
- * are supported.
+ * and *.. or ..* or .*. or *. or .* does not match path segment symbol .. (the symbol for representing 
+ * previous directory). However, paths like src/./dir* (dot means current directory) and src/../dir* (dot 
+ * means previous directory) are supported.
  */
 
 public class Globber {
