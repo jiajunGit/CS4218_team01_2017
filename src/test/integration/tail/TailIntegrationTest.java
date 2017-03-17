@@ -338,7 +338,7 @@ public class TailIntegrationTest {
 	    for( int i = 0; i < 300; ++i ){
 	        path += sub;
 	    }
-	    path += "out";
+	    path += "in";
 	    
 	    String command = "cd '" + path + "';tail <in; cal";
         assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
@@ -353,7 +353,7 @@ public class TailIntegrationTest {
         for( int i = 0; i < 300; ++i ){
             path += sub;
         }
-        path += "out";
+        path += "in";
         
         String command = "cd '" + path + "';tail <in; cal";
         assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
