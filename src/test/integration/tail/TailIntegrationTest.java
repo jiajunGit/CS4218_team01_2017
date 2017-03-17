@@ -184,21 +184,13 @@ public class TailIntegrationTest {
 	@Test
 	public void testTailWithGrep() throws AbstractApplicationException, ShellException {
 
-		String command = "tail -n 7 \"" + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR
-				+ "in\"|grep '\"hi `echo space` there\"'";
-
-		String fileContents = "12" + NEW_LINE + "  11" + NEW_LINE + "10  " + NEW_LINE
-				+ "9\t8\t8\t8\t8\t8\t8\t8\t8\t8\t8\t8" + NEW_LINE
-				+ "8\t8\t8\t8\t8\t8\"hi `echo space` there\"\t8\t8\t8 " + NEW_LINE + "  7hi `echo space` there  "
-				+ NEW_LINE + " \"hi `echo space` there\"6" + NEW_LINE + "5 " + NEW_LINE
-				+ "4\t8\t8\t8\"hi `echo space` there\"\t8\t8\t8\t8\t8" + NEW_LINE + "\"hi space there\"3" + NEW_LINE
-				+ "2  hi space there" + NEW_LINE + "1" + NEW_LINE;
-		assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", fileContents));
+		String command = "tail -n 7 \"" + RELATIVE_EXPECTED_DIRECTORY + PATH_SEPARATOR
+				+ "testGrepInput\"|grep '\"hi `echo space` there\"'";
 
 		String out = shell.parseAndEvaluate(command);
 
 		String expected = " \"hi `echo space` there\"6" + NEW_LINE
-				+ "4\t8\t8\t8\"hi `echo space` there\"\t8\t8\t8\t8\t8" + NEW_LINE;
+				          + "4\t8\t8\t8\"hi `echo space` there\"\t8\t8\t8\t8\t8" + NEW_LINE;
 
 		assertEquals(out, expected);
 	}
@@ -314,25 +306,11 @@ public class TailIntegrationTest {
 	@Test
 	public void testTailWithCd() throws AbstractApplicationException, ShellException {
 
-		String command = "tail -n 17 <`head -n 20 " + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out >"
+		String command = "tail -n 17 <`head -n 20 " + ABSOLUTE_EXPECTED_DIRECTORY + PATH_SEPARATOR + "testCdInput >"
 				+ RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in" + ";echo '" + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR
 				+ "in'` > " + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "in2" + "; cd " + RELATIVE_TEST_DIRECTORY + ">"
 				+ "; echo Here is your pepsi >" + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in3"
 				+ "; sed s/'COKE '/PEPSI/ in2 > in4 ;cat in3 in4";
-
-		String fileContents = "hi there!                " + NEW_LINE + "  let me treat you to a  " + NEW_LINE
-				+ "\t bottle of virtual coke" + NEW_LINE + "                         " + NEW_LINE
-				+ "         ________        " + NEW_LINE + "        (((_()___)       " + NEW_LINE
-				+ "         || ^   |        " + NEW_LINE + "         || ^   |        " + NEW_LINE
-				+ "        // ^     \"      " + NEW_LINE + "      /// ^      `\"     " + NEW_LINE
-				+ "      ||| ^       ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
-				+ "      ||| ^ COKE  ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
-				+ "      ||| ^       ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
-				+ "      ||| ^       ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
-				+ "      \"\\ ^     //      " + NEW_LINE + "        ==========       " + NEW_LINE
-				+ "                         " + NEW_LINE + "   Treat me              " + NEW_LINE
-				+ "to a Pepsi next time   \t";
-		assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out", fileContents));
 
 		String out = shell.parseAndEvaluate(command);
 
