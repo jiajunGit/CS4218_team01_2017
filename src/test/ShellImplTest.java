@@ -118,7 +118,7 @@ public class ShellImplTest {
 	@Test
 	public void redirectOutputNonExistFile() {
 		File noExist = new File(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
-
+		noExist.delete();
 		Assert.assertFalse(noExist.exists());
 
 		try {
