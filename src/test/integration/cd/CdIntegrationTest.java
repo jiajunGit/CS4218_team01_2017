@@ -171,14 +171,7 @@ public class CdIntegrationTest {
 	@Test
 	public void testCdWithSort() throws AbstractApplicationException, ShellException {
 
-		String command = "cd " + RELATIVE_TEST_DIRECTORY_ONE + "; sort -n `cd " + ABSOLUTE_TEST_DIRECTORY_TWO + "`in";
-
-		String fileContents = "12" + NEW_LINE + "9128" + NEW_LINE + "8122" + NEW_LINE + "300000" + NEW_LINE + "-36"
-				+ NEW_LINE + "37" + NEW_LINE + "-14" + NEW_LINE + "1" + NEW_LINE + "1000" + NEW_LINE + "-17" + NEW_LINE
-				+ "35" + NEW_LINE + "100" + NEW_LINE + "1000" + NEW_LINE + "10" + NEW_LINE + "0" + NEW_LINE + "0"
-				+ NEW_LINE + "21000" + NEW_LINE + "1000" + NEW_LINE + "10" + NEW_LINE + "-212" + NEW_LINE + "200"
-				+ NEW_LINE + "2100" + NEW_LINE + "-200";
-		assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY_TWO + PATH_SEPARATOR + "in", fileContents));
+		String command = "cd " + RELATIVE_TEST_DIRECTORY_ONE + "; sort -n `cd " + ABSOLUTE_EXPECTED_DIRECTORY + "`testWithSort";
 
 		String out = shell.parseAndEvaluate(command);
 
