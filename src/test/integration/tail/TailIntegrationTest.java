@@ -66,6 +66,12 @@ public class TailIntegrationTest {
 		Environment.setDefaultDirectory();
 	}
 
+	@Test(expected=ShellException.class)
+	public void testTailWithWcNegativeConsecutiveSeq() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi there|cat|tail|wc -m;;echo there";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithWc() throws AbstractApplicationException, ShellException {
 
@@ -89,6 +95,12 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithSedNegativeUnclosedSingleQuotes() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi there|tail|sed s/'there''/here/";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithSed() throws AbstractApplicationException, ShellException {
 
@@ -112,6 +124,12 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithDateNegativeUnclosedDoubleQuotes() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi|tail \"   \"-n 1\";date";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithDate() throws AbstractApplicationException, ShellException {
 
@@ -128,6 +146,12 @@ public class TailIntegrationTest {
 		assertEquals(out, NEW_LINE + expected + NEW_LINE);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithSortNegativeUnclosedBackQuotes() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi|tail `echo -m 1``|sort";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithSort() throws AbstractApplicationException, ShellException {
 
@@ -148,6 +172,15 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=AbstractApplicationException.class)
+    public void testTailWithGrepNegativeMultipleFilesSpecified() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi|tail `echo -m 1`; cd " + ABSOLUTE_TEST_DIRECTORY + ";grep hi `echo out in in2`";
+	    assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out", ""));
+	    assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
+	    assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in2", ""));
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithGrep() throws AbstractApplicationException, ShellException {
 
@@ -170,6 +203,13 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=AbstractApplicationException.class)
+    public void testTailWithTailNegativeInvalidFilePath() throws AbstractApplicationException, ShellException {
+        String command = "tail " + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out.*   ;echo hi|tail ";
+        assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out", ""));
+        shell.parseAndEvaluate(command);
+    }
+	
 	@Test
 	public void testTailWithTail() throws AbstractApplicationException, ShellException {
 
@@ -189,6 +229,14 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithEchoNegativeMultipleInputRedir() throws AbstractApplicationException, ShellException {
+	    String command = "cd " + ABSOLUTE_TEST_DIRECTORY + "; tail < out < in| echo hi there";
+	    assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out", ""));
+        assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
+        shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithEcho() throws AbstractApplicationException, ShellException {
 
@@ -210,6 +258,13 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithHeadNegativeMultipleOutputRedir() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi there|tail|head > '" + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "out' >'" 
+	                     + ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in'";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithHead() throws AbstractApplicationException, ShellException {
 
@@ -228,6 +283,12 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+	public void testTailWithPwdNegativePipeWithOutputRedir() throws AbstractApplicationException, ShellException {
+	    String command = "echo hi there > '" + RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "out'|tail";
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithPwd() throws AbstractApplicationException, ShellException {
 
@@ -243,6 +304,13 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=ShellException.class)
+    public void testTailWithCdNegativeUppercaseApplicationName() throws AbstractApplicationException, ShellException {
+	    String command = "CD " + ABSOLUTE_TEST_DIRECTORY + ";tail <in";
+	    assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
+	    shell.parseAndEvaluate(command);
+	}
+	
 	@Test
 	public void testTailWithCd() throws AbstractApplicationException, ShellException {
 
@@ -284,6 +352,36 @@ public class TailIntegrationTest {
 		assertEquals(out, expected);
 	}
 
+	@Test(expected=AbstractApplicationException.class)
+    public void testTailWithCalNegativeInvalidCdDirectory() throws AbstractApplicationException, ShellException {
+        
+	    String path = "";
+	    String sub = ".." + PATH_SEPARATOR;
+	    for( int i = 0; i < 300; ++i ){
+	        path += sub;
+	    }
+	    path += "out";
+	    
+	    String command = "cd '" + path + "';tail <in; cal";
+        assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
+        shell.parseAndEvaluate(command);
+    }
+	
+	@Test(expected=AbstractApplicationException.class)
+    public void testTailWithCalNegativeInvalidAbsoluteCdDirectory() throws AbstractApplicationException, ShellException {
+        
+        String path = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR;
+        String sub = ".." + PATH_SEPARATOR;
+        for( int i = 0; i < 300; ++i ){
+            path += sub;
+        }
+        path += "out";
+        
+        String command = "cd '" + path + "';tail <in; cal";
+        assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", ""));
+        shell.parseAndEvaluate(command);
+    }
+	
 	@Test
 	public void testTailWithCal() throws AbstractApplicationException, ShellException {
 
