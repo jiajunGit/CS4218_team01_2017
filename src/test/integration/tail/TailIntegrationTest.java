@@ -268,7 +268,8 @@ public class TailIntegrationTest {
 
 		String out = shell.parseAndEvaluate(command);
 
-		String expected = "Here is your pepsi                         " + NEW_LINE + NEW_LINE
+		String expected = "Here is your pepsi"  + NEW_LINE
+		        + "                         " + NEW_LINE
 				+ "         ________        " + NEW_LINE + "        (((_()___)       " + NEW_LINE
 				+ "         || ^   |        " + NEW_LINE + "         || ^   |        " + NEW_LINE
 				+ "        // ^     \"      " + NEW_LINE + "      /// ^      `\"     " + NEW_LINE
@@ -276,7 +277,9 @@ public class TailIntegrationTest {
 				+ "      ||| ^ PEPSI ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
 				+ "      ||| ^       ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
 				+ "      ||| ^       ||     " + NEW_LINE + "      ||| ^       ||     " + NEW_LINE
-				+ "      \"\\ ^     //      " + NEW_LINE + "        ==========       " + NEW_LINE + NEW_LINE;
+				+ "      \"\\ ^     //      " + NEW_LINE + "        ==========       " + NEW_LINE 
+				+ NEW_LINE
+				+ NEW_LINE;
 
 		assertEquals(out, expected);
 	}
