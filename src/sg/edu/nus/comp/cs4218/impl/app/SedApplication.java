@@ -175,10 +175,21 @@ public class SedApplication implements Sed {
 
 		try {
 
-			Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(content);
+			int findStart = 0;
+			
+			while (findStart < content.length() && matcher.find(findStart)) {
+			    
+			    int start = matcher.start();
+                int end = matcher.end();
 
+                content.replace(start, end, replacement);
+                
+                findStart = start + replacement.length();
+			}
+			
 			out = content.toString();
-			out = out.replaceAll(regex, replacement);
 
 		} catch (PatternSyntaxException e) {
 			throw new SedException(ERROR_EXP_INVALID_REGEX);
