@@ -38,7 +38,7 @@ public class HeadIntegrationTest {
 				+ " ; cat " + RELATIVE_DIR + "headOut.txt");
 		String expectedOut = "head1" + LINE_SEPARATOR + "head2" + LINE_SEPARATOR + "head3" + LINE_SEPARATOR + "head4"
 				+ LINE_SEPARATOR + "head5" + LINE_SEPARATOR + "head6" + LINE_SEPARATOR + "head7" + LINE_SEPARATOR
-				+ "head8" + LINE_SEPARATOR + "head9" + LINE_SEPARATOR + "head10" + LINE_SEPARATOR;
+				+ "head8" + LINE_SEPARATOR + "head9" + LINE_SEPARATOR + "head10" + LINE_SEPARATOR + LINE_SEPARATOR;
 
 		File file = new File(RELATIVE_DIR + "headOut.txt");
 		if (file.exists()) {

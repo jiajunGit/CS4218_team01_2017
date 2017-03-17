@@ -76,7 +76,7 @@ public class SedIntegrationTest {
 				+ "sedIntegration2.txt ; cat " + RELATIVE_DIR + "*");
 		String expected = "-n 1sub sub string" + LINE_SEPARATOR + "replacement substring" + LINE_SEPARATOR + "substitution"
 				+ "many sub string" + LINE_SEPARATOR + "replacement manystring" + LINE_SEPARATOR + "manystitution"
-				+ LINE_SEPARATOR;
+				+ LINE_SEPARATOR + LINE_SEPARATOR;
 
 		File file = new File(RELATIVE_DIR + "sedIntegration2.txt");
 		if (file.exists()) {
