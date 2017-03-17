@@ -14,18 +14,6 @@ import sg.edu.nus.comp.cs4218.Shell;
 
 /**
  * A class used to expand glob paths.
- * 
- * Assumptions:
- * 
- * 1) Hidden files are ignored by glob.
- * 
- * 2) Do NOT support glob together with path segments symbols like . and .. so syntax like *.
- *    or *.* or .* does NOT match path segment symbol . (the symbol for representing current directory)
- *    and *.. or ..* or .*. or *. or .* does NOT match path segment symbol .. (the symbol for representing 
- *    previous directory). However, paths like src/./dir* (dot means current directory) and src/../dir* (dot dot
- *    means previous directory) are supported.
- * 
- * 3) Matching of file names is case insensitive
  */
 
 public class Globber {
@@ -115,31 +103,30 @@ public class Globber {
 						continue;
 					}
 
-					File dir = new File(dirPath);
-					String[] fileNames = dir.list(filter);
-
 					switch (pathSymbolType) {
-					case CURRENT:
-						if (!Environment.isHidden(dirPath)) {
-							newDirPaths.add(dirPath);
-						}
-						break;
-					case PREVIOUS:
-						String prevPath = Environment.getAbsPath(dirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S);
-						if (!prevPath.isEmpty() && !Environment.isHidden(prevPath)) {
-							newDirPaths.add(prevPath);
-						}
-						break;
-					default:
-						for (String fileName : fileNames) {
-							String newPath = dirPath;
-							newPath += Symbol.PATH_SEPARATOR;
-							newPath += fileName;
-							if (!Environment.isHidden(newPath)) {
-								newDirPaths.add(newPath);
-							}
-						}
-						break;
+    					case CURRENT:
+    						if (!Environment.isHidden(dirPath)) {
+    							newDirPaths.add(dirPath);
+    						}
+    						break;
+    					case PREVIOUS:
+    						String prevPath = Environment.getAbsPath(dirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S);
+    						if (!prevPath.isEmpty() && !Environment.isHidden(prevPath)) {
+    							newDirPaths.add(prevPath);
+    						}
+    						break;
+    					default:
+    					    File dir = new File(dirPath);
+    	                    String[] fileNames = dir.list(filter);
+    						for (String fileName : fileNames) {
+    							String newPath = dirPath;
+    							newPath += Symbol.PATH_SEPARATOR;
+    							newPath += fileName;
+    							if (!Environment.isHidden(newPath)) {
+    								newDirPaths.add(newPath);
+    							}
+    						}
+    						break;
 					}
 				}
 				dirPaths = newDirPaths;
