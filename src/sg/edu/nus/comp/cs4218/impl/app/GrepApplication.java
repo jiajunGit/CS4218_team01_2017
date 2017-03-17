@@ -271,7 +271,7 @@ public class GrepApplication implements Grep {
 
 		Pattern regxPattern = null;
 		try {
-			regxPattern = Pattern.compile(pattern);
+			regxPattern = Pattern.compile(pattern, Pattern.MULTILINE);
 		} catch (PatternSyntaxException e) {
 			throw new GrepException(ERROR_EXP_INVALID_PATTERN);
 		}
@@ -380,7 +380,7 @@ public class GrepApplication implements Grep {
 
 			Pattern regxPattern = null;
 			if (!pattern.isEmpty()) {
-				regxPattern = Pattern.compile(pattern);
+				regxPattern = Pattern.compile(pattern, Pattern.MULTILINE);
 			}
 
 			StringBuilder output = new StringBuilder();
