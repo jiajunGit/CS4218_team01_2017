@@ -137,7 +137,7 @@ public class SedApplication implements Sed {
 
 		try {
 
-			Pattern pattern = Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 			Matcher matcher = pattern.matcher(content);
 			int findStart = 0;
 
@@ -175,7 +175,7 @@ public class SedApplication implements Sed {
 
 		try {
 
-			Pattern pattern = Pattern.compile(regex);
+			Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 			Matcher matcher = pattern.matcher(content);
 			int findStart = 0;
 			
