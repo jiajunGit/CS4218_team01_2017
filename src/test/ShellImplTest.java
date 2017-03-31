@@ -2,7 +2,6 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,10 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
@@ -40,11 +37,6 @@ public class ShellImplTest {
 
 	private ShellImpl shell = new ShellImpl();
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
-	@BeforeClass
-	public static void setup() {
-		GlobTestHelper.setupGlobFiles(ABSOLUTE_TEST_GLOB_DIRECTORY);
-	}
 
 	@Before
 	public void setUpBeforeTest() {
@@ -384,6 +376,44 @@ public class ShellImplTest {
 	}
 
 	// Test section for double quotes
+	
+	@Test
+	public void testComplexQuotes() throws ShellException, AbstractApplicationException {
+		String output = shell.processDQ("\" `echo \"`echo \"hi\"`\"` \"");
+		String expectedOut = " hi ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testDoubleQuoteWithinSingleQuoteWithinDoubleQuote() throws ShellException, AbstractApplicationException {
+		String output = shell.processDQ("\" `echo '\"hi\"'` \"");
+		String expectedOut = " \"hi\" ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testSingleQuoteWithinBackQuoteWithinDoubleQuoteWithinBackQuote() 
+			throws AbstractApplicationException, ShellException {
+					
+		String output = shell.processDQ("\" `echo \"`echo 'hi'`\"` \"");
+		String expectedOut = " hi ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackQuoteWithinDoubleQuoteWithinBackQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\" `echo \"`echo hi`\"` \"");
+		String expectedOut = " hi ";
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testDoubleQuoteWithinBackQuoteWithinDoubleQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.processDQ("\" `echo \"hi\"` \"");
+		String expectedOut = " hi ";
+		assertEquals(expectedOut, output);
+	}
+	
 	@Test
 	public void testDoubleQuoteSimple() throws AbstractApplicationException, ShellException {
 		String output = shell.processDQ("\"hi\"");
@@ -435,17 +465,25 @@ public class ShellImplTest {
 
 	@Test(expected = ShellException.class)
 	public void testDoubleQuoteWithOddBackquoteException() throws AbstractApplicationException, ShellException {
-		String output = shell.processDQ("\"hi ``inner backquote`\"");
+		shell.processDQ("\"hi ``inner backquote`\"");
 	}
 
 	@Test(expected = ShellException.class)
 	public void testDoubleQuoteWithOddSinglequoteException() throws AbstractApplicationException, ShellException {
-		String output = shell.processDQ("\"hi '''inner singlequote''\"");
+		shell.processDQ("\"hi '''inner singlequote''\"");
 	}
 
 	/**
 	 * Calls Command
+	 * @throws ShellException 
+	 * @throws AbstractApplicationException 
 	 */
+	
+	@Test(expected = ShellException.class)
+	public void testCallNewLineViolation() throws AbstractApplicationException, ShellException {
+		shell.parseAndEvaluate("Echo hi" + LINE_SEPARATOR + "there", System.out);
+	}
+	
 	@Test(expected = ShellException.class)
 	public void testCallInvalidCaseSensitiveAppName() throws AbstractApplicationException, ShellException {
 		shell.parseAndEvaluate("Echo", System.out);
@@ -687,64 +725,26 @@ public class ShellImplTest {
 
 	@Test
 	public void testGlobOneDirectory() {
-		String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "cab*";
+		String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*";
 		String output = shell.globOneFile(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + LINE_SEPARATOR;
+		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "README.md" + LINE_SEPARATOR;
 		assertEquals(output, expected);
 	}
 
 	@Test
-	public void testGlobOneFileWithSpaces() {
-		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\"FiLe WiTh SpAcEs\""
-				+ PATH_SEPARATOR + "*\"ile with spac\"*\"s.\"*";
-		String output = shell.globOneFile(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "FiLe WiTh SpAcEs" + PATH_SEPARATOR
-				+ "file with spaces.txt" + LINE_SEPARATOR;
-		assertEquals(output, expected);
-	}
-
-	@Test
-	public void testGlobAfterFullDirectoryName() {
-		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "\".cab.car\"**";
-		String output = shell.globOneFile(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + LINE_SEPARATOR;
-		assertEquals(output, expected);
-	}
-
-	@Test
-	public void testGlobMultipleFilesAndDirectoriesInSingleDirectory() {
-		String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*\".cab.car\""
-				+ PATH_SEPARATOR + "*";
+	public void testGlobMultipleFiles() {
+		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".." + PATH_SEPARATOR + ".." 
+						+ PATH_SEPARATOR + "\"*";
 		String output = shell.globFilesDirectories(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-.- "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "-carr "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712 "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712 2712 2712 "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "cab "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "car "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "cat" + LINE_SEPARATOR;
-		assertEquals(output, expected);
-	}
-
-	@Test
-	public void testGlobMultipleFilesAndDirectoriesInMultipleDirectories() {
-		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "ca*" + PATH_SEPARATOR
-				+ "c*t" + PATH_SEPARATOR + "2712*";
-		String output = shell.globFilesDirectories(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR + "cat"
-				+ PATH_SEPARATOR + "2712 " + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cab" + PATH_SEPARATOR
-				+ "cat" + PATH_SEPARATOR + "2712.txt " + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "car"
-				+ PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 " + ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR
-				+ "car" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712.txt " + ABSOLUTE_TEST_GLOB_DIRECTORY
-				+ PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "2712 "
-				+ ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR
-				+ "2712.txt" + LINE_SEPARATOR;
+		String expected = Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "sg "
+						+ Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "test" 
+						+ LINE_SEPARATOR;
 		assertEquals(output, expected);
 	}
 
 	@Test
 	public void testGlobWithMultipleOutputRedir() {
-		String command = "echo hi >\"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR
+		String command = "echo hi >>\"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR
 				+ "-.-" + PATH_SEPARATOR + "2712*";
 		String output = shell.globWithException(command);
 		String expected = "shell: Invalid syntax encountered.";
@@ -753,10 +753,10 @@ public class ShellImplTest {
 
 	@Test
 	public void testGlobWithMultipleInputRedir() {
-		String command = "cat <\"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR
+		String command = "cat <<\"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "-.-" + PATH_SEPARATOR
 				+ "-.-" + PATH_SEPARATOR + "2712*";
 		String output = shell.globWithException(command);
-		String expected = "shell: Multiple input streams.";
+		String expected = "shell: Invalid syntax encountered.";
 		assertEquals(output, expected);
 	}
 

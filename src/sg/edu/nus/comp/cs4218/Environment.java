@@ -98,24 +98,6 @@ public final class Environment {
 		return absPath;
 	}
 
-	/*
-	 * WARNING: This method only constructs the parent path. It does NOT mean
-	 * that the path constructed exists [ Use isFile() or isExists() or
-	 * isDirectory() ].
-	 * 
-	 * Returns empty string if parent path cannot be created
-	 */
-	public static String getParentPathFrom(String filePath) {
-		String path = filePath;
-
-		if (path == null) {
-			return "";
-		}
-		File file = new File(path);
-		path = file.getParent();
-		return (path != null ? path : "");
-	}
-
 	public static boolean createNewFile(String absPath) {
 
 		if (absPath == null) {
@@ -146,21 +128,5 @@ public final class Environment {
 		}
 
 		return isDeleted;
-	}
-
-	public static boolean createNewDirectory(String absPath) {
-
-		if (absPath == null) {
-			return false;
-		}
-
-		boolean isCreated = false;
-		File file = new File(absPath);
-		try {
-			isCreated = file.mkdir();
-		} catch (SecurityException e) {
-		}
-
-		return isCreated;
 	}
 }

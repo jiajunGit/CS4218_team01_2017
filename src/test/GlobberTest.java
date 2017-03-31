@@ -3,12 +3,13 @@ package test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.impl.Globber;
 import sg.edu.nus.comp.cs4218.impl.ShellImpl;
@@ -17,75 +18,19 @@ public class GlobberTest {
 
 	private static Globber globber;
 
-	private static String absTestDirPath;
-	private static String relativeDirPath;
-	private static String baseDirName;
-
+	private static final String PATH_SEPARATOR = File.separator;
+	private static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "glob";
+	private static final String ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_DIRECTORY;
+	private static final String SECOND_ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + "src";
+	
 	@BeforeClass
 	public static void setUp() {
-
 		globber = new Globber();
-		absTestDirPath = Environment.currentDirectory + Symbol.PATH_SEPARATOR_S + "src" + Symbol.PATH_SEPARATOR_S
-				+ "test" + Symbol.PATH_SEPARATOR_S + "glob";
-		relativeDirPath = "src" + Symbol.PATH_SEPARATOR_S + "test" + Symbol.PATH_SEPARATOR_S + "glob";
-		baseDirName = "glob";
-
-		GlobTestHelper.setupGlobFiles(absTestDirPath);
 	}
 
 	@AfterClass
 	public static void tearDown() {
-
 		globber = null;
-		absTestDirPath = "";
-		relativeDirPath = "";
-		baseDirName = "";
-	}
-
-	@Test
-	public void testRelativePathWithConsecutiveGlobCharacters() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271**";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 2);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271.txt";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[1], expected);
-	}
-
-	@Test
-	public void testAbsolutePathWithConsecutiveGlobCharacters() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271**";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 2);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271.txt";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[1], expected);
 	}
 
 	@Test
@@ -98,198 +43,6 @@ public class GlobberTest {
 		assertTrue(out.length == 0);
 	}
 
-	@Test
-	public void testAbsolutePathWithEndingGlobCharacter() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 2);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271.txt";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[1], expected);
-	}
-
-	@Test
-	public void testRelativePathWithEndingGlobCharacter() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 2);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "271.txt";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[1], expected);
-	}
-
-	@Test
-	public void testRelativePathWithEndingPathSeparator() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*12" + Symbol.PATH_SEPARATOR_S;
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testRelativePathWithStartingGlobCharacter() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testRelativePathWithPreviousDirectorySymbol() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S
-				+ baseDirName + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S
-				+ Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testRelativePathWithCurrentDirectorySymbol() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S
-				+ Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testAbsolutePathWithPreviousDirectorySymbol() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + Symbol.PREV_DIR_S + Symbol.PATH_SEPARATOR_S
-				+ baseDirName + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + Symbol.CURRENT_DIR_S
-				+ Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testAbsolutePathWithCurrentDirectorySymbol() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S
-				+ Symbol.CURRENT_DIR_S + Symbol.PATH_SEPARATOR_S + "2712" + Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testAbsolutePathWithEndingPathSeparator() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*12" + Symbol.PATH_SEPARATOR_S;
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
-	public void testAbsolutePathWithStartingGlobCharacter() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*12";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
-	}
-
 	/**
 	 * Tests if the developer have sanitized the glob string before using it to
 	 * construct the regex pattern used to match file/directory names. Relative
@@ -300,8 +53,8 @@ public class GlobberTest {
 	@Test
 	public void testRelativePathWithSpecialCharacters() throws ShellException {
 
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "27'.*'";
+		String input = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712"
+					 + PATH_SEPARATOR + "27'.*'";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
@@ -320,8 +73,8 @@ public class GlobberTest {
 	@Test
 	public void testAbsolutePathWithSpecialCharacters() throws ShellException {
 
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "27'.*'";
+		String input = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712"
+					 + PATH_SEPARATOR + "27'.*'";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
@@ -340,8 +93,8 @@ public class GlobberTest {
 	@Test
 	public void testRelativePathWithEscapeCharacters() throws ShellException {
 
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*'\\E2712\\Q'*";
+		String input = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712"
+					 + PATH_SEPARATOR + "*'\\E2712\\Q'*";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
@@ -360,8 +113,8 @@ public class GlobberTest {
 	@Test
 	public void testAbsolutePathWithEscapeCharacters() throws ShellException {
 
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "*'\\E2712\\Q'*";
+		String input = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712"
+					 + PATH_SEPARATOR + "*'\\E2712\\Q'*";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
@@ -371,246 +124,10 @@ public class GlobberTest {
 	}
 
 	@Test
-	public void testPathWithNonMatchingCases() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		Environment.setDefaultDirectory();
-
-		String[] expected = {
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S + "New folder",
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces",
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "FiLe WiTh SpAcEs" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces.txt" };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-	}
-
-	@Test
-	public void testPathWithSpaces() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S + "*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		Environment.setDefaultDirectory();
-
-		String[] expected = {
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S + "New folder",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces.txt" };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-	}
-
-	@Test
-	public void testRelativePathWithSingleGlobCharacter() throws ShellException {
-
-		Environment.currentDirectory = absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces";
-
-		String input = "*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		Environment.setDefaultDirectory();
-
-		String[] expected = {
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S + "New folder",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "file with spaces" + Symbol.PATH_SEPARATOR_S
-						+ "file with spaces.txt", };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-	}
-
-	@Test
-	public void testRelativePath() throws ShellException {
-
-		String input = relativeDirPath + Symbol.PATH_SEPARATOR_S + "ca*" + Symbol.PATH_SEPARATOR_S + "cat"
-				+ Symbol.PATH_SEPARATOR_S + "2712*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 6);
-
-		String[] expected = {
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt" };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-		assertEquals(out[3], expected[3]);
-		assertEquals(out[4], expected[4]);
-		assertEquals(out[5], expected[5]);
-	}
-
-	@Test
-	public void testMultipleDirectoriesInMultipleDirectories() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "ca*" + Symbol.PATH_SEPARATOR_S + "c*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 8);
-
-		String[] expected = {
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cab",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "car",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cat",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cab",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cat",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cab",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "car",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cat" };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-		assertEquals(out[3], expected[3]);
-		assertEquals(out[4], expected[4]);
-		assertEquals(out[5], expected[5]);
-		assertEquals(out[6], expected[6]);
-		assertEquals(out[7], expected[7]);
-	}
-
-	@Test
-	public void testMultipleFilesInMultipleDirectories() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "ca*" + Symbol.PATH_SEPARATOR_S + "cat"
-				+ Symbol.PATH_SEPARATOR_S + "2712*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 6);
-
-		String[] expected = {
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cab" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "car" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712",
-
-				absTestDirPath + Symbol.PATH_SEPARATOR_S + "cat" + Symbol.PATH_SEPARATOR_S + "cat"
-						+ Symbol.PATH_SEPARATOR_S + "2712.txt" };
-
-		assertEquals(out[0], expected[0]);
-		assertEquals(out[1], expected[1]);
-		assertEquals(out[2], expected[2]);
-		assertEquals(out[3], expected[3]);
-		assertEquals(out[4], expected[4]);
-		assertEquals(out[5], expected[5]);
-	}
-
-	@Test
-	public void testMultipleDirectories() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "ca*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 3);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "cab";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "car";
-
-		assertEquals(out[1], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "cat";
-
-		assertEquals(out[2], expected);
-	}
-
-	@Test
-	public void testSingleDirectory() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "-ca*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "-carr";
-
-		assertEquals(out[0], expected);
-	}
-
-	@Test
 	public void testInvalidCharactersInPath() throws ShellException {
 
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ":(-.-):" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + "c*r*";
+		String input = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + ":(-.-):" + PATH_SEPARATOR + "-.-"
+					 + PATH_SEPARATOR + PATH_SEPARATOR + "c*r*";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
@@ -622,124 +139,58 @@ public class GlobberTest {
 	@Test
 	public void testNonExistentPath() throws ShellException {
 
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "(-.-)" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + "c*r*";
+		String input = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "(-.-)" + PATH_SEPARATOR + "-.-" 
+					 + PATH_SEPARATOR + PATH_SEPARATOR + "c*r*";
 
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 
 		String[] out = globber.processGlob(input, inputSymbols);
 
 		assertTrue(out.length == 0);
-	}
-
-	@Test
-	public void testMultiplePathSeparator() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + Symbol.PATH_SEPARATOR_S + "c*r*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 3);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "car";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "car.txt";
-
-		assertEquals(out[1], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "carrier";
-
-		assertEquals(out[2], expected);
-	}
-
-	@Test
-	public void testMultipleFileGlob() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "c*r*";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 3);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "car";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "car.txt";
-
-		assertEquals(out[1], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "carrier";
-
-		assertEquals(out[2], expected);
-	}
-
-	@Test
-	public void testMultipleFilesInSingleDirectory() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "c*r";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 2);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "car";
-
-		assertEquals(out[0], expected);
-
-		expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + "-.-" + Symbol.PATH_SEPARATOR_S + "-.-"
-				+ Symbol.PATH_SEPARATOR_S + "carrier";
-
-		assertEquals(out[1], expected);
-	}
-
-	@Test
-	public void testSingleFile() throws ShellException {
-
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "27*2";
-
-		String inputSymbols = ShellImpl.generateSymbolString(input);
-
-		String[] out = globber.processGlob(input, inputSymbols);
-
-		assertTrue(out.length == 1);
-
-		String expected = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "2712";
-
-		assertEquals(out[0], expected);
 	}
 
 	@Test
 	public void testNullInputSymbol() throws ShellException {
 
-		String input = absTestDirPath + Symbol.PATH_SEPARATOR_S + ".cab.car" + Symbol.PATH_SEPARATOR_S + "2712"
-				+ Symbol.PATH_SEPARATOR_S + "27*2";
+		String input = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + ".cab.car" + PATH_SEPARATOR + "2712" 
+					 + PATH_SEPARATOR + "27*2";
 
 		String[] out = globber.processGlob(input, null);
 
 		assertTrue(out.length == 0);
 	}
+	
+	@Test
+	public void testSingleFile() throws ShellException {
+		
+		String input = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + "." + PATH_SEPARATOR + "*";
+		String expected = ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "README.md";
+		
+		String inputSymbols = ShellImpl.generateSymbolString(input);
+		String[] out = globber.processGlob(input, inputSymbols);
+		
+		assertTrue(out.length == 1);
+		
+		assertEquals( expected, out[0] );
+	}
 
+	@Test
+	public void testMultipleFiles() throws ShellException {
+		
+		String input = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + ".." + PATH_SEPARATOR + ".." + PATH_SEPARATOR + "*";
+		
+		String []expected = { SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "sg",
+							  SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "test" };
+		
+		String inputSymbols = ShellImpl.generateSymbolString(input);
+		String[] out = globber.processGlob(input, inputSymbols);
+		
+		assertTrue(out.length == 2);
+		
+		assertEquals( expected[0], out[0] );
+		assertEquals( expected[1], out[1] );
+	}
+	
 	@Test
 	public void testNullInput() throws ShellException {
 

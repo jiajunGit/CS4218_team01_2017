@@ -1,20 +1,12 @@
 package sg.edu.nus.comp.cs4218.impl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Stack;
 
 import sg.edu.nus.comp.cs4218.Application;
-import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.Shell;
 import sg.edu.nus.comp.cs4218.Symbol;
 
@@ -451,37 +443,6 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Main method for the Shell Interpreter program.
-	 * 
-	 * @param args
-	 *            List of strings arguments, unused.
-	 */
-	public static void main(String... args) {
-
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-		String readLine = null;
-		String currentDir;
-		Shell shell = new ShellImpl();
-
-		while (true) {
-			try {
-				currentDir = Environment.currentDirectory;
-				System.out.print(currentDir + ">");
-				readLine = bReader.readLine();
-				if (readLine == null) {
-					break;
-				}
-				if (("").equals(readLine)) {
-					continue;
-				}
-				shell.parseAndEvaluate(readLine, System.out);
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
-
-	/**
 	 * Static method to run the application as specified by the application
 	 * command keyword and arguments.
 	 * 
@@ -537,70 +498,6 @@ public class ShellImpl implements Shell {
 	}
 
 	/**
-	 * Static method to creates an inputStream based on the file name or file
-	 * path.
-	 * 
-	 * @param inputStreamS
-	 *            String of file name or file path
-	 * 
-	 * @return InputStream of file opened
-	 * 
-	 * @throws ShellException
-	 *             If file is not found.
-	 */
-	public static InputStream openInputRedir(String inputStreamS) throws ShellException {
-		File inputFile = new File(inputStreamS);
-		FileInputStream fInputStream = null;
-		try {
-			fInputStream = new FileInputStream(inputFile);
-		} catch (FileNotFoundException e) {
-			throw new ShellException(e.getMessage());
-		}
-		return fInputStream;
-	}
-
-	/**
-	 * Static method to creates an outputStream based on the file name or file
-	 * path.
-	 * 
-	 * @param onputStreamS
-	 *            String of file name or file path.
-	 * 
-	 * @return OutputStream of file opened.
-	 * 
-	 * @throws ShellException
-	 *             If file destination cannot be opened or inaccessible.
-	 */
-	public static OutputStream openOutputRedir(String outputStreamS) throws ShellException {
-		File outputFile = new File(outputStreamS);
-		FileOutputStream fOutputStream = null;
-		try {
-			fOutputStream = new FileOutputStream(outputFile);
-		} catch (FileNotFoundException e) {
-			throw new ShellException(e.getMessage());
-		}
-		return fOutputStream;
-	}
-
-	/**
-	 * Static method to close an inputStream.
-	 * 
-	 * @param inputStream
-	 *            InputStream to be closed.
-	 * 
-	 * @throws ShellException
-	 *             If inputStream cannot be closed successfully.
-	 */
-	public static void closeInputStream(InputStream inputStream) throws ShellException {
-		if (inputStream != null && inputStream != System.in) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-			}
-		}
-	}
-
-	/**
 	 * Static method to close an outputStream. If outputStream provided is
 	 * System.out, it will be ignored.
 	 * 
@@ -617,45 +514,6 @@ public class ShellImpl implements Shell {
 			} catch (IOException e) {
 			}
 		}
-	}
-
-	/**
-	 * Static method to write output of an outputStream to another outputStream,
-	 * usually System.out.
-	 * 
-	 * @param outputStream
-	 *            Source outputStream to get stream from.
-	 * @param stdout
-	 *            Destination outputStream to write stream to.
-	 * @throws ShellException
-	 *             If exception is thrown during writing.
-	 */
-	public static void writeToStdout(OutputStream outputStream, OutputStream stdout) throws ShellException {
-		if (stdout == null || outputStream == null) {
-			return;
-		}
-		try {
-			stdout.write(((ByteArrayOutputStream) outputStream).toByteArray());
-		} catch (IOException e) {
-			throw new ShellException(EXP_STDOUT);
-		}
-	}
-
-	/**
-	 * Static method to pipe data from an outputStream to an inputStream, for
-	 * the evaluation of the Pipe Commands.
-	 * 
-	 * @param outputStream
-	 *            Source outputStream to get stream from.
-	 * 
-	 * @return InputStream with data piped from the outputStream.
-	 * 
-	 * @throws ShellException
-	 *             If exception is thrown during piping.
-	 */
-	public static InputStream outputStreamToInputStream(OutputStream outputStream) throws ShellException {
-		return (outputStream != null ? new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray())
-				: new ByteArrayInputStream(new byte[0]));
 	}
 
 	// TODO
@@ -1246,37 +1104,6 @@ public class ShellImpl implements Shell {
 
 			fromIndex = start + outputSymbol.length();
 		}
-	}
-
-	/**
-	 * Searches for and processes the commands enclosed by non-nested back
-	 * quotes for command substitution. If no back quotes are found, the input
-	 * is returned unchanged. If back quotes are found, the back quotes and its
-	 * enclosed commands substituted with the output from processing the
-	 * commands enclosed in the back quotes.
-	 * 
-	 * @param input
-	 *            String containing the commands.
-	 * 
-	 * @return String with the back quotes command processed.
-	 * 
-	 * @throws AbstractApplicationException
-	 *             If an exception happens while processing the content in the
-	 *             back quotes.
-	 * @throws ShellException
-	 *             If an exception happens while processing the content in the
-	 *             back quotes.
-	 */
-	public String processBQ(String input) throws ShellException, AbstractApplicationException {
-
-		if (input == null) {
-			return null;
-		}
-		StringBuilder cmdSymbols = generateSymbols(input);
-		StringBuilder cmd = new StringBuilder(input);
-		processBQ(cmd, cmdSymbols, true);
-
-		return cmd.toString();
 	}
 
 	/**

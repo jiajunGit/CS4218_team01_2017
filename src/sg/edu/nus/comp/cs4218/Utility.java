@@ -24,24 +24,10 @@ public final class Utility {
 		return new ByteArrayInputStream(((ByteArrayOutputStream) outputStream).toByteArray());
 	}
 
-	public static boolean isWindows() {
-		String osName = System.getProperty("os.name");
-		return osName.startsWith("Windows");
-	}
-
 	public static void closeStdin(InputStream stdin) {
 		if (stdin != null && stdin != System.in) {
 			try {
 				stdin.close();
-			} catch (IOException e) {
-			}
-		}
-	}
-
-	public static void closeStdout(OutputStream stdout) {
-		if (stdout != null && stdout != System.out) {
-			try {
-				stdout.close();
 			} catch (IOException e) {
 			}
 		}

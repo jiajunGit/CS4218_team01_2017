@@ -97,6 +97,27 @@ public class CommandSubstitutionTest {
 	}
 
 	@Test
+	public void testDoubleQuoteWithinBackQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitution("echo ` echo \"hi\" `");
+		String expectedOut = "hi" + LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testSingleQuoteWithinBackquote() {
+		String output = shell.performCommandSubstitution("echo ` echo 'hi' `");
+		String expectedOut = "hi" + LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
+	public void testBackquoteWithinDoubleQuoteWithinBackQuote() throws AbstractApplicationException, ShellException {
+		String output = shell.performCommandSubstitution("echo ` echo \"`echo 'hi'`\" `");
+		String expectedOut = "hi" + LINE_SEPARATOR;
+		assertEquals(expectedOut, output);
+	}
+	
+	@Test
 	public void testBackquoteHead() throws AbstractApplicationException, ShellException {
 		String file = RELATIVE_TEST_DIRECTORY + "test11Lines";
 		String output = shell.performCommandSubstitution("echo `head " + file + "`");
