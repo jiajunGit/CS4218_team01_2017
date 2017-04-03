@@ -20,8 +20,8 @@ import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 public class WcApplicationTest {
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
-			+ PATH_SEPARATOR + "wc" + PATH_SEPARATOR;
+	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+			+ "ef2" + PATH_SEPARATOR + "wc" + PATH_SEPARATOR;
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 	@AfterClass
@@ -32,65 +32,33 @@ public class WcApplicationTest {
 	@Test
 	public void testPrintCharacterCountInFile() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals(" 6617123", wcApp
-				.printCharacterCountInFile("wc -m " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals(" 6617123", wcApp.printCharacterCountInFile(
+				"wc -m " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 	}
 
 	@Test
 	public void testPrintWordCountInFile() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals(" 1095695",
-				wcApp.printWordCountInFile("wc -w " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals(" 1095695", wcApp.printWordCountInFile(
+				"wc -w " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 	}
 
 	@Test
 	public void testPrintNewlineCountInFile() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals("  128457", wcApp
-				.printNewlineCountInFile("wc -l " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals("  128457", wcApp.printNewlineCountInFile(
+				"wc -l " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 
 	}
 
 	@Test
 	public void testPrintAllCountsInFile() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals(" 6617123 1095695  128457", wcApp
-				.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals(" 6617123 1095695  128457", wcApp.printAllCountsInFile(
+				"wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 
 	}
 
-	// @Test
-	// public void testPrintCharacterCountInFileSmall(){
-	// WcApplication wcApp = new WcApplication();
-	// assertEquals(" 6488666" + LINE_SEPARATOR,
-	// wcApp.printCharacterCountInFile("wc -m " + RELATIVE_TEST_DIRECTORY +
-	// "input" + PATH_SEPARATOR + "big.txt"));
-	// }
-	//
-	// @Test
-	// public void testPrintWordCountInFileSmall(){
-	// WcApplication wcApp = new WcApplication();
-	// assertEquals(" 1095695" + LINE_SEPARATOR, wcApp.printWordCountInFile("wc
-	// -w " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
-	// }
-	//
-	// @Test
-	// public void testPrintNewlineCountInFileSmall(){
-	// WcApplication wcApp = new WcApplication();
-	// assertEquals(" 128457" + LINE_SEPARATOR,
-	// wcApp.printNewlineCountInFile("wc -l " + RELATIVE_TEST_DIRECTORY +
-	// "input" + PATH_SEPARATOR + "big.txt"));
-	//
-	// }
-	//
-	// @Test
-	// public void testPrintAllCountsInFileSmall(){
-	// WcApplication wcApp = new WcApplication();
-	// assertEquals(" 6488666 1095695 128457" + LINE_SEPARATOR,
-	// wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input"
-	// + PATH_SEPARATOR + "big.txt"));
-	//
-	// }
 
 	@Test
 	public void testPrintCharacterCountInStdin() {
@@ -151,35 +119,37 @@ public class WcApplicationTest {
 	@Test
 	public void testMoreThan3Options() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals("Invalid Options", wcApp
-				.printAllCountsInFile("wc -mwlq " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals("Invalid Options", wcApp.printAllCountsInFile(
+				"wc -mwlq " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 	}
 
 	@Test
 	public void test2Files() {
 		WcApplication wcApp = new WcApplication();
 		String response = "    3647     592      71" + LINE_SEPARATOR + "     316      53      10";
-		assertEquals(response, wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input"
-				+ PATH_SEPARATOR + "text1 " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"));
+		assertEquals(response,
+				wcApp.printAllCountsInFile(
+						"wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text1 "
+								+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"));
 	}
 
 	@Test
 	public void test4Files() {
 		WcApplication wcApp = new WcApplication();
-		String response = " 6617123 1095695  128457" + LINE_SEPARATOR + "    3647     592      71" + LINE_SEPARATOR
-				+ "     316      53      10" + LINE_SEPARATOR + "     198       0      99";
-		assertEquals(response,
-				wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt "
-						+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text1 " + RELATIVE_TEST_DIRECTORY
-						+ "input" + PATH_SEPARATOR + "text2 " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
-						+ "textblank"));
+		String response = " 6617123 1095695  128457" + LINE_SEPARATOR + "    3647     592      71"
+				+ LINE_SEPARATOR + "     316      53      10" + LINE_SEPARATOR
+				+ "     198       0      99";
+		assertEquals(response, wcApp.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY
+				+ "input" + PATH_SEPARATOR + "big.txt " + RELATIVE_TEST_DIRECTORY + "input"
+				+ PATH_SEPARATOR + "text1 " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
+				+ "text2 " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "textblank"));
 	}
 
 	@Test
 	public void testInvalidFile() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals("Invalid File", wcApp
-				.printAllCountsInFile("wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "noexist.txt"));
+		assertEquals("Invalid File", wcApp.printAllCountsInFile(
+				"wc -mwl " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "noexist.txt"));
 	}
 
 	@Test
@@ -191,15 +161,15 @@ public class WcApplicationTest {
 	@Test
 	public void testInvalidOption() {
 		WcApplication wcApp = new WcApplication();
-		assertEquals("Invalid Options", wcApp
-				.printAllCountsInFile("wc -stu " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
+		assertEquals("Invalid Options", wcApp.printAllCountsInFile(
+				"wc -stu " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "big.txt"));
 	}
 
 	@Test
 	public void testRunPrintCharacterCountInFile() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-m", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2" };
+		String[] arguments = {"-m", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"};
 		try {
 			wcApp.run(arguments, null, System.out);
 			assertEquals("     316", out.toString());
@@ -213,7 +183,7 @@ public class WcApplicationTest {
 	public void testRunPrintWordCountInFile() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-w", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2" };
+		String[] arguments = {"-w", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"};
 		try {
 			wcApp.run(arguments, null, System.out);
 			assertEquals("      53", out.toString());
@@ -227,7 +197,7 @@ public class WcApplicationTest {
 	public void testRunPrintNewlineCountInFile() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-l", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2" };
+		String[] arguments = {"-l", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"};
 		try {
 			wcApp.run(arguments, null, System.out);
 			assertEquals("      10", out.toString());
@@ -241,7 +211,22 @@ public class WcApplicationTest {
 	public void testRunPrintAllCountsInFile() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-m", "-w", "-l", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2" };
+		String[] arguments =
+				{"-m", "-w", "-l", RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"};
+		try {
+			wcApp.run(arguments, null, System.out);
+			assertEquals("     316      53      10", out.toString());
+		} catch (AbstractApplicationException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	@Test
+	public void testRunPrintAllCountsInFileNoOpt() {
+		WcApplication wcApp = new WcApplication();
+		System.setOut(new PrintStream(out));
+		String[] arguments = {RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "text2"};
 		try {
 			wcApp.run(arguments, null, System.out);
 			assertEquals("     316      53      10", out.toString());
@@ -255,7 +240,7 @@ public class WcApplicationTest {
 	public void testRunPrintCharacterCountInStdin() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-m" };
+		String[] arguments = {"-m"};
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
@@ -270,7 +255,7 @@ public class WcApplicationTest {
 	public void testRunPrintWordCountInStdin() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-w" };
+		String[] arguments = {"-w"};
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
@@ -285,7 +270,7 @@ public class WcApplicationTest {
 	public void testRunPrintNewlineCountInStdin() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-l" };
+		String[] arguments = {"-l"};
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
@@ -300,7 +285,22 @@ public class WcApplicationTest {
 	public void testRunPrintAllCountsInStdin() {
 		WcApplication wcApp = new WcApplication();
 		System.setOut(new PrintStream(out));
-		String[] arguments = { "-mwl" };
+		String[] arguments = {"-mwl"};
+		try {
+			InputStream stdin = writeToStdin("textblank");
+			wcApp.run(arguments, stdin, System.out);
+			assertEquals("     198       0      99", out.toString());
+		} catch (AbstractApplicationException | IOException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	@Test
+	public void testRunPrintAllCountsInStdinNoOpt() {
+		WcApplication wcApp = new WcApplication();
+		System.setOut(new PrintStream(out));
+		String[] arguments = {};
 		try {
 			InputStream stdin = writeToStdin("textblank");
 			wcApp.run(arguments, stdin, System.out);
@@ -312,3 +312,5 @@ public class WcApplicationTest {
 	}
 
 }
+
+
