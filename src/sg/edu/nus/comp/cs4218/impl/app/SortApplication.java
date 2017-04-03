@@ -30,6 +30,7 @@ public class SortApplication implements Sort {
 
 	private static final String ERROR_EXP_NULL = "Null arguments";
 	private static final String ERR_INVALID_OUT = "OutputStream not provided";
+	private static final String ERR_STDIN_NULL = "Stdin is null";
 	private static final String ERR_NULL_STRING = "Comparing empty string";
 	private static final String FILE_NOT_FOUND = "Specify a file which exists";
 	private static final String ERR_READ = "IO ERROR WHEN READING FILE";
@@ -513,6 +514,9 @@ public class SortApplication implements Sort {
 	 * @throws SortException
 	 */
 	private void loadFromStdIn(InputStream stdin) throws SortException {
+		if(stdin == null){
+			throw new SortException(ERR_STDIN_NULL);
+		}
 		Vector<String> linesVector;
 		try {
 			linesVector = importFile(stdin);

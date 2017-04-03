@@ -21,7 +21,9 @@ import org.junit.Test;
 
 import sg.edu.nus.comp.cs4218.Environment;
 import sg.edu.nus.comp.cs4218.exception.AbstractApplicationException;
+import sg.edu.nus.comp.cs4218.exception.ShellException;
 import sg.edu.nus.comp.cs4218.exception.SortException;
+import sg.edu.nus.comp.cs4218.impl.ShellImpl;
 import sg.edu.nus.comp.cs4218.impl.app.SortApplication;
 
 public class SortApplicationTest {
@@ -760,6 +762,13 @@ public class SortApplicationTest {
 		sort.run(args, is, System.out);
 
 		assertEquals(expectedOutput, out.toString());
+	}
+	
+
+	@Test(expected = SortException.class)
+	public void testRunSortNullStdout() throws AbstractApplicationException, ShellException {
+		ShellImpl shell = new ShellImpl();
+		shell.parseAndEvaluate("sort -n");
 	}
 
 }
