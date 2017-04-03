@@ -268,9 +268,7 @@ public class WcApplication implements Wc {
 			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempChar = getNoCharsInFile(fileNames.get(startIndex));
-					if (String.valueOf(tempChar).length() >= 8) {
-						spaces = String.valueOf(tempChar).length() + 1;
-					}
+					spaces = extendPrintSpace(tempChar, spaces);
 					noChars.add(tempChar);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -284,9 +282,7 @@ public class WcApplication implements Wc {
 			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempChar = getNoCharsInFile(argsArr[startIndex]);
-					if (String.valueOf(tempChar).length() >= 8) {
-						spaces = String.valueOf(tempChar).length() + 1;
-					}
+					spaces = extendPrintSpace(tempChar, spaces);
 					noChars.add(tempChar);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -403,9 +399,7 @@ public class WcApplication implements Wc {
 			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempWord = getNoWordsInFile(argsArr[startIndex]);
-					if (String.valueOf(tempWord).length() >= 8) {
-						spaces = String.valueOf(tempWord).length() + 1;
-					}
+					spaces = extendPrintSpace(tempWord, spaces);
 					noWords.add(tempWord);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -417,9 +411,7 @@ public class WcApplication implements Wc {
 			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempWord = getNoWordsInFile(fileNames.get(startIndex));
-					if (String.valueOf(tempWord).length() >= 8) {
-						spaces = String.valueOf(tempWord).length() + 1;
-					}
+					spaces = extendPrintSpace(tempWord, spaces);
 					noWords.add(tempWord);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -489,9 +481,7 @@ public class WcApplication implements Wc {
 			for (startIndex += 0; startIndex < argsArr.length; startIndex++) {
 				try {
 					tempNewLine = getNoNewlineInFile(argsArr[startIndex]);
-					if (String.valueOf(tempNewLine).length() >= 8) {
-						spaces = String.valueOf(tempNewLine).length() + 1;
-					}
+					spaces = extendPrintSpace(tempNewLine, spaces);
 					noNewline.add(tempNewLine);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -503,9 +493,7 @@ public class WcApplication implements Wc {
 			for (int startIndex = 0; startIndex < fileNames.size(); startIndex++) {
 				try {
 					tempNewLine = getNoNewlineInFile(fileNames.get(startIndex));
-					if (String.valueOf(tempNewLine).length() >= 8) {
-						spaces = String.valueOf(tempNewLine).length() + 1;
-					}
+					spaces = extendPrintSpace(tempNewLine, spaces);
 					noNewline.add(tempNewLine);
 				} catch (WcException e) {
 					return "Invalid File";
@@ -520,6 +508,18 @@ public class WcApplication implements Wc {
 		String resultString = getResultString();
 
 		return resultString;
+	}
+
+	/**
+	 * @param tempNewLine
+	 * @param spaces
+	 * @return
+	 */
+	private int extendPrintSpace(int tempNewLine, int spaces) {
+		if (String.valueOf(tempNewLine).length() >= 8) {
+			spaces = String.valueOf(tempNewLine).length() + 1;
+		}
+		return spaces;
 	}
 
 	/**
@@ -619,9 +619,7 @@ public class WcApplication implements Wc {
 		}
 
 		tempChar = getNoCharsInStdin(stdin);
-		if (String.valueOf(tempChar).length() >= 8) {
-			spaces = String.valueOf(tempChar).length() + 1;
-		}
+		spaces = extendPrintSpace(tempChar, spaces);
 		noChars.add(tempChar);
 
 		for (int toAdd = 0; toAdd < noChars.size(); toAdd++) {
@@ -711,9 +709,7 @@ public class WcApplication implements Wc {
 		}
 
 		tempWord = getNoWordsInStdin(stdin);
-		if (String.valueOf(tempWord).length() >= 8) {
-			spaces = String.valueOf(tempWord).length() + 1;
-		}
+		spaces = extendPrintSpace(tempWord, spaces);
 		noWords.add(tempWord);
 
 		for (int toAdd = 0; toAdd < noWords.size(); toAdd++) {
@@ -797,9 +793,7 @@ public class WcApplication implements Wc {
 		}
 
 		tempNewline = getNoNewlinesInStdin(stdin);
-		if (String.valueOf(tempNewline).length() >= 8) {
-			spaces = String.valueOf(tempNewline).length() + 1;
-		}
+		spaces = extendPrintSpace(tempNewline, spaces);
 		noNewlines.add(tempNewline);
 
 		for (int toAdd = 0; toAdd < noNewlines.size(); toAdd++) {
