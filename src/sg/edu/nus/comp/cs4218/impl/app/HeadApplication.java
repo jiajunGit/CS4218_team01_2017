@@ -53,7 +53,23 @@ public class HeadApplication implements Head {
 			} else if (args.length == 3) {
 				noLines = logicFor3Arguments(args, stdin, noLines);
 			} else {
-				throw new HeadException(INVALID_FORMAT);
+				int lastindex=0;
+				for(int i=0;i<args.length;i++){
+					if(args[i].equals("-n")){
+						lastindex=i;
+					}
+				}
+				if(lastindex==args.length-2){
+					String[] temp = {args[lastindex], args[lastindex+1]};
+					noLines = logicFor2Arguments(temp,stdin, noLines);
+				}
+				else if(lastindex==args.length-3){
+					String[] temp = {args[lastindex],args[lastindex+1],args[lastindex+2]};
+					noLines = logicFor3Arguments(temp,stdin, noLines);
+				}
+				else{
+					throw new HeadException(INVALID_FORMAT);
+				}
 			}
 			printLines(noLines, stdout);
 		} catch (NumberFormatException e) {

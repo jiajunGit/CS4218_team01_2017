@@ -55,6 +55,14 @@ public class HeadApplicationTest {
 	public void testEmptyStdinWithNullArgException() throws HeadException {
 		head.run(null, null, System.out);
 	}
+	
+	@Test
+	public void testMultipleOption() throws HeadException {
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
+		String[] arg = {"-n", "5", "-n", "10", file};
+		head.run(arg, System.in, System.out);
+		assertEquals(TEST_STRING_10_LINES, outContent.toString());
+	}
 
 	@Test(expected = HeadException.class)
 	public void testEmptyStdinWith1ArgException() throws HeadException {
