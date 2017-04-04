@@ -1,7 +1,7 @@
 /**
  * Echo JUnit Testing
  */
-package test;
+package bf.echo;
 
 import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;

@@ -1,7 +1,7 @@
 /**
  * HeadApplication Test
  */
-package test;
+package bf.head;
 
 import static org.junit.Assert.*;
 
