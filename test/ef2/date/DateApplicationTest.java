@@ -1,4 +1,4 @@
-package test.ef2.date;
+package ef2.date;
 
 import static org.junit.Assert.*;
 

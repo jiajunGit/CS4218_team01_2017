@@ -1,4 +1,4 @@
-package test;
+package bf.call;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

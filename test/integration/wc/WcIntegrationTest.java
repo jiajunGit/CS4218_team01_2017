@@ -1,4 +1,4 @@
-package test.integration.wc;
+package integration.wc;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ public class WcIntegrationTest {
 	private static ShellImpl shell;
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration"
+	private static final String RELATIVE_DIR = "test" + PATH_SEPARATOR + "integration"
 			+ PATH_SEPARATOR + "wc" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
 
 	@Before

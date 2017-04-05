@@ -1,4 +1,4 @@
-package test.integration.head;
+package integration.head;
 
 import static org.junit.Assert.*;
 
@@ -17,8 +17,7 @@ public class HeadIntegrationTest {
 	private static ShellImpl shell;
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration"
-			+ PATH_SEPARATOR + "head" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
+	private static final String RELATIVE_DIR = "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR + "head" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
 	private static final String ABS_DIR = Environment.currentDirectory + PATH_SEPARATOR;
 
 	@Before

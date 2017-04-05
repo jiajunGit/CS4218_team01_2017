@@ -1,4 +1,4 @@
-package test;
+package ef1.calendar;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +18,7 @@ import sg.edu.nus.comp.cs4218.exception.CalException;
 public class CalApplicationTest {
 
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar"
+	private static final String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "calendar"
 			+ PATH_SEPARATOR;
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
