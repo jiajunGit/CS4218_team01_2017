@@ -19,7 +19,7 @@ public class CommandSubstitutionTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final static String PATH_SEPARATOR = File.separator;
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
+	final static String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "ef2" + PATH_SEPARATOR + "shell"
 			+ PATH_SEPARATOR + "commandsubstitution" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
 
 	/**

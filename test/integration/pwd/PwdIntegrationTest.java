@@ -105,10 +105,10 @@ public class PwdIntegrationTest {
 	@Test
 	public void testWithCal() throws AbstractApplicationException, ShellException {
 		String output = shell.parseAndEvaluate("pwd ;cal");
-		String relativeTestDir = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR;
+		String relativeTestDir = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR;
 		String expectedCalendar = "";
 		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(relativeTestDir + "currentMonth")));
+			expectedCalendar = new String(Files.readAllBytes(Paths.get(relativeTestDir + "aprilMonth")));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
