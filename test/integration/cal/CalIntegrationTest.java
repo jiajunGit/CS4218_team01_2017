@@ -1,4 +1,4 @@
-package test.integration.cal;
+package integration.cal;
 
 import static org.junit.Assert.*;
 

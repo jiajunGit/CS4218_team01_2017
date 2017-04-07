@@ -1,7 +1,7 @@
 /**
  * Cat JUnit Test   
  */
-package test;
+package bf.cat;
 
 import static org.junit.Assert.*;
 

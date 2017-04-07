@@ -1,4 +1,4 @@
-package test.ef2.sed;
+package ef2.sed;
 
 import static org.junit.Assert.*;
 

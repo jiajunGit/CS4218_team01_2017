@@ -1,4 +1,4 @@
-package test.integration.date;
+package integration.date;
 
 import static org.junit.Assert.*;
 

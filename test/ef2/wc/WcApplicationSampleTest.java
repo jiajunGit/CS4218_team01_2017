@@ -1,4 +1,4 @@
-package test;
+package ef2.wc;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

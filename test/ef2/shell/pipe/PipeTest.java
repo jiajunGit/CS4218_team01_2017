@@ -1,4 +1,4 @@
-package test.ef2.pipe;
+package ef2.shell.pipe;
 
 import static org.junit.Assert.*;
 

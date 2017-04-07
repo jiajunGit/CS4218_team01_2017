@@ -1,4 +1,4 @@
-package test.integration.pwd;
+package integration.pwd;
 
 import static org.junit.Assert.*;
 import java.io.File;

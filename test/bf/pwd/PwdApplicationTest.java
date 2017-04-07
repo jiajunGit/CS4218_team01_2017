@@ -1,7 +1,7 @@
 /**
  * PWD application test
  */
-package test;
+package bf.pwd;
 
 import static org.junit.Assert.*;
 

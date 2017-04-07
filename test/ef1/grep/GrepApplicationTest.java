@@ -1,4 +1,4 @@
-package test;
+package ef1.grep;
 
 import static org.junit.Assert.*;
 

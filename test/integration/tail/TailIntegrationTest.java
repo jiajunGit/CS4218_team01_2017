@@ -1,4 +1,4 @@
-package test.integration.tail;
+package integration.tail;
 
 import static org.junit.Assert.*;
 

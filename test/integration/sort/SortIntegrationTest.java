@@ -1,4 +1,4 @@
-package test.integration.sort;
+package integration.sort;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package test.ef2.commandsubstitution;
+package ef2.shell.commandsubstitution;
 
 import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;

@@ -1,7 +1,7 @@
 /**
  * Tail Application test
  */
-package test;
+package bf.tail;
 
 import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;

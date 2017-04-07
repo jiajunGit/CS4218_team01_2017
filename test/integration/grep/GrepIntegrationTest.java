@@ -1,4 +1,4 @@
-package test.integration.grep;
+package integration.grep;
 
 import static org.junit.Assert.*;
 

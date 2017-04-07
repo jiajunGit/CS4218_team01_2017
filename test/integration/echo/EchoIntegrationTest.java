@@ -1,4 +1,4 @@
-package test.integration.echo;
+package integration.echo;
 
 import static org.junit.Assert.*;
 

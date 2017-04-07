@@ -1,4 +1,4 @@
-package test.ef2.wc;
+package ef2.wc;
 
 import static org.junit.Assert.*;
 

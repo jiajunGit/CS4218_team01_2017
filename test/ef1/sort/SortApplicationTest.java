@@ -1,4 +1,4 @@
-package test;
+package ef1.sort;
 
 import static org.junit.Assert.*;
 

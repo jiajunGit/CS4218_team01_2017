@@ -1,5 +1,5 @@
 
-package test.integration.cat;
+package integration.cat;
 
 import static org.junit.Assert.*;
 
