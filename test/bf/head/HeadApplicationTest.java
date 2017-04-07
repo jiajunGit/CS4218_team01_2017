@@ -20,7 +20,7 @@ public class HeadApplicationTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final static String PATH_SEPARATOR = File.separator;
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "head"
+	private final static String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "bf" + PATH_SEPARATOR + "head"
 			+ PATH_SEPARATOR;
 	private final static String ABSOLUTE_TEST_DIRECTORY = new File(RELATIVE_TEST_DIRECTORY).getAbsolutePath()
 			+ PATH_SEPARATOR;
