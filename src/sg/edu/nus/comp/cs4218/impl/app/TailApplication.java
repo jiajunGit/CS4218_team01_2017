@@ -44,7 +44,23 @@ public class TailApplication implements Tail {
 			} else if (args.length == 3) {
 				noLines = logicFor3Arguments(args, stdin, noLines);
 			} else {
-				throw new TailException(INVALID_FORMAT);
+				int lastOption = 0;
+				for(int i=0; i<args.length;i++){
+					if(args[i].equals("-n")){
+						lastOption = i;
+					}
+				}
+				if(lastOption == args.length-2){
+					String[] temp = {args[lastOption], args[lastOption+1]};
+					noLines=logicFor2Arguments(temp, stdin, noLines);
+				}
+				else if(lastOption == args.length-3){
+					String[] temp = {args[lastOption],args[lastOption+1],args[lastOption+2]};
+					noLines=logicFor3Arguments(temp,stdin,noLines);
+				}
+				else{
+					throw new TailException(INVALID_FORMAT);
+				}
 			}
 			printLines(noLines, stdout);
 		} catch (NumberFormatException e) {
@@ -90,7 +106,7 @@ public class TailApplication implements Tail {
 
 	private int logicFor3Arguments(String[] args, InputStream stdin, int numLines) throws TailException, IOException {
 		int noLines= numLines;
-		
+
 		if (args[0].length() == 0 && args[1].length() == 0) {
 			if (args[2].length() == 0) { // tail "" "" ""
 				loadFromStdIn(stdin);

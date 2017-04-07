@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import sg.edu.nus.comp.cs4218.exception.HeadException;
 import sg.edu.nus.comp.cs4218.exception.TailException;
 import sg.edu.nus.comp.cs4218.impl.app.TailApplication;
 
@@ -19,7 +21,7 @@ public class TailApplicationTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final static String PATH_SEPARATOR = File.separator;
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "tail"
+	private final static String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "bf" + PATH_SEPARATOR + "tail"
 			+ PATH_SEPARATOR;
 	private final static String ABSOLUTE_TEST_DIRECTORY = new File(RELATIVE_TEST_DIRECTORY).getAbsolutePath()
 			+ PATH_SEPARATOR;
@@ -49,6 +51,32 @@ public class TailApplicationTest {
 		tail = null;
 	}
 
+	//Test for post-hackathon fixes
+	@Test
+	public void testMultipleOptionFileInput() throws TailException {
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
+		String[] arg = {"-n", "5", "-n", "10", file};
+		tail.run(arg, System.in, System.out);
+		assertEquals(TESTSTRING10LINES, outContent.toString());
+	}
+
+	@Test
+	public void testMultipleOptionFileInput2() throws TailException {
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testTail11Lines";
+		String[] arg = {"-n", "5","-n","6","-n","6","-n","6","-n","6", "-n", "10", file};
+		tail.run(arg, System.in, System.out);
+		assertEquals(TESTSTRING10LINES, outContent.toString());
+	}
+
+	@Test
+	public void testMultipleOptionStdin() throws TailException {
+		String testStdinInput = TESTSTRING11LINES;
+		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
+		System.setIn(in);
+		String[] arg = {"-n", "5", "-n", "10"};
+		tail.run(arg, System.in, System.out);
+		assertEquals(TESTSTRING10LINES, outContent.toString());
+	}
 	// Test section for I/O validation
 	@Test(expected = TailException.class)
 	public void testEmptyStdinWithNullArgException() throws TailException {

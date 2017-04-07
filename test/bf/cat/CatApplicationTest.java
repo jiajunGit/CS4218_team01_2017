@@ -23,7 +23,7 @@ public class CatApplicationTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final static String PATH_SEPARATOR = File.separator;
 	private final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	private final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "cat"
+	private final static String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "bf" + PATH_SEPARATOR + "cat"
 			+ PATH_SEPARATOR;
 	private final static String TESTINPUT1 = "1" + LINE_SEPARATOR + "2" + LINE_SEPARATOR + "3" + LINE_SEPARATOR + ""
 			+ LINE_SEPARATOR + "a" + LINE_SEPARATOR + "B" + LINE_SEPARATOR + "7" + LINE_SEPARATOR + "*" + LINE_SEPARATOR

@@ -49,21 +49,40 @@ public class HeadApplicationTest {
 		System.setOut(null);
 		head = null;
 	}
-
+	
+	//Test for post-hackathon fixes
+	@Test
+	public void testMultipleOptionFileInput() throws HeadException {
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
+		String[] arg = {"-n", "5", "-n", "10", file};
+		head.run(arg, System.in, System.out);
+		assertEquals(TEST_STRING_10_LINES, outContent.toString());
+	}
+	
+	@Test
+	public void testMultipleOptionFileInput2() throws HeadException {
+		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
+		String[] arg = {"-n", "5","-n","6","-n","6","-n","6","-n","6", "-n", "10", file};
+		head.run(arg, System.in, System.out);
+		assertEquals(TEST_STRING_10_LINES, outContent.toString());
+	}
+	
+	@Test
+	public void testMultipleOptionStdin() throws HeadException {
+		String testStdinInput = TEST_STRING_11_LINES;
+		ByteArrayInputStream in = new ByteArrayInputStream(testStdinInput.getBytes());
+		System.setIn(in);
+		String[] arg = {"-n", "5", "-n", "10"};
+		head.run(arg, System.in, System.out);
+		assertEquals(TEST_STRING_10_LINES, outContent.toString());
+	}
+	
 	// Test section for I/O validation
 	@Test(expected = HeadException.class)
 	public void testEmptyStdinWithNullArgException() throws HeadException {
 		head.run(null, null, System.out);
 	}
 	
-	@Test
-	public void testMultipleOption() throws HeadException {
-		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testHead11Lines";
-		String[] arg = {"-n", "5", "-n", "10", file};
-		head.run(arg, System.in, System.out);
-		assertEquals(TEST_STRING_10_LINES, outContent.toString());
-	}
-
 	@Test(expected = HeadException.class)
 	public void testEmptyStdinWith1ArgException() throws HeadException {
 		String[] arg = {};
