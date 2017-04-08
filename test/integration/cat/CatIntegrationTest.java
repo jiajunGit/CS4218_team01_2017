@@ -29,9 +29,9 @@ public class CatIntegrationTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
 	private static final String RELATIVE_INPUT_DIR =
-			"src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR
+			"test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR 
 					+ "cat" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
-	private static final String RELATIVE_EXP_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_EXP_DIR = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cat" + PATH_SEPARATOR + "expected" + PATH_SEPARATOR;
 	private static final String ABS_DIR = Environment.currentDirectory + PATH_SEPARATOR;
 	private static final String RELATIVE_FOOBAR = RELATIVE_INPUT_DIR + "foobar";
@@ -169,7 +169,7 @@ public class CatIntegrationTest {
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String command = "cat " + RELATIVE_FILENAMES + " " + RELATIVE_RICK2 + " | wc";
-		String expected = "     376      38       9" + LINE_SEPARATOR;
+		String expected = "     356      38       9" + LINE_SEPARATOR;
 		String actual = shell.parseAndEvaluate(command);
 		assertEquals(expected, actual);
 	}

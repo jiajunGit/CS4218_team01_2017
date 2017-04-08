@@ -34,7 +34,9 @@ public class ShellImplTest {
 			+ "glob";
 	private final static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
 			+ RELATIVE_TEST_GLOB_DIRECTORY;
-
+	private static String RELATIVE_TEST_DIRECTORY_IO = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "IOredirect"
+			+ PATH_SEPARATOR;
+	
 	private ShellImpl shell = new ShellImpl();
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
@@ -55,12 +57,12 @@ public class ShellImplTest {
 
 		try {
 			clearFromFile(
-					RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
-			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
+					RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY_IO
 					+ "expected" + PATH_SEPARATOR + "testRedirectOutput.txt")));
-			shell.redirectOutput("echo helloworld > " + RELATIVE_TEST_DIRECTORY + "input"
+			shell.redirectOutput("echo helloworld > " + RELATIVE_TEST_DIRECTORY_IO + "input"
 					+ PATH_SEPARATOR + "testRedirectOutput.txt");
-			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
+			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY_IO
 					+ "input" + PATH_SEPARATOR + "testRedirectOutput.txt")));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
@@ -112,22 +114,22 @@ public class ShellImplTest {
 	@Test
 	public void redirectOutputNonExistFile() {
 		File noExist =
-				new File(RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
+				new File(RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "outputNoExist.txt");
 		noExist.delete();
 		Assert.assertFalse(noExist.exists());
 
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths.get(
-					RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "outputNoExist.txt")));
-			shell.redirectOutput("echo le wild file appears > " + RELATIVE_TEST_DIRECTORY + "input"
+					RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "outputNoExist.txt")));
+			shell.redirectOutput("echo le wild file appears > " + RELATIVE_TEST_DIRECTORY_IO + "input"
 					+ PATH_SEPARATOR + "outputNoExist.txt");
 			String actualOutput = new String(Files.readAllBytes(Paths.get(
-					RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt")));
+					RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "outputNoExist.txt")));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists = new File(
-					RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "outputNoExist.txt");
+					RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "outputNoExist.txt");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -145,12 +147,12 @@ public class ShellImplTest {
 
 		try {
 			clearFromFile(
-					RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
-			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
+					RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "testRedirectOutput.txt");
+			String expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY_IO
 					+ "expected" + PATH_SEPARATOR + "testRedirectOutput.txt")));
-			shell.redirectOutput("> " + RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
+			shell.redirectOutput("> " + RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR
 					+ "testRedirectOutput.txt" + " echo helloworld");
-			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
+			String actualOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY_IO
 					+ "input" + PATH_SEPARATOR + "testRedirectOutput.txt")));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
@@ -164,9 +166,9 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths
-					.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput")))
+					.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "testReditInput")))
 					+ LINE_SEPARATOR;
-			Assert.assertEquals(expectedOutput, shell.redirectInput("< " + RELATIVE_TEST_DIRECTORY
+			Assert.assertEquals(expectedOutput, shell.redirectInput("< " + RELATIVE_TEST_DIRECTORY_IO
 					+ "input" + PATH_SEPARATOR + "testRedirInput" + " cat"));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -178,10 +180,10 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(Paths
-					.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testReditInput")))
+					.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "testReditInput")))
 					+ LINE_SEPARATOR;
 			Assert.assertEquals(expectedOutput, shell.redirectInput("cat < "
-					+ RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRedirInput"));
+					+ RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "testRedirInput"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -192,16 +194,16 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "catOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "catOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "catOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "newIOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "catOut";
 			shell.parseAndEvaluate("cat < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "catOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "catOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -216,16 +218,16 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "headOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "headOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "headOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "newIOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "headOut";
 			shell.parseAndEvaluate("head < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "headOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "headOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -240,16 +242,16 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "tailOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "tailOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "tailOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "newIOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "tailOut";
 			shell.parseAndEvaluate("tail < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "tailOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "tailOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -264,16 +266,16 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "sortOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "sortOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "newIOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "sortOut";
 			shell.parseAndEvaluate("sort -n < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "sortOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "sortOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -288,16 +290,16 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "grepOut")));
-			String inPath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "newIOinput";
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "grepOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "grepOut")));
+			String inPath = RELATIVE_TEST_DIRECTORY_IO + "input" + PATH_SEPARATOR + "newIOinput";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "grepOut";
 			shell.parseAndEvaluate("grep Please < " + inPath + " > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "grepOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "grepOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -312,15 +314,15 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = new String(Files.readAllBytes(
-					Paths.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "year2017")));
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "calOut";
+					Paths.get(RELATIVE_TEST_DIRECTORY_IO + "expected" + PATH_SEPARATOR + "year2017")));
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "calOut";
 			shell.parseAndEvaluate("cal 2017 > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "calOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "calOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();
@@ -335,14 +337,14 @@ public class ShellImplTest {
 		ShellImpl shell = new ShellImpl();
 		try {
 			String expectedOutput = Environment.currentDirectory;
-			String outPath = RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "pwdOut";
+			String outPath = RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "pwdOut";
 			shell.parseAndEvaluate("pwd > " + outPath);
 			String actualOutput = new String(Files.readAllBytes(Paths.get(outPath)));
 
 			Assert.assertEquals(expectedOutput, actualOutput);
 
 			File nowExists =
-					new File(RELATIVE_TEST_DIRECTORY + "output" + PATH_SEPARATOR + "pwdOut");
+					new File(RELATIVE_TEST_DIRECTORY_IO + "output" + PATH_SEPARATOR + "pwdOut");
 
 			if (nowExists.exists()) {
 				nowExists.delete();

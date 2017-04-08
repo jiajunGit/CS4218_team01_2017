@@ -24,7 +24,7 @@ public class SortApplicationTest {
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
 	final static String RELATIVE_TEST_DIRECTORY =
-			"src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "sort" + PATH_SEPARATOR;
+			"test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "sort" + PATH_SEPARATOR;
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 	@AfterClass

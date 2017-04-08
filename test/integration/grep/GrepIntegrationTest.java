@@ -27,11 +27,9 @@ public class GrepIntegrationTest {
 	private static ShellImpl shell;
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_INPUT_DIR =
-			"src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR
+	private static final String RELATIVE_INPUT_DIR = "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR
 					+ "grep" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
-	private static final String RELATIVE_EXP_DIR =
-			"src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR
+	private static final String RELATIVE_EXP_DIR = "test" + PATH_SEPARATOR + "integration" + PATH_SEPARATOR
 					+ "grep" + PATH_SEPARATOR + "expected" + PATH_SEPARATOR;
 	private static final String ABS_DIR = Environment.currentDirectory + PATH_SEPARATOR;
 	private static final String RELATIVE_RICK1 = RELATIVE_INPUT_DIR + "rickroll1";
@@ -183,7 +181,7 @@ public class GrepIntegrationTest {
 	@Test
 	public void testIntegrateWc() throws AbstractApplicationException, ShellException {
 		String command = "grep toto " + RELATIVE_FILENAMES + " | wc";
-		String expected = "      76       2       1" + LINE_SEPARATOR;
+		String expected = "      68       2       1" + LINE_SEPARATOR;
 		String output = shell.parseAndEvaluate(command);
 		assertEquals(expected, output);
 	}

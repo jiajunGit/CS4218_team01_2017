@@ -20,7 +20,7 @@ import sg.edu.nus.comp.cs4218.impl.app.WcApplication;
 public class WcApplicationTest {
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	final static String RELATIVE_TEST_DIRECTORY =  "test" + PATH_SEPARATOR
 			+ "ef2" + PATH_SEPARATOR + "wc" + PATH_SEPARATOR;
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
