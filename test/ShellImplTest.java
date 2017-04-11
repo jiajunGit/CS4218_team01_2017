@@ -26,12 +26,12 @@ public class ShellImplTest {
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "IOredirect"
+	final static String RELATIVE_TEST_DIRECTORY =  "test" + PATH_SEPARATOR + "IOredirect"
 			+ PATH_SEPARATOR;
-	final static String RELATIVE_TEST_SHELL_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "shell"
+	final static String RELATIVE_TEST_SHELL_DIRECTORY =   "test" + PATH_SEPARATOR + "bf" + PATH_SEPARATOR + "shell"
 			+ PATH_SEPARATOR;
-	private final static String RELATIVE_TEST_GLOB_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
-			+ "glob";
+	private final static String RELATIVE_TEST_GLOB_DIRECTORY = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR
+			+ "shell" + PATH_SEPARATOR + "glob";
 	private final static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
 			+ RELATIVE_TEST_GLOB_DIRECTORY;
 	private static String RELATIVE_TEST_DIRECTORY_IO = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "IOredirect"
@@ -552,20 +552,21 @@ public class ShellImplTest {
 		assertEquals(expectedOut, outContent.toString());
 	}
 
-	@Test
+/*	@Test
 	public void testCallOption() throws AbstractApplicationException, ShellException {
 		String expectedOut = "";
 		shell.parseAndEvaluate("cal -m", System.out);
 
 		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get("src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+			expectedOut = new String(Files.readAllBytes(Paths.get( "test" + PATH_SEPARATOR
+					+ "ef1"+ PATH_SEPARATOR
 					+ "calendar" + PATH_SEPARATOR + "currentMonthMonday")));
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 
 		assertEquals(expectedOut + LINE_SEPARATOR, outContent.toString());
-	}
+	}*/
 
 	@Test
 	public void testCallOptArg() throws AbstractApplicationException, ShellException {
@@ -731,17 +732,19 @@ public class ShellImplTest {
 
 	@Test
 	public void testGlobNoMatchingRelativePaths() {
-		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "t*";
+		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "x*";
 		String output = shell.globNoPaths(command);
-		String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "t*" + LINE_SEPARATOR;
+		String expected = RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "x*" + LINE_SEPARATOR;
 		assertEquals(output, expected);
 	}
 
 	@Test
 	public void testGlobOneDirectory() {
-		String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "*";
+		String command = "echo \"" + ABSOLUTE_TEST_GLOB_DIRECTORY + "\"" + PATH_SEPARATOR + "testOne"+ 
+				PATH_SEPARATOR + "testTwo"+ PATH_SEPARATOR + "testThree" + PATH_SEPARATOR + "*";
 		String output = shell.globOneFile(command);
-		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "README.md" + LINE_SEPARATOR;
+		String expected = ABSOLUTE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + "testOne"+ 
+				PATH_SEPARATOR + "testTwo"+ PATH_SEPARATOR + "testThree" +  PATH_SEPARATOR + "README.md" + LINE_SEPARATOR;
 		assertEquals(output, expected);
 	}
 
@@ -750,9 +753,18 @@ public class ShellImplTest {
 		String command = "echo \"" + RELATIVE_TEST_GLOB_DIRECTORY + PATH_SEPARATOR + ".." + PATH_SEPARATOR + ".." 
 						+ PATH_SEPARATOR + "\"*";
 		String output = shell.globFilesDirectories(command);
-		String expected = Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "sg "
-						+ Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "test" 
-						+ LINE_SEPARATOR;
+		String expected = Environment.currentDirectory + PATH_SEPARATOR + "test"
+						+ PATH_SEPARATOR + "ef1" 
+						+ PATH_SEPARATOR + "calendar "
+						+ Environment.currentDirectory + PATH_SEPARATOR + "test"
+						+ PATH_SEPARATOR + "ef1" 
+						+ PATH_SEPARATOR + "grep "
+						+ Environment.currentDirectory + PATH_SEPARATOR + "test"
+						+ PATH_SEPARATOR + "ef1" 
+						+ PATH_SEPARATOR + "shell "
+						+ Environment.currentDirectory + PATH_SEPARATOR + "test"
+						+ PATH_SEPARATOR + "ef1" 
+						+ PATH_SEPARATOR + "sort"+ LINE_SEPARATOR;
 		assertEquals(output, expected);
 	}
 

@@ -25,8 +25,8 @@ public class PipeTest {
 	static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	final static String LINE_SEPARATOR = System.lineSeparator();
 	final static String PATH_SEPARATOR = File.separator;
-	final static String RELATIVE_TEST_PIPE_DIR = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
-			+ PATH_SEPARATOR;
+	final static String RELATIVE_TEST_PIPE_DIR = "test" + PATH_SEPARATOR + "ef2"
+			+ PATH_SEPARATOR + "shell" + PATH_SEPARATOR;
 
 	@Before
 	public void setUpBeforeTest() throws Exception {

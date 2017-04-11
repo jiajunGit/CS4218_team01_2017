@@ -21,7 +21,7 @@ public class WcApplicationSampleTest {
 	private static final String FILE_SEPARATOR = File.separator;
 	final static String PATH_SEPARATOR = File.separator;
 	final static String LINE_SEPARATOR = System.getProperty("line.separator");
-	final static String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef2"
+	final static String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "ef2"
 			+ PATH_SEPARATOR + "wc" + PATH_SEPARATOR + "input" + PATH_SEPARATOR;
 	private static final String TEST_FILE_EMPTY = RELATIVE_TEST_DIRECTORY + "empty.txt";
 	private static final String TEST_FILE_SINGLE_WORD = RELATIVE_TEST_DIRECTORY + "singleWord.txt";
@@ -299,7 +299,7 @@ public class WcApplicationSampleTest {
 	@Test
 	public void printAllCountsInFile() {
 		String expected = String.format("%8d     717     250", TITLE_FILES_TOTAL_BYTES);
-		String result = app.printAllCountsInFile(String.format("wc %s", TEST_FILE_TITLES));
+		String result = app.printAllCountsInFile(String.format("wc -mwl %s", TEST_FILE_TITLES));
 		assertEquals(expected, result);
 	}
 

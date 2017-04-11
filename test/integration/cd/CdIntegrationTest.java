@@ -31,7 +31,7 @@ public class CdIntegrationTest {
 
 	public static final String NEW_LINE_IN_EXPECTED = getNewLineInExpectedFile();
 
-	private static final String RELATIVE_EXPECTED_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_EXPECTED_DIRECTORY = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cd" + PATH_SEPARATOR + "expected";
 
 	private static final String ABSOLUTE_EXPECTED_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
@@ -41,7 +41,7 @@ public class CdIntegrationTest {
 
 	private static final String TEST_DIRECTORY_ONE_NAME = "testDirOne";
 
-	private static final String RELATIVE_TEST_DIRECTORY_ONE = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_TEST_DIRECTORY_ONE = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cd" + PATH_SEPARATOR + TEST_DIRECTORY_ONE_NAME;
 
 	private static final String ABSOLUTE_TEST_DIRECTORY_ONE = Environment.currentDirectory + PATH_SEPARATOR
@@ -49,7 +49,7 @@ public class CdIntegrationTest {
 
 	private static final String TEST_DIRECTORY_TWO_NAME = "testDirTwo";
 
-	private static final String RELATIVE_TEST_DIRECTORY_TWO = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_TEST_DIRECTORY_TWO = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cd" + PATH_SEPARATOR + TEST_DIRECTORY_TWO_NAME;
 
 	private static final String ABSOLUTE_TEST_DIRECTORY_TWO = Environment.currentDirectory + PATH_SEPARATOR
@@ -57,7 +57,7 @@ public class CdIntegrationTest {
 
 	private static final String TEST_DIRECTORY_THREE_NAME = "testDirThree";
 
-	private static final String RELATIVE_TEST_DIRECTORY_THREE = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_TEST_DIRECTORY_THREE = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cd" + PATH_SEPARATOR + TEST_DIRECTORY_THREE_NAME;
 
 	private static final String ABSOLUTE_TEST_DIRECTORY_THREE = Environment.currentDirectory + PATH_SEPARATOR
@@ -65,7 +65,7 @@ public class CdIntegrationTest {
 
 	private static final String TEST_EMPTY_DIRECTORY_NAME = "emptyDir";
 
-	private static final String RELATIVE_EMPTY_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_EMPTY_TEST_DIRECTORY = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cd" + PATH_SEPARATOR + TEST_EMPTY_DIRECTORY_NAME;
 
 	private static final String ABSOLUTE_EMPTY_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR

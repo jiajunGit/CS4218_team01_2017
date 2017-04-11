@@ -32,13 +32,13 @@ public class CalIntegrationTest {
 
 	public static final String NEW_LINE_IN_EXPECTED = getNewLineInExpectedFile();
 
-	private static final String RELATIVE_EXPECTED_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_EXPECTED_DIRECTORY = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cal" + PATH_SEPARATOR + "expected";
 
 	private static final String ABSOLUTE_EXPECTED_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
 			+ RELATIVE_EXPECTED_DIRECTORY;
 
-	private static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR
+	private static final String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR
 			+ "integration" + PATH_SEPARATOR + "cal" + PATH_SEPARATOR + "testDir";
 
 	private static final String ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
@@ -265,10 +265,10 @@ public class CalIntegrationTest {
 	@Test
 	public void testCalWithCd() throws AbstractApplicationException, ShellException {
 
-		String expectedDir = Environment.currentDirectory + PATH_SEPARATOR + "src" + PATH_SEPARATOR + "test"
+		String expectedDir = Environment.currentDirectory + PATH_SEPARATOR +  "test"
 				+ PATH_SEPARATOR + "integration" + PATH_SEPARATOR + "cal" + PATH_SEPARATOR + "testDir";
 
-		String command = "cal 2 2020; cd src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "integration"
+		String command = "cal 2 2020; cd test" + PATH_SEPARATOR + "integration"
 				+ PATH_SEPARATOR + "cal" + PATH_SEPARATOR + "testDir*; pwd  ";
 
 		String out = shell.parseAndEvaluate(command);
