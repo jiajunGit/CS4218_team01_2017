@@ -24,7 +24,7 @@ public class GrepApplicationTest {
 
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "grep";
+	private static final String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "grep" + PATH_SEPARATOR + "input";
 	private static final String ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_DIRECTORY;
 
 	private static GrepApplication grep;

@@ -19,9 +19,9 @@ public class GlobberTest {
 	private static Globber globber;
 
 	private static final String PATH_SEPARATOR = File.separator;
-	private static final String RELATIVE_TEST_DIRECTORY = "src" + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "glob";
+	private static final String RELATIVE_TEST_DIRECTORY = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "glob" + PATH_SEPARATOR + "testOne" + PATH_SEPARATOR + "testTwo" + PATH_SEPARATOR + "testThree";
 	private static final String ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + RELATIVE_TEST_DIRECTORY;
-	private static final String SECOND_ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + "src";
+	private static final String SECOND_ABSOLUTE_TEST_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR + "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "glob" + PATH_SEPARATOR + "testOne";
 	
 	@BeforeClass
 	public static void setUp() {
@@ -179,8 +179,8 @@ public class GlobberTest {
 		
 		String input = RELATIVE_TEST_DIRECTORY + PATH_SEPARATOR + ".." + PATH_SEPARATOR + ".." + PATH_SEPARATOR + "*";
 		
-		String []expected = { SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "sg",
-							  SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "test" };
+		String []expected = { SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "testTwo",
+							  SECOND_ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "txt.txt" };
 		
 		String inputSymbols = ShellImpl.generateSymbolString(input);
 		String[] out = globber.processGlob(input, inputSymbols);
