@@ -22,6 +22,7 @@ public class PwdApplication implements Application {
 
 	public static final String ERROR_EXP_INVALID_OUTSTREAM = "OutputStream not provided";
 	public static final String ERROR_EXP_UNKNOWN_DIR = "Unknown current directory";
+	public static final String ERROR_ARGS = "Pwd accepts no args";
 
 	/**
 	 * Runs the pwd application with the specified arguments.
@@ -41,7 +42,10 @@ public class PwdApplication implements Application {
 	 */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws PwdException {
-
+		if (args!=null && args.length !=  0){
+			throw new PwdException(ERROR_ARGS);
+		}
+		
 		if (stdout == null) {
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
 		}
