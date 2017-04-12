@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 
 import sg.edu.nus.comp.cs4218.Application;
 import sg.edu.nus.comp.cs4218.Environment;
-import sg.edu.nus.comp.cs4218.Symbol;
 import sg.edu.nus.comp.cs4218.exception.PwdException;
 
 /**
@@ -42,7 +40,8 @@ public class PwdApplication implements Application {
 	 */
 	@Override
 	public void run(String[] args, InputStream stdin, OutputStream stdout) throws PwdException {
-		if (args!=null && args.length !=  0){
+		
+		if (args != null && args.length != 0){
 			throw new PwdException(ERROR_ARGS);
 		}
 		
@@ -56,7 +55,6 @@ public class PwdApplication implements Application {
 
 		try {
 			stdout.write(Environment.currentDirectory.getBytes());
-			// stdout.write(Symbol.NEW_LINE_S.getBytes());
 			stdout.flush();
 		} catch (IOException e) {
 			throw new PwdException(ERROR_EXP_INVALID_OUTSTREAM);
