@@ -24,6 +24,7 @@ public class HackathonTest {
 	
 	private ShellImpl shell = new ShellImpl();
 	
+	// For bug 1: pwd should throw error when there is argument at the back
 	@Test(expected = PwdException.class) 
 	public void testPwd() throws PwdException {
 		
@@ -32,6 +33,7 @@ public class HackathonTest {
 		pwd.run(args, System.in, System.out);
 	}
 	
+	// For bug 2: head/tail supposed to allow multiple [OPTIONS]
 	@Test 
 	public void testHeadMultipleOptions() throws AbstractApplicationException, ShellException {
 		
@@ -39,6 +41,7 @@ public class HackathonTest {
 		assertEquals("1" + LINE_SEPARATOR + "2" + LINE_SEPARATOR  + "3" + LINE_SEPARATOR + "4" + LINE_SEPARATOR + "5" + LINE_SEPARATOR, outputHead);
 	}
 	
+	// For bug 2: head/tail supposed to allow multiple [OPTIONS]
 	@Test
 	public void testTailMultipleOptions() throws AbstractApplicationException, ShellException {
 		
@@ -46,6 +49,7 @@ public class HackathonTest {
 		assertEquals("44" + LINE_SEPARATOR + "55" + LINE_SEPARATOR  + "alice" + LINE_SEPARATOR + "bob" + LINE_SEPARATOR + "charlie" + LINE_SEPARATOR, outputTail);		
 	}
 	
+	// For bug 5: Sort does not catch null pointer exception when stdin is null from Shell
 	@Test(expected = SortException.class) 
 	public void testRunSortNullStdout() throws AbstractApplicationException, ShellException { 
 		
