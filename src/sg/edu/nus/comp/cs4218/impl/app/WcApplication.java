@@ -516,10 +516,11 @@ public class WcApplication implements Wc {
 	 * @return
 	 */
 	private int extendPrintSpace(int tempNewLine, int spaces) {
+		int returnValue = spaces;
 		if (String.valueOf(tempNewLine).length() >= 8) {
-			spaces = String.valueOf(tempNewLine).length() + 1;
+			returnValue = String.valueOf(tempNewLine).length() + 1;
 		}
-		return spaces;
+		return returnValue;
 	}
 
 	/**
