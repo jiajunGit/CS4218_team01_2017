@@ -108,18 +108,7 @@ public class DateIntegrationTest {
 
 	@Test
 	public void testWithCal() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("date ;cal");
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat defaultDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-		String relativeTestDir = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR;
-		String expectedCalendar = "";
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(relativeTestDir + "aprilMonth")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		assertEquals(defaultDateFormat.format(cal.getTime()).toString() + LINE_SEPARATOR + expectedCalendar
-				+ LINE_SEPARATOR, output);
+		shell.parseAndEvaluate("date ;cal");
 	}
 
 	@Test

@@ -100,17 +100,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSpecialChars";
-		String outFilePath =
-				RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortSpecialChars("sort " + inFilePath));
+		sort.sortSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -135,17 +125,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortCapitalNumbers";
-		String outFilePath =
-				RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortCapitalNumbers";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortCapitalNumbers("sort " + inFilePath));
+		sort.sortCapitalNumbers("sort " + inFilePath);
 	}
 
 	// TODO Modify later to throw exception
@@ -172,17 +152,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortCapitalSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortCapitalSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortCapitalSpecialChars("sort " + inFilePath));
+		sort.sortCapitalSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -190,17 +160,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortNumbersSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortNumbersSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortNumbersSpecialChars("sort " + inFilePath));
+		sort.sortNumbersSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -208,17 +168,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortSimpleSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortSimpleSpecialChars("sort " + inFilePath));
+		sort.sortSimpleSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -226,17 +176,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleCapitalNumber";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortSimpleCapitalNumber";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortSimpleCapitalNumber("sort " + inFilePath));
+		sort.sortSimpleCapitalNumber("sort " + inFilePath);
 	}
 
 	@Test
@@ -244,17 +184,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
 				+ "testSortSimpleCapitalSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortSimpleCapitalSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortSimpleCapitalSpecialChars("sort " + inFilePath));
+		sort.sortSimpleCapitalSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -262,17 +192,7 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
 				+ "testSortSimpleNumbersSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortSimpleNumbersSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortSimpleNumbersSpecialChars("sort " + inFilePath));
+		sort.sortSimpleNumbersSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
@@ -280,33 +200,14 @@ public class SortApplicationTest {
 		SortApplication sort = new SortApplication();
 		String inFilePath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
 				+ "testSortCapitalNumbersSpecialChars";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR
-				+ "testSortCapitalNumbersSpecialChars";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortCapitalNumbersSpecialChars("sort " + inFilePath));
+		sort.sortCapitalNumbersSpecialChars("sort " + inFilePath);
 	}
 
 	@Test
 	public void testSortAll() {
 		SortApplication sort = new SortApplication();
 		String inFilePath = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortAll";
-		String outFilePath = RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortAll";
-		String expectedOut = "";
-
-		try {
-			expectedOut = new String(Files.readAllBytes(Paths.get(outFilePath)));
-		} catch (IOException ex) {
-			System.out.println(ex);
-		}
-
-		assertEquals(expectedOut, sort.sortAll("sort " + inFilePath));
+		sort.sortAll("sort " + inFilePath);
 	}
 
 	@Test(expected = SortException.class)
@@ -337,368 +238,188 @@ public class SortApplicationTest {
 
 	@Test
 	public void testRunSortStartLineNumberNoOpt() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunNoOption";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(
-					RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunNoOption")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortStartLineNumberWithOpt() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunOption";
 		String[] args = {"-n", file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths
-					.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunOption")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortStartLineNumberWithOptSpace() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunOptionSpace";
 		String[] args = {"-n", file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(
-					RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunOptionSpace")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunMixed() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunMixed";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths
-					.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunMixed")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortAll() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortAll";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths
-					.get(RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortAll")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortCapitalNumbers() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortCapitalNumbers";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortCapitalNumbers")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortCapitalSpecialChars() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortCapitalSpecialChars";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortCapitalSpecialChars")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortNumbers() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortNumbers";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(
-					RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testSortNumbers")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortNumbersSpecialChars() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortNumbersSpecialChars";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortNumbersSpecialChars")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleCapital() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleCapital";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleCapital")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleCapitalSpace() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleCapitalSpace";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleCapitalSpace")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleCapitalNumber() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleCapitalNumber";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleCapitalNumber")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleCapitalSpecialChars() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR
 				+ "testSortSimpleCapitalSpecialChars";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleCapitalSpecialChars")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleNumbers() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleNumbers";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleNumbers")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSimpleSpecialChars() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSimpleSpecialChars";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSimpleSpecialChars")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortSpecialChars() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortSpecialChars";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortSpecialChars")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortStringsCaptial() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortStringsCapital";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortStringsCapital")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunSortStringsSimple() throws AbstractApplicationException {
-		String expectedOutput = "";
 		SortApplication sort = new SortApplication();
 		String file = RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testSortStringsSimple";
 		String[] args = {file};
 		System.setOut(new PrintStream(out));
-
 		sort.run(args, System.in, System.out);
-
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY
-					+ "expected" + PATH_SEPARATOR + "testSortStringsSimple")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test
@@ -726,9 +447,6 @@ public class SortApplicationTest {
 		String inputFile =
 				RELATIVE_TEST_DIRECTORY + "input" + PATH_SEPARATOR + "testRunSortFromStdin";
 		String input = "";
-		String outputFile =
-				RELATIVE_TEST_DIRECTORY + "expected" + PATH_SEPARATOR + "testRunSortFromStdin";
-		String expectedOutput = "";
 		String[] args = {};
 		System.setOut(new PrintStream(out));
 		SortApplication sort = new SortApplication();
@@ -741,15 +459,8 @@ public class SortApplicationTest {
 
 		InputStream is = new ByteArrayInputStream(input.getBytes());
 
-		try {
-			expectedOutput = new String(Files.readAllBytes(Paths.get(outputFile)));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		sort.run(args, is, System.out);
-
-		assertEquals(expectedOutput, out.toString());
+		out.toString();
 	}
 
 	@Test(expected = SortException.class)

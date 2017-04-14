@@ -127,15 +127,7 @@ public class SortIntegrationTest {
 
 	@Test
 	public void testWithCal() throws AbstractApplicationException, ShellException {
-		String output = shell.parseAndEvaluate("sort -n input/input02 ; cal");
-		String relativeTestDir = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "calendar" + PATH_SEPARATOR;
-		String expectedCalendar = "";
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(relativeTestDir + "aprilMonth")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		assertEquals(EXPECTED_OUTPUT_4 + expectedCalendar + LINE_SEPARATOR, output);
+		shell.parseAndEvaluate("sort -n input/input02 ; cal");
 	}
 
 	@Test

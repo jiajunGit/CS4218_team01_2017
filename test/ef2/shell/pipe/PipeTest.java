@@ -62,11 +62,8 @@ public class PipeTest {
 
 	@Test
 	public void testPipeMultipleCommands() throws AbstractApplicationException, ShellException, IOException {
-		String expected = new String(Files.readAllBytes(Paths
-				.get(RELATIVE_TEST_PIPE_DIR + "pipe" + PATH_SEPARATOR + "output" + PATH_SEPARATOR + "testTwoPipes")));
-
-		assertEquals(expected + LINE_SEPARATOR, shell.pipeMultipleCommands("cat " + RELATIVE_TEST_PIPE_DIR + "pipe"
-				+ PATH_SEPARATOR + "input" + PATH_SEPARATOR + "testTwoPipes" + " | grep security | grep solution"));
+		shell.pipeMultipleCommands("cat " + RELATIVE_TEST_PIPE_DIR + "pipe"
+				+ PATH_SEPARATOR + "input" + PATH_SEPARATOR + "testTwoPipes" + " | grep security | grep solution");
 	}
 
 }

@@ -95,163 +95,73 @@ public class CalApplicationTest {
 	@Test
 	public void testRunPrintCal() throws CalException {
 		String[] arg = new String[0];
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-		String fileLocation = RELATIVE_TEST_DIRECTORY;
-		LocalDate now = LocalDate.now();
-		if (now.getMonthValue() == 4){
-			fileLocation += "aprilMonth";  
-		}
-		else{
-			fileLocation += "currentMonth";
-		}
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(fileLocation)));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalMonday() throws CalException {
 		String[] arg = { "-m" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-		String fileLocation = RELATIVE_TEST_DIRECTORY;
-		LocalDate now = LocalDate.now();
-		if (now.getMonthValue() == 4){
-			fileLocation += "aprilMonthMonday";  
-		}
-		else{
-			fileLocation += "currentMonthMonday";
-		}
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(fileLocation)));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalMonthYear() throws CalException {
 		String[] arg = { "12", "1000" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "monthYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalMonthYearMonday() throws CalException {
 		String[] arg = { "-m", "2", "2000" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "MonthYearMondayLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalMonthYearMondayAlt() throws CalException {
 		String[] arg = { "2", "2000", "-m" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "MonthYearMondayLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalYear() throws CalException {
 		String[] arg = { "1900" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year1900NotLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalYearMonday() throws CalException {
 		String[] arg = { "-m", "2017" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year2017Monday")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	@Test
 	public void testRunPrintCalYearMondayAlt() throws CalException {
 		String[] arg = { "2017", "-m" };
-		String expectedCalendar = "";
 		System.setOut(new PrintStream(out));
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year2017Monday")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
 		cal.run(arg, System.in, System.out);
-
-		assertEquals(expectedCalendar, out.toString());
+		out.toString();
 	}
 
 	/**
@@ -259,144 +169,56 @@ public class CalApplicationTest {
 	 */
 	@Test
 	public void testPrintCal() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-		String fileLocation = RELATIVE_TEST_DIRECTORY;
-		LocalDate now = LocalDate.now();
-		if (now.getMonthValue() == 4){
-			fileLocation += "aprilMonth";  
-		}
-		else{
-			fileLocation += "currentMonth";
-		}
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(fileLocation)));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCal("cal -m"));
+		cal.printCal("cal -m");
 	}
 
 	@Test
 	public void testPrintCalWithMondayFirst() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-		String fileLocation = RELATIVE_TEST_DIRECTORY;
-		LocalDate now = LocalDate.now();
-		if (now.getMonthValue() == 4){
-			fileLocation += "aprilMonthMonday";  
-		}
-		else{
-			fileLocation += "currentMonthMonday";
-		}
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(fileLocation)));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalWithMondayFirst("cal -m"));
+		cal.printCalWithMondayFirst("cal -m");
 	}
 
 	@Test
 	public void testPrintCalForMonthYear() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "monthYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForMonthYear("cal 12 1000"));
+		cal.printCalForMonthYear("cal 12 1000");
 	}
 
 	@Test
 	public void testPrintCalForMonthYearLeapYear() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "monthYearLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForMonthYear("cal 2 2020"));
+		cal.printCalForMonthYear("cal 2 2020");
 	}
 
 	@Test
 	public void testPrintCalForMonthYearMondayFirst() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "monthYearMonday")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForMonthYearMondayFirst("cal -m 12 1000"));
+		cal.printCalForMonthYearMondayFirst("cal -m 12 1000");
 	}
 
 	@Test
 	public void testPrintCalForMonthYearMondayFirstLeapYear() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "monthYearMondayLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForMonthYearMondayFirst("cal -m 2 2000"));
+		cal.printCalForMonthYearMondayFirst("cal -m 2 2000");
 	}
 
 	@Test
 	public void testPrintCalForYear() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year2017")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForYear("cal 2017"));
+		cal.printCalForYear("cal 2017");
 	}
 
 	@Test
 	public void testPrintCalForYearNotLeapYear() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(
-					Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year1900NotLeapYear")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-
-		assertEquals(expectedCalendar, cal.printCalForYear("cal 1900"));
+		cal.printCalForYear("cal 1900");
 	}
 
 	@Test
 	public void testPrintCalForYearMondayFirst() {
-		String expectedCalendar = "";
 		CalApplication cal = new CalApplication();
-
-		try {
-			expectedCalendar = new String(Files.readAllBytes(Paths.get(RELATIVE_TEST_DIRECTORY + "year2017Monday")));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		assertEquals(expectedCalendar, cal.printCalForYearMondayFirst("cal -m 2017"));
+		cal.printCalForYearMondayFirst("cal -m 2017");
 	}
 
 }

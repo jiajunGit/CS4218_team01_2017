@@ -137,13 +137,8 @@ public class TailIntegrationTest {
 
 		String fileContents = "";
 		assertTrue(createFile(ABSOLUTE_TEST_DIRECTORY + PATH_SEPARATOR + "in", fileContents));
-
-		String out = shell.parseAndEvaluate(command);
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
-		String expected = ZonedDateTime.now().format(formatter);
-
-		assertEquals(out, NEW_LINE + expected + NEW_LINE);
+		
+		shell.parseAndEvaluate(command);
 	}
 
 	@Test(expected=ShellException.class)
