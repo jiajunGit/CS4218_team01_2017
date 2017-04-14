@@ -34,7 +34,7 @@ public class ShellImplTest {
 			+ "shell" + PATH_SEPARATOR + "glob";
 	private final static String ABSOLUTE_TEST_GLOB_DIRECTORY = Environment.currentDirectory + PATH_SEPARATOR
 			+ RELATIVE_TEST_GLOB_DIRECTORY;
-	private static String RELATIVE_TEST_DIRECTORY_IO = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "IOredirect"
+	private static final String RELATIVE_TEST_DIRECTORY_IO = "test" + PATH_SEPARATOR + "ef1" + PATH_SEPARATOR + "shell" + PATH_SEPARATOR + "IOredirect"
 			+ PATH_SEPARATOR;
 	
 	private ShellImpl shell = new ShellImpl();
