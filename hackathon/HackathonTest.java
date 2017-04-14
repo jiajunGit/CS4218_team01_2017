@@ -2,8 +2,6 @@
  * This test class only contains valid bugs (bug 1, 2 and 5) as reported in the
  * bug report.
  */
-package hackathon;
-
 import static org.junit.Assert.*;
 
 import java.io.File;
